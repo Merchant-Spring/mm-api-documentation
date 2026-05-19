@@ -1,0 +1,69 @@
+---
+title: "API Reference Overview"
+description: "Complete reference for all Marketplace Manager API endpoints"
+---
+
+# API Reference
+
+The Marketplace Manager API follows REST conventions. All endpoints accept and return JSON.
+
+## Base URL
+
+```
+https://api.marketplacemanager.com/v1
+```
+
+## Request format
+
+- All request bodies must be JSON with `Content-Type: application/json`
+- All timestamps are ISO 8601 in UTC (e.g. `2024-01-15T09:30:00Z`)
+- IDs are strings
+
+## Response format
+
+All responses share a consistent envelope:
+
+```json
+{
+  "data": { ... },       // The requested resource or array of resources
+  "meta": {              // Present on list endpoints
+    "total": 100,
+    "page": 1,
+    "per_page": 20
+  },
+  "error": {             // Present only on error responses
+    "code": "not_found",
+    "message": "The requested resource was not found."
+  }
+}
+```
+
+## Pagination
+
+List endpoints support cursor-based pagination via query parameters:
+
+| Parameter  | Type    | Default | Description                      |
+|------------|---------|---------|----------------------------------|
+| `page`     | integer | `1`     | Page number                      |
+| `per_page` | integer | `20`    | Results per page (max `100`)     |
+
+## Available endpoints
+
+<CardGroup cols={2}>
+  <Card title="Orders" icon="cart-shopping">
+    Manage and fulfil orders across all connected marketplaces
+  </Card>
+  <Card title="Inventory" icon="boxes-stacked">
+    Query and update stock levels per SKU and marketplace
+  </Card>
+  <Card title="Listings" icon="tag">
+    Create and manage product listings
+  </Card>
+  <Card title="Marketplaces" icon="store">
+    List and configure connected marketplace accounts
+  </Card>
+</CardGroup>
+
+<Info>
+  Full endpoint pages will be added here as the API is built out. Each section will include interactive request examples.
+</Info>
