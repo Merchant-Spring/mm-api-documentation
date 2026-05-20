@@ -1,28 +1,202 @@
 ---
 title: "Introduction"
-description: "Welcome to the Marketplace Manager API documentation"
+description: "Welcome to the Marketplace Manager API — programmatic access to all your marketplace operations."
 ---
 
-# Marketplace Manager API
+<div style={{
+  background: "linear-gradient(135deg, #1A1A2E 0%, #16213E 50%, #0F3460 100%)",
+  borderRadius: "16px",
+  padding: "72px 48px",
+  marginBottom: "48px",
+  position: "relative",
+  overflow: "hidden"
+}}>
 
-Welcome to the **Marketplace Manager API** — your gateway to programmatically managing marketplace integrations, orders, inventory, and more.
+  {/* Glow orb — top right */}
+  <div style={{
+    position: "absolute",
+    top: "-80px",
+    right: "-80px",
+    width: "400px",
+    height: "400px",
+    background: "radial-gradient(circle, rgba(59,91,219,0.35) 0%, transparent 70%)",
+    borderRadius: "50%",
+    pointerEvents: "none"
+  }} />
 
-## What you can do with the API
+  {/* Glow orb — bottom left */}
+  <div style={{
+    position: "absolute",
+    bottom: "-60px",
+    left: "-60px",
+    width: "300px",
+    height: "300px",
+    background: "radial-gradient(circle, rgba(12,166,120,0.25) 0%, transparent 70%)",
+    borderRadius: "50%",
+    pointerEvents: "none"
+  }} />
+
+  {/* Eyebrow */}
+  <p style={{
+    color: "#0CA678",
+    fontSize: "0.8rem",
+    fontWeight: 700,
+    textTransform: "uppercase",
+    letterSpacing: "0.15em",
+    marginBottom: "16px",
+    position: "relative"
+  }}>
+    Marketplace Manager · Developer API
+  </p>
+
+  {/* Headline */}
+  <h1 style={{
+    fontSize: "clamp(2rem, 4vw, 3.25rem)",
+    fontWeight: 800,
+    color: "#ffffff",
+    lineHeight: 1.1,
+    marginBottom: "20px",
+    position: "relative"
+  }}>
+    Build on top of every<br />
+    <span style={{
+      background: "linear-gradient(90deg, #748ffc 0%, #0CA678 100%)",
+      WebkitBackgroundClip: "text",
+      WebkitTextFillColor: "transparent",
+      backgroundClip: "text"
+    }}>
+      marketplace, at once.
+    </span>
+  </h1>
+
+  {/* Subtitle */}
+  <p style={{
+    fontSize: "1.125rem",
+    color: "rgba(255,255,255,0.75)",
+    maxWidth: "540px",
+    lineHeight: 1.7,
+    marginBottom: "36px",
+    position: "relative"
+  }}>
+    The Marketplace Manager API gives you unified, programmatic access to orders, inventory, listings, analytics, and more — across Amazon, eBay, Shopify, and 50+ other channels.
+  </p>
+
+  {/* CTA Buttons */}
+  <div style={{
+    display: "flex",
+    gap: "12px",
+    flexWrap: "wrap",
+    alignItems: "center",
+    position: "relative"
+  }}>
+    <a href="/quickstart" style={{
+      background: "#3B5BDB",
+      color: "#ffffff",
+      fontWeight: 700,
+      fontSize: "0.95rem",
+      padding: "12px 28px",
+      borderRadius: "8px",
+      textDecoration: "none",
+      boxShadow: "0 4px 14px rgba(59,91,219,0.45)",
+      transition: "all 0.2s ease",
+      display: "inline-block"
+    }}>
+      ⚡ Get started free
+    </a>
+    <a href="/api-reference/overview" style={{
+      background: "transparent",
+      color: "#ffffff",
+      fontWeight: 600,
+      fontSize: "0.95rem",
+      padding: "12px 28px",
+      borderRadius: "8px",
+      textDecoration: "none",
+      border: "2px solid rgba(255,255,255,0.25)",
+      display: "inline-block"
+    }}>
+      Browse API reference →
+    </a>
+  </div>
+
+  {/* Trust note */}
+  <p style={{
+    color: "rgba(255,255,255,0.45)",
+    fontSize: "0.8rem",
+    marginTop: "20px",
+    position: "relative"
+  }}>
+    No credit card required · 14-day free trial · 50+ marketplace integrations
+  </p>
+
+</div>
+
+{/* Stats strip */}
+<div style={{
+  display: "grid",
+  gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))",
+  gap: "1px",
+  background: "linear-gradient(135deg, rgba(59,91,219,0.15), rgba(12,166,120,0.1))",
+  borderRadius: "12px",
+  border: "1px solid rgba(59,91,219,0.2)",
+  overflow: "hidden",
+  marginBottom: "48px"
+}}>
+  {[
+    { value: "50+", label: "Marketplaces" },
+    { value: "REST", label: "Modern API" },
+    { value: "99.9%", label: "Uptime SLA" },
+    { value: "< 200ms", label: "Avg. latency" }
+  ].map(({ value, label }) => (
+    <div key={label} style={{
+      background: "rgba(255,255,255,0.03)",
+      padding: "24px",
+      textAlign: "center"
+    }}>
+      <div style={{
+        fontSize: "1.75rem",
+        fontWeight: 800,
+        background: "linear-gradient(135deg, #3B5BDB, #748ffc)",
+        WebkitBackgroundClip: "text",
+        WebkitTextFillColor: "transparent",
+        backgroundClip: "text",
+        lineHeight: 1.1,
+        marginBottom: "4px"
+      }}>{value}</div>
+      <div style={{ fontSize: "0.8rem", color: "#6c757d", fontWeight: 500 }}>{label}</div>
+    </div>
+  ))}
+</div>
+
+## What you can build
 
 <CardGroup cols={2}>
-  <Card title="Manage Orders" icon="cart-shopping">
-    Retrieve, update, and fulfil orders across all your connected marketplaces in one unified API.
+  <Card title="Order Management" icon="cart-shopping" color="#3B5BDB">
+    Retrieve, update, and fulfil orders across all your connected marketplaces through a single, unified endpoint.
   </Card>
-  <Card title="Sync Inventory" icon="boxes-stacked">
-    Keep stock levels accurate and in sync across Amazon, eBay, Shopify, and more.
+  <Card title="Inventory Sync" icon="boxes-stacked" color="#0CA678">
+    Keep stock levels accurate and in sync across Amazon, eBay, Shopify, and more — in real time.
   </Card>
-  <Card title="Track Performance" icon="chart-line">
-    Access sales analytics, profit reports, and marketplace metrics programmatically.
+  <Card title="Performance Analytics" icon="chart-line" color="#3B5BDB">
+    Access sales analytics, profit reports, and marketplace metrics to power your own dashboards and tools.
   </Card>
-  <Card title="Manage Listings" icon="tag">
-    Create, update, and optimise product listings across every marketplace channel.
+  <Card title="Listing Management" icon="tag" color="#0CA678">
+    Create, update, and optimise product listings across every marketplace channel programmatically.
   </Card>
 </CardGroup>
+
+## How it works
+
+<Steps>
+  <Step title="Authenticate">
+    Generate an API key from your [MerchantSpring dashboard](https://app.merchantspring.io) and pass it as a Bearer token on every request.
+  </Step>
+  <Step title="Choose your endpoint">
+    Browse the [API Reference](/api-reference/overview) to find the endpoint you need — orders, inventory, listings, analytics, and more.
+  </Step>
+  <Step title="Make your first call">
+    Follow the [Quickstart](/quickstart) guide to make your first live API request in under 5 minutes.
+  </Step>
+</Steps>
 
 ## Base URL
 
@@ -32,6 +206,17 @@ All API requests are made to:
 https://api.marketplacemanager.com/v1
 ```
 
+<Info>
+  The API uses **HTTPS only**. All requests must include a valid Bearer token. See [Authentication](/authentication) for details.
+</Info>
+
 ## Need help?
 
-If you run into issues or have questions, reach out to [support@marketplacemanager.com](mailto:support@marketplacemanager.com).
+<CardGroup cols={2}>
+  <Card title="Read the docs" icon="book-open" href="/authentication">
+    Start with authentication then follow the quickstart guide.
+  </Card>
+  <Card title="Contact support" icon="envelope" href="mailto:support@marketplacemanager.com">
+    Can't find what you need? Our team is happy to help.
+  </Card>
+</CardGroup>
