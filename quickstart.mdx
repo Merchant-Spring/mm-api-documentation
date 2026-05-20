@@ -1,0 +1,84 @@
+---
+title: "Quickstart"
+description: "Make your first API call in under 5 minutes"
+---
+
+# Quickstart
+
+This guide walks you through making your first call to the Marketplace Manager API.
+
+## Prerequisites
+
+- A Marketplace Manager account ([sign up here](https://app.marketplacemanager.com/register))
+- An API key — see [Authentication](/authentication)
+- `curl` or any HTTP client
+
+## Step 1 — Get your API key
+
+Follow the [Authentication](/authentication) guide to generate your key.
+
+## Step 2 — Make your first request
+
+Fetch your list of connected marketplaces:
+
+<CodeGroup>
+
+```bash cURL
+curl -X GET "https://api.marketplacemanager.com/v1/marketplaces" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+```python Python
+import requests
+
+headers = {"Authorization": "Bearer YOUR_API_KEY"}
+response = requests.get(
+    "https://api.marketplacemanager.com/v1/marketplaces",
+    headers=headers
+)
+print(response.json())
+```
+
+```javascript Node.js
+const response = await fetch("https://api.marketplacemanager.com/v1/marketplaces", {
+  headers: { Authorization: "Bearer YOUR_API_KEY" }
+});
+const data = await response.json();
+console.log(data);
+```
+
+</CodeGroup>
+
+## Step 3 — Review the response
+
+A successful response looks like:
+
+```json
+{
+  "data": [
+    {
+      "id": "mp_amazon_us",
+      "name": "Amazon US",
+      "type": "amazon",
+      "status": "connected",
+      "region": "us-east-1"
+    }
+  ],
+  "meta": {
+    "total": 1,
+    "page": 1,
+    "per_page": 20
+  }
+}
+```
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="API Reference" icon="book" href="/api-reference/overview">
+    Browse the full endpoint reference
+  </Card>
+  <Card title="Authentication" icon="key" href="/authentication">
+    Learn about API keys and rate limits
+  </Card>
+</CardGroup>

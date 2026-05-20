@@ -1,0 +1,48 @@
+---
+title: "Authentication"
+description: "How to authenticate with the Marketplace Manager API"
+---
+
+# Authentication
+
+The Marketplace Manager API uses **API keys** for authentication. Every request must include your API key in the request header.
+
+## Getting your API key
+
+1. Log in to your [Marketplace Manager dashboard](https://app.marketplacemanager.com)
+2. Navigate to **Settings → API**
+3. Click **Generate API Key**
+4. Copy and store your key securely — it won't be shown again
+
+<Warning>
+  Keep your API key secret. Never expose it in client-side code or public repositories.
+</Warning>
+
+## Making authenticated requests
+
+Pass your API key in the `Authorization` header using the `Bearer` scheme:
+
+```bash
+curl -X GET "https://api.marketplacemanager.com/v1/orders" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json"
+```
+
+## Rate limits
+
+| Plan       | Requests per minute |
+|------------|---------------------|
+| Starter    | 60                  |
+| Growth     | 300                 |
+| Enterprise | 1 000               |
+
+When you exceed the rate limit, the API returns a `429 Too Many Requests` response. Retry after the number of seconds indicated in the `Retry-After` header.
+
+## Error codes
+
+| Status | Meaning                                          |
+|--------|--------------------------------------------------|
+| `401`  | Missing or invalid API key                       |
+| `403`  | Valid key but insufficient permissions           |
+| `429`  | Rate limit exceeded                              |
+| `500`  | Internal server error — contact support          |
