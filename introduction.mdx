@@ -4,41 +4,53 @@ description: "Welcome to the Marketplace Manager API — programmatic access to 
 ---
 
 <div style={{
-  background: "linear-gradient(135deg, #1A1A2E 0%, #16213E 50%, #0F3460 100%)",
+  background: "linear-gradient(135deg, #020610 0%, #000f36 60%, #0a1d4d 100%)",
   borderRadius: "16px",
   padding: "72px 48px",
   marginBottom: "48px",
   position: "relative",
-  overflow: "hidden"
+  overflow: "hidden",
+  fontFamily: "'Open Sans', system-ui, -apple-system, sans-serif"
 }}>
 
-  {/* Glow orb — top right */}
+  {/* Animated SVG flares — wrapper isolates from Mintlify's <img> default styling */}
   <div style={{
     position: "absolute",
-    top: "-80px",
-    right: "-80px",
-    width: "400px",
-    height: "400px",
-    background: "radial-gradient(circle, rgba(59,91,219,0.35) 0%, transparent 70%)",
-    borderRadius: "50%",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    overflow: "hidden",
     pointerEvents: "none"
-  }} />
-
-  {/* Glow orb — bottom left */}
-  <div style={{
-    position: "absolute",
-    bottom: "-60px",
-    left: "-60px",
-    width: "300px",
-    height: "300px",
-    background: "radial-gradient(circle, rgba(12,166,120,0.25) 0%, transparent 70%)",
-    borderRadius: "50%",
-    pointerEvents: "none"
-  }} />
+  }}>
+    <img
+      src="/images/hero-flares.svg"
+      alt=""
+      aria-hidden="true"
+      style={{
+        position: "absolute",
+        top: 0,
+        left: 0,
+        width: "100%",
+        height: "100%",
+        margin: 0,
+        padding: 0,
+        border: 0,
+        maxWidth: "none",
+        maxHeight: "none",
+        minWidth: "100%",
+        minHeight: "100%",
+        objectFit: "fill",
+        display: "block",
+        verticalAlign: "top",
+        userSelect: "none"
+      }}
+    />
+  </div>
 
   {/* Eyebrow */}
   <p style={{
-    color: "#0CA678",
+    color: "#ffb446",
     fontSize: "0.8rem",
     fontWeight: 700,
     textTransform: "uppercase",
@@ -60,7 +72,7 @@ description: "Welcome to the Marketplace Manager API — programmatic access to 
   }}>
     Build on top of every<br />
     <span style={{
-      background: "linear-gradient(90deg, #748ffc 0%, #0CA678 100%)",
+      background: "linear-gradient(90deg, #ffc042 0%, #f89c1c 100%)",
       WebkitBackgroundClip: "text",
       WebkitTextFillColor: "transparent",
       backgroundClip: "text"
@@ -72,7 +84,7 @@ description: "Welcome to the Marketplace Manager API — programmatic access to 
   {/* Subtitle */}
   <p style={{
     fontSize: "1.125rem",
-    color: "rgba(255,255,255,0.75)",
+    color: "rgba(255,255,255,0.78)",
     maxWidth: "540px",
     lineHeight: 1.7,
     marginBottom: "36px",
@@ -90,14 +102,14 @@ description: "Welcome to the Marketplace Manager API — programmatic access to 
     position: "relative"
   }}>
     <a href="/quickstart" style={{
-      background: "#3B5BDB",
-      color: "#ffffff",
+      background: "#f89c1c",
+      color: "#000f36",
       fontWeight: 700,
       fontSize: "0.95rem",
       padding: "12px 28px",
       borderRadius: "8px",
       textDecoration: "none",
-      boxShadow: "0 4px 14px rgba(59,91,219,0.45)",
+      boxShadow: "0 4px 14px rgba(248,156,28,0.45)",
       transition: "all 0.2s ease",
       display: "inline-block"
     }}>
@@ -111,7 +123,7 @@ description: "Welcome to the Marketplace Manager API — programmatic access to 
       padding: "12px 28px",
       borderRadius: "8px",
       textDecoration: "none",
-      border: "2px solid rgba(255,255,255,0.25)",
+      border: "2px solid rgba(255,255,255,0.3)",
       display: "inline-block"
     }}>
       Browse API reference →
@@ -120,7 +132,7 @@ description: "Welcome to the Marketplace Manager API — programmatic access to 
 
   {/* Trust note */}
   <p style={{
-    color: "rgba(255,255,255,0.45)",
+    color: "rgba(255,255,255,0.5)",
     fontSize: "0.8rem",
     marginTop: "20px",
     position: "relative"
@@ -135,11 +147,12 @@ description: "Welcome to the Marketplace Manager API — programmatic access to 
   display: "grid",
   gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))",
   gap: "1px",
-  background: "linear-gradient(135deg, rgba(59,91,219,0.15), rgba(12,166,120,0.1))",
+  background: "linear-gradient(135deg, rgba(255,180,70,0.15), rgba(60,129,224,0.1))",
   borderRadius: "12px",
-  border: "1px solid rgba(59,91,219,0.2)",
+  border: "1px solid rgba(255,180,70,0.25)",
   overflow: "hidden",
-  marginBottom: "48px"
+  marginBottom: "48px",
+  fontFamily: "'Open Sans', system-ui, -apple-system, sans-serif"
 }}>
   {[
     { value: "50+", label: "Marketplaces" },
@@ -155,14 +168,11 @@ description: "Welcome to the Marketplace Manager API — programmatic access to 
       <div style={{
         fontSize: "1.75rem",
         fontWeight: 800,
-        background: "linear-gradient(135deg, #3B5BDB, #748ffc)",
-        WebkitBackgroundClip: "text",
-        WebkitTextFillColor: "transparent",
-        backgroundClip: "text",
+        color: "#000511",
         lineHeight: 1.1,
         marginBottom: "4px"
       }}>{value}</div>
-      <div style={{ fontSize: "0.8rem", color: "#6c757d", fontWeight: 500 }}>{label}</div>
+      <div style={{ fontSize: "0.8rem", color: "#636d87", fontWeight: 500 }}>{label}</div>
     </div>
   ))}
 </div>
