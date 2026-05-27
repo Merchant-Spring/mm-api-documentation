@@ -18,23 +18,15 @@ https://api.marketplacemanager.com/v1
 - All request bodies must be JSON with `Content-Type: application/json`
 - All timestamps are ISO 8601 in UTC (e.g. `2024-01-15T09:30:00Z`)
 - IDs are strings
+- All requests must include your API key in the `x-api-key` header — see [Authentication](/authentication)
 
 ## Response format
 
-All responses share a consistent envelope:
+Successful responses return the requested resource directly. Error responses use a consistent envelope:
 
 ```json
 {
-  "data": { ... },       // The requested resource or array of resources
-  "meta": {              // Present on list endpoints
-    "total": 100,
-    "page": 1,
-    "per_page": 20
-  },
-  "error": {             // Present only on error responses
-    "code": "not_found",
-    "message": "The requested resource was not found."
-  }
+  "error": "Missing or empty path parameter: organisationId"
 }
 ```
 
@@ -50,6 +42,9 @@ List endpoints support cursor-based pagination via query parameters:
 ## Available endpoints
 
 <CardGroup cols={2}>
+  <Card title="Stores" icon="store" href="/api-reference/stores/list-stores">
+    List and retrieve stores connected to your organisation
+  </Card>
   <Card title="Orders" icon="cart-shopping">
     Manage and fulfil orders across all connected marketplaces
   </Card>
@@ -59,11 +54,8 @@ List endpoints support cursor-based pagination via query parameters:
   <Card title="Listings" icon="tag">
     Create and manage product listings
   </Card>
-  <Card title="Marketplaces" icon="store">
-    List and configure connected marketplace accounts
-  </Card>
 </CardGroup>
 
 <Info>
-  Full endpoint pages will be added here as the API is built out. Each section will include interactive request examples.
+  The Stores endpoints are live. Additional endpoint pages will be added as the API is built out.
 </Info>
