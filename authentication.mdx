@@ -5,7 +5,7 @@ description: "How to authenticate with the Marketplace Manager API"
 
 # Authentication
 
-The Marketplace Manager API uses **API keys** for authentication. Every request must include your API key in the request header.
+The Marketplace Manager API uses **API keys** for authentication. Every request must include your API key in the `x-api-key` request header.
 
 ## Getting your API key
 
@@ -20,21 +20,27 @@ The Marketplace Manager API uses **API keys** for authentication. Every request 
 
 ## Making authenticated requests
 
-Pass your API key in the `Authorization` header using the `Bearer` scheme:
+Pass your API key in the `x-api-key` header:
 
 ```bash
-curl -X GET "https://api.marketplacemanager.com/v1/orders" \
-  -H "Authorization: Bearer YOUR_API_KEY" \
-  -H "Content-Type: application/json"
+curl -X GET "https://api.marketplacemanager.com/v1/organisations/org-123/stores" \
+  -H "x-api-key: YOUR_API_KEY"
 ```
 
 ## Rate limits
 
-| Plan       | Requests per minute |
-|------------|---------------------|
-| Starter    | 60                  |
-| Growth     | 300                 |
-| Enterprise | 1 000               |
+| Plan       | Requests per month |
+|------------|--------------------|
+| Starter    | 100,000            |
+| Growth     | 500,000            |
+| Enterprise | Unlimited          |
+
+The API enforces per-second throttling as well:
+
+| Limit       | Value |
+|-------------|-------|
+| Burst limit | 50 requests  |
+| Rate limit  | 25 requests/second |
 
 When you exceed the rate limit, the API returns a `429 Too Many Requests` response. Retry after the number of seconds indicated in the `Retry-After` header.
 
@@ -42,6 +48,7 @@ When you exceed the rate limit, the API returns a `429 Too Many Requests` respon
 
 | Status | Meaning                                          |
 |--------|--------------------------------------------------|
+| `400`  | Bad request — missing or invalid parameters      |
 | `401`  | Missing or invalid API key                       |
 | `403`  | Valid key but insufficient permissions           |
 | `429`  | Rate limit exceeded                              |
