@@ -1,0 +1,90 @@
+---
+title: "List store orders"
+description: "Return a list of orders for a specific store within an organisation."
+---
+
+# List store orders
+
+Returns a list of orders associated with the given store and organisation.
+
+<Info>
+  This endpoint currently returns dummy data. Real data access will be wired in a future release.
+</Info>
+
+## Endpoint
+
+```text
+GET /organisations/{organisationId}/stores/{storeId}/orders
+```
+
+## Authentication
+
+All requests must include your API key in the `x-api-key` header. See [Authentication](/authentication) for details.
+
+## Path parameters
+
+<ParamField path="organisationId" type="string" required>
+  The unique identifier of the organisation.
+</ParamField>
+
+<ParamField path="storeId" type="string" required>
+  The unique identifier of the store whose orders you want to retrieve.
+</ParamField>
+
+## Request example
+
+```bash
+curl -X GET "https://api.marketplacemanager.com/v1/organisations/org-123/stores/store-1/orders" \
+  -H "x-api-key: YOUR_API_KEY"
+```
+
+## Response
+
+Returns an object containing the `organisationId`, `storeId`, and an `orders` array.
+
+```json
+{
+  "organisationId": "org-123",
+  "storeId": "store-1",
+  "orders": [
+    { "orderId": "order-1", "status": "shipped", "total": 49.99, "currency": "AUD" },
+    { "orderId": "order-2", "status": "pending", "total": 19.50, "currency": "AUD" }
+  ]
+}
+```
+
+## Response fields
+
+<ResponseField name="organisationId" type="string">
+  The organisation identifier from the request path.
+</ResponseField>
+
+<ResponseField name="storeId" type="string">
+  The store identifier from the request path.
+</ResponseField>
+
+<ResponseField name="orders" type="array">
+  List of order objects for the store.
+
+  <Expandable title="Order object fields">
+    <ResponseField name="orderId" type="string">
+      Unique identifier for the order.
+    </ResponseField>
+    <ResponseField name="status" type="string">
+      Current status of the order (e.g. `shipped`, `pending`).
+    </ResponseField>
+    <ResponseField name="total" type="number">
+      Total order value.
+    </ResponseField>
+    <ResponseField name="currency" type="string">
+      ISO 4217 currency code for the order total (e.g. `AUD`).
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+## Error responses
+
+| Status | Meaning |
+|--------|---------|
+| `400`  | Missing or empty `organisationId` or `storeId` path parameter |
+| `401`  | Missing or invalid API key |
