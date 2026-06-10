@@ -44,6 +44,7 @@
           {
             "group": "Stores",
             "pages": [
+              "api-reference/stores/create-store",
               "api-reference/stores/list-stores",
               "api-reference/stores/get-store"
             ]
