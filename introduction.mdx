@@ -1,210 +1,44 @@
 ---
-title: "Introduction"
-description: "Welcome to the Marketplace Manager API — programmatic access to all your marketplace operations."
+title: "MerchantSpring Public API"
+description: "Programmatic, pre-aggregated access to your cross-marketplace sales, profitability, advertising and operational data."
 ---
 
-<div style={{
-  background: "linear-gradient(135deg, #020610 0%, #000f36 60%, #0a1d4d 100%)",
-  borderRadius: "16px",
-  padding: "72px 48px",
-  marginBottom: "48px",
-  position: "relative",
-  overflow: "hidden",
-  fontFamily: "'Open Sans', system-ui, -apple-system, sans-serif"
-}}>
+The **MerchantSpring Public API** gives you unified, pre-aggregated access to your sales, profitability, advertising, traffic and orders — across Amazon, Walmart, and every other channel you sell on.
 
-  {/* Animated SVG flares — wrapper isolates from Mintlify's <img> default styling */}
-  <div style={{
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    overflow: "hidden",
-    pointerEvents: "none"
-  }}>
-    <img
-      src="/images/hero-flares.svg"
-      alt=""
-      aria-hidden="true"
-      style={{
-        position: "absolute",
-        top: 0,
-        left: 0,
-        width: "100%",
-        height: "100%",
-        margin: 0,
-        padding: 0,
-        border: 0,
-        maxWidth: "none",
-        maxHeight: "none",
-        minWidth: "100%",
-        minHeight: "100%",
-        objectFit: "fill",
-        display: "block",
-        verticalAlign: "top",
-        userSelect: "none"
-      }}
-    />
-  </div>
-
-  {/* Eyebrow */}
-  <p style={{
-    color: "#ffb446",
-    fontSize: "0.8rem",
-    fontWeight: 700,
-    textTransform: "uppercase",
-    letterSpacing: "0.15em",
-    marginBottom: "16px",
-    position: "relative"
-  }}>
-    Marketplace Manager · Developer API
-  </p>
-
-  {/* Headline */}
-  <h1 style={{
-    fontSize: "clamp(2rem, 4vw, 3.25rem)",
-    fontWeight: 800,
-    color: "#ffffff",
-    lineHeight: 1.1,
-    marginBottom: "20px",
-    position: "relative"
-  }}>
-    Build on top of every<br />
-    <span style={{
-      background: "linear-gradient(90deg, #ffc042 0%, #f89c1c 100%)",
-      WebkitBackgroundClip: "text",
-      WebkitTextFillColor: "transparent",
-      backgroundClip: "text"
-    }}>
-      marketplace, at once.
-    </span>
-  </h1>
-
-  {/* Subtitle */}
-  <p style={{
-    fontSize: "1.125rem",
-    color: "rgba(255,255,255,0.78)",
-    maxWidth: "540px",
-    lineHeight: 1.7,
-    marginBottom: "36px",
-    position: "relative"
-  }}>
-    The Marketplace Manager API gives you unified, programmatic access to orders, inventory, listings, analytics, and more — across Amazon, eBay, Shopify, and 50+ other channels.
-  </p>
-
-  {/* CTA Buttons */}
-  <div style={{
-    display: "flex",
-    gap: "12px",
-    flexWrap: "wrap",
-    alignItems: "center",
-    position: "relative"
-  }}>
-    <a href="/quickstart" style={{
-      background: "#f89c1c",
-      color: "#000f36",
-      fontWeight: 700,
-      fontSize: "0.95rem",
-      padding: "12px 28px",
-      borderRadius: "8px",
-      textDecoration: "none",
-      boxShadow: "0 4px 14px rgba(248,156,28,0.45)",
-      transition: "all 0.2s ease",
-      display: "inline-block"
-    }}>
-      ⚡ Get started free
-    </a>
-    <a href="/api-reference/overview" style={{
-      background: "transparent",
-      color: "#ffffff",
-      fontWeight: 600,
-      fontSize: "0.95rem",
-      padding: "12px 28px",
-      borderRadius: "8px",
-      textDecoration: "none",
-      border: "2px solid rgba(255,255,255,0.3)",
-      display: "inline-block"
-    }}>
-      Browse API reference →
-    </a>
-  </div>
-
-  {/* Trust note */}
-  <p style={{
-    color: "rgba(255,255,255,0.5)",
-    fontSize: "0.8rem",
-    marginTop: "20px",
-    position: "relative"
-  }}>
-    No credit card required · 14-day free trial · 50+ marketplace integrations
-  </p>
-
-</div>
-
-{/* Stats strip */}
-<div style={{
-  display: "grid",
-  gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))",
-  gap: "1px",
-  background: "linear-gradient(135deg, rgba(255,180,70,0.15), rgba(60,129,224,0.1))",
-  borderRadius: "12px",
-  border: "1px solid rgba(255,180,70,0.25)",
-  overflow: "hidden",
-  marginBottom: "48px",
-  fontFamily: "'Open Sans', system-ui, -apple-system, sans-serif"
-}}>
-  {[
-    { value: "50+", label: "Marketplaces" },
-    { value: "REST", label: "Modern API" },
-    { value: "99.9%", label: "Uptime SLA" },
-    { value: "< 200ms", label: "Avg. latency" }
-  ].map(({ value, label }) => (
-    <div key={label} style={{
-      background: "rgba(255,255,255,0.03)",
-      padding: "24px",
-      textAlign: "center"
-    }}>
-      <div style={{
-        fontSize: "1.75rem",
-        fontWeight: 800,
-        color: "#000511",
-        lineHeight: 1.1,
-        marginBottom: "4px"
-      }}>{value}</div>
-      <div style={{ fontSize: "0.8rem", color: "#636d87", fontWeight: 500 }}>{label}</div>
-    </div>
-  ))}
-</div>
+<CardGroup cols={2}>
+  <Card title="Get started" icon="rocket" href="/quickstart" horizontal>
+    Make your first live API call in a few minutes.
+  </Card>
+  <Card title="Browse the API reference" icon="code" href="/api-reference/channel/retrieve-a-list-of-channels" horizontal>
+    Every endpoint, with an interactive playground.
+  </Card>
+</CardGroup>
 
 ## What you can build
 
 <CardGroup cols={2}>
-  <Card title="Order Management" icon="cart-shopping" color="#3B5BDB">
-    Retrieve, update, and fulfil orders across all your connected marketplaces through a single, unified endpoint.
+  <Card title="Sales & performance reporting" icon="chart-line">
+    Pull sales-by-product, traffic & conversion, ordered/shipped revenue and more — as downloadable CSV reports or JSON views.
   </Card>
-  <Card title="Inventory Sync" icon="boxes-stacked" color="#0CA678">
-    Keep stock levels accurate and in sync across Amazon, eBay, Shopify, and more — in real time.
+  <Card title="Profitability" icon="coins">
+    Retrieve store and product profit & loss, and manage unit COGS, to power your own margin dashboards.
   </Card>
-  <Card title="Performance Analytics" icon="chart-line" color="#3B5BDB">
-    Access sales analytics, profit reports, and marketplace metrics to power your own dashboards and tools.
-  </Card>
-  <Card title="Listing Management" icon="tag" color="#0CA678">
-    Create, update, and optimise product listings across every marketplace channel programmatically.
+  <Card title="Advertising & traffic" icon="bullhorn">
+    Access advertising performance by channel and campaign-level reporting across connected ad accounts.
   </Card>
 </CardGroup>
 
 ## How it works
 
 <Steps>
-  <Step title="Authenticate">
-    Generate an API key from your [MerchantSpring dashboard](https://app.merchantspring.io) and pass it as a Bearer token on every request.
+  <Step title="Get an API key">
+    API keys are provisioned by MerchantSpring — contact your MerchantSpring representative. Keys are **not** created from these docs. See [Authentication](/authentication).
   </Step>
-  <Step title="Choose your endpoint">
-    Browse the [API Reference](/api-reference/overview) to find the endpoint you need — orders, inventory, listings, analytics, and more.
+  <Step title="Find your channels">
+    Most endpoints identify a channel by `merchantId` + `channelId`. Call [`POST /channels`](/api-reference/channel/retrieve-a-list-of-channels) first to discover them.
   </Step>
-  <Step title="Make your first call">
-    Follow the [Quickstart](/quickstart) guide to make your first live API request in under 5 minutes.
+  <Step title="Request data">
+    Run a report, view performance, or read profitability data. Follow the [Quickstart](/quickstart) to make your first live call.
   </Step>
 </Steps>
 
@@ -213,20 +47,20 @@ description: "Welcome to the Marketplace Manager API — programmatic access to 
 All API requests are made to:
 
 ```
-https://api.marketplacemanager.com/v1
+https://mm-api.merchantspring.io
 ```
 
 <Info>
-  The API uses **HTTPS only**. All requests must include a valid Bearer token. See [Authentication](/authentication) for details.
+  The API is **HTTPS only**. Every request must include your API key in the `x-api-key` header — see [Authentication](/authentication).
 </Info>
 
 ## Need help?
 
 <CardGroup cols={2}>
-  <Card title="Read the docs" icon="book-open" href="/authentication">
-    Start with authentication then follow the quickstart guide.
+  <Card title="Start with the guides" icon="book-open" href="/authentication">
+    Authentication, then the Quickstart and the Reports guide.
   </Card>
-  <Card title="Contact support" icon="envelope" href="mailto:support@marketplacemanager.com">
-    Can't find what you need? Our team is happy to help.
+  <Card title="Contact MerchantSpring" icon="envelope" href="mailto:support@merchantspring.io">
+    Questions, access, or a higher plan? Talk to your MerchantSpring representative.
   </Card>
 </CardGroup>

@@ -1,0 +1,15 @@
+{
+  "name": "mm-api-documentation",
+  "version": "1.0.0",
+  "private": true,
+  "description": "MerchantSpring External API documentation",
+  "type": "module",
+  "scripts": {
+    "prepare-openapi": "node scripts/prepare-openapi.mjs",
+    "dev": "mint dev",
+    "broken-links": "mint broken-links"
+  },
+  "devDependencies": {
+    "js-yaml": "^4.1.0"
+  }
+}

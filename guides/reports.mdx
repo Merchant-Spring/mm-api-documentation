@@ -1,0 +1,99 @@
+---
+title: "Reports"
+description: "How to create, poll, and download reports — and which reports are available."
+---
+
+The Reporting API is the core of the MerchantSpring Public API. Reports are generated **asynchronously**: you create a report, poll its status, and download the result when it's ready. Some reports also offer instant **JSON views**.
+
+## Step 1 — Identify the channel
+
+Most reports are scoped to a channel, identified by `merchantId` + `channelId`. Call [`POST /channels`](/api-reference/channel/retrieve-a-list-of-channels) to discover them. Each record looks like:
+
+```json
+{
+  "channelId": "<channelId>",
+  "merchantId": "<merchantId>",
+  "marketplace": "amazon",
+  "countryCode": "USA",
+  "displayName": "Your Shop Name"
+}
+```
+
+Use `displayName` and `countryCode` to pick the channel you want, then read its `merchantId` and `channelId`.
+
+## Step 2 — Create a report
+
+Create a report by calling `POST /reports/create/<reportName>`. The call returns a `reportId`:
+
+```bash
+curl -X POST "https://mm-api.merchantspring.io/reports/create/salesByProduct" \
+  -H "x-api-key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{ "merchantId": "YOUR_MERCHANT_ID", "channelId": "YOUR_CHANNEL_ID" }'
+```
+
+Each report's exact request body (date ranges, view options, columns) is documented on its [API Reference](/api-reference/report/create-a-sales-by-product-report) page.
+
+## Step 3 — Poll for status
+
+Call [`GET /reports/status/{reportId}`](/api-reference/report/get-the-status-of-a-report-request) until the report is finished:
+
+```json
+{ "reportId": "<reportId>", "reportType": "<reportType>", "status": "inProgress" }
+```
+
+`status` progresses through `started` → `inProgress` → `done` (or `errored`).
+
+## Step 4 — Download
+
+When `status` is `done`, the response includes a `downloadUrl`. Open it (or fetch it) to retrieve the report — reports are delivered as **CSV**.
+
+```json
+{
+  "reportId": "<reportId>",
+  "reportType": "<reportType>",
+  "status": "done",
+  "downloadUrl": "https://.../report.csv"
+}
+```
+
+<Steps>
+  <Step title="POST /reports/create/{name}">Returns a <code>reportId</code>.</Step>
+  <Step title="GET /reports/status/{reportId}">Poll until <code>status: "done"</code>.</Step>
+  <Step title="GET downloadUrl">Download the CSV.</Step>
+</Steps>
+
+## Instant JSON views
+
+Some performance data is available immediately as JSON via the `POST /reports/view/*` endpoints — no create/poll cycle. These return data in the response body and support pagination where applicable:
+
+- [`/reports/view/salesByPeriod`](/api-reference/report/retrieve-sales-by-period-performance) — aggregated GMV, traffic and advertising over a date range.
+- [`/reports/view/vendorSalesByPeriod`](/api-reference/report/retrieve-vendor-sales-by-period-performance) — vendor revenue with advertising metrics.
+- [`/reports/view/advertisingByChannels`](/api-reference/report/view-advertising-performance-by-channel) — advertising performance grouped by channel.
+- `/reports/view/salesByChannel` and `/reports/view/salesByProduct`.
+
+## Available reports
+
+The `create` endpoints include (see the **Reports → Create a report** section of the API Reference for the full list and each body):
+
+| Report | Notes |
+|---|---|
+| Sales by product | All marketplaces |
+| Traffic and conversion | Amazon, Walmart |
+| Cancellations and refunds | |
+| Customer lifetime value | Cohort LTV / CAC metrics |
+| Shipped revenue / Ordered revenue | Amazon Vendor |
+| Inventory health | Amazon Vendor |
+| Inventory replenishment | Amazon FBA |
+| Campaigns | Amazon Advertising (multi-file CSV) |
+| Channel profit and loss | |
+| Amazon Buy Box performance | |
+| Repeat purchase | |
+| Suppressed product | |
+| Marketing by product | |
+| Subscribe and save | Amazon |
+| Products | **Requires Enterprise plan** |
+
+<Info>
+  The Products report and Amazon orders require the **Enterprise** plan (a feature flag on your API key); calling them without it returns `401`.
+</Info>

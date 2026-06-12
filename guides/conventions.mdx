@@ -1,0 +1,51 @@
+---
+title: "Conventions"
+description: "Shared conventions across the API: requests, pagination, dates, and errors."
+---
+
+These conventions apply across the MerchantSpring Public API.
+
+## Base URL & format
+
+All requests go to:
+
+```
+https://mm-api.merchantspring.io
+```
+
+- **HTTPS only.**
+- Requests and responses are **JSON**. Send `Content-Type: application/json` on requests with a body.
+- Authenticate with your key in the `x-api-key` header on every request — see [Authentication](/authentication).
+- Most data endpoints are scoped to a channel by `merchantId` + `channelId`; discover these via [`POST /channels`](/api-reference/channel/retrieve-a-list-of-channels).
+
+## Pagination
+
+Paginated endpoints (such as [`POST /content-changes`](/api-reference/content-change/retrieve-a-list-of-content-changes)) use **zero-based** `pageIndex` / `pageSize`:
+
+| Parameter | Description |
+|---|---|
+| `pageIndex` | Page number, starting at `0` (default `0`). |
+| `pageSize`  | Items per page. Defaults and caps vary by endpoint — e.g. content changes are capped at `500`. |
+
+Always check the specific endpoint's reference page for its exact default and maximum.
+
+## Dates
+
+Date ranges and timestamps are expressed in the format documented on each endpoint. Provide date-range parameters where an endpoint requires them (for example, the sales-by-period views), and prefer explicit ranges over relying on defaults.
+
+## Reports are asynchronous
+
+Report **creation** (`POST /reports/create/*`) returns a `reportId` rather than the data itself. Poll [`GET /reports/status/{reportId}`](/api-reference/report/get-the-status-of-a-report-request) until `status` is `done`, then download the `downloadUrl`. See the [Reports guide](/guides/reports). Endpoints under `/reports/view/*` return JSON immediately and do not need polling.
+
+## Errors
+
+The API uses standard HTTP status codes:
+
+| Status | Meaning |
+|--------|---------|
+| `400`  | Bad request — missing or invalid parameters. |
+| `401`  | Valid key, but it lacks permission for the endpoint (e.g. an Enterprise-only endpoint). |
+| `403`  | Missing or invalid API key. |
+| `404`  | Resource not found (e.g. an unknown `reportId`). |
+
+Error responses include a message describing the problem.

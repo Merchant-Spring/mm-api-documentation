@@ -1,84 +1,102 @@
 ---
 title: "Quickstart"
-description: "Make your first API call in under 5 minutes"
+description: "Make your first call to the MerchantSpring Public API in a few minutes."
 ---
 
-# Quickstart
-
-This guide walks you through making your first call to the Marketplace Manager API.
+This guide walks you through your first calls to the MerchantSpring Public API: finding your channels, then requesting a report.
 
 ## Prerequisites
 
-- A Marketplace Manager account ([sign up here](https://app.marketplacemanager.com/register))
-- An API key — see [Authentication](/authentication)
-- `curl` or any HTTP client
+- An **API key** issued by MerchantSpring — see [Authentication](/authentication).
+- `curl` or any HTTP client.
 
-## Step 1 — Get your API key
+## Step 1 — Find your channels
 
-Follow the [Authentication](/authentication) guide to generate your key.
-
-## Step 2 — Make your first request
-
-List the stores connected to your organisation:
+Most endpoints identify a channel by two values: `merchantId` and `channelId`. Call `POST /channels` to list the channels your organisation can access.
 
 <CodeGroup>
 
 ```bash cURL
-curl -X GET "https://api.marketplacemanager.com/organisations/YOUR_ORG_ID/stores" \
-  -H "x-api-key: YOUR_API_KEY"
+curl -X POST "https://mm-api.merchantspring.io/channels" \
+  -H "x-api-key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{}'
 ```
 
 ```python Python
 import requests
 
-headers = {"x-api-key": "YOUR_API_KEY"}
-response = requests.get(
-    "https://api.marketplacemanager.com/organisations/YOUR_ORG_ID/stores",
-    headers=headers
+resp = requests.post(
+    "https://mm-api.merchantspring.io/channels",
+    headers={"x-api-key": "YOUR_API_KEY", "Content-Type": "application/json"},
+    json={},
 )
-print(response.json())
+print(resp.json())
 ```
 
 ```javascript Node.js
-const response = await fetch(
-  "https://api.marketplacemanager.com/organisations/YOUR_ORG_ID/stores",
-  { headers: { "x-api-key": "YOUR_API_KEY" } }
-);
-const data = await response.json();
-console.log(data);
+const resp = await fetch("https://mm-api.merchantspring.io/channels", {
+  method: "POST",
+  headers: { "x-api-key": "YOUR_API_KEY", "Content-Type": "application/json" },
+  body: JSON.stringify({}),
+});
+console.log(await resp.json());
 ```
 
 </CodeGroup>
 
-## Step 3 — Review the response
+Each channel in the response includes the `merchantId` and `channelId` you'll pass to other endpoints. See the [full schema and filter options](/api-reference/channel/retrieve-a-list-of-channels) on the endpoint reference page.
 
-A successful response looks like:
+## Step 2 — Request a report
+
+Reports are generated asynchronously. You **create** a report, then **poll** for its status until a download URL is ready. For example, create a "sales by product" report:
+
+```bash
+curl -X POST "https://mm-api.merchantspring.io/reports/create/salesByProduct" \
+  -H "x-api-key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{ "merchantId": "YOUR_MERCHANT_ID", "channelId": "YOUR_CHANNEL_ID" }'
+```
+
+The response returns a `reportId`.
+
+## Step 3 — Poll for the report
+
+Check the status with the `reportId`:
+
+```bash
+curl -X GET "https://mm-api.merchantspring.io/reports/status/YOUR_REPORT_ID" \
+  -H "x-api-key: YOUR_API_KEY"
+```
+
+While processing, `status` is `started` or `inProgress`. When complete it becomes `done` and includes a `downloadUrl` to the CSV:
 
 ```json
 {
-  "organisationId": "YOUR_ORG_ID",
-  "stores": [
-    {
-      "storeId": "store-1",
-      "name": "My Amazon Store",
-      "marketplace": "amazon"
-    },
-    {
-      "storeId": "store-2",
-      "name": "My eBay Store",
-      "marketplace": "ebay"
-    }
-  ]
+  "reportId": "YOUR_REPORT_ID",
+  "reportType": "salesByProduct",
+  "status": "done",
+  "downloadUrl": "https://.../report.csv"
 }
 ```
+
+<Tip>
+  The full create → status → download flow (and which reports also offer instant JSON `view` endpoints) is covered in the [Reports guide](/guides/reports).
+</Tip>
 
 ## Next steps
 
 <CardGroup cols={2}>
-  <Card title="API Reference" icon="book" href="/api-reference/overview">
-    Browse the full endpoint reference
+  <Card title="Reports guide" icon="file-lines" href="/guides/reports">
+    The full report lifecycle and the list of available reports.
   </Card>
-  <Card title="Authentication" icon="key" href="/authentication">
-    Learn about API keys and rate limits
+  <Card title="API Reference" icon="book" href="/api-reference/channel/retrieve-a-list-of-channels">
+    Every endpoint, with an interactive playground.
+  </Card>
+  <Card title="Profitability" icon="coins" href="/guides/profitability">
+    Store and product P&amp;L, and managing unit COGS.
+  </Card>
+  <Card title="Conventions" icon="list-check" href="/guides/conventions">
+    Pagination, dates, and error handling.
   </Card>
 </CardGroup>
