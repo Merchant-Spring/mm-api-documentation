@@ -1,55 +1,53 @@
 ---
 title: "Authentication"
-description: "How to authenticate with the Marketplace Manager API"
+description: "How to authenticate with the MerchantSpring Public API using your API key."
 ---
 
-# Authentication
-
-The Marketplace Manager API uses **API keys** for authentication. Every request must include your API key in the `x-api-key` request header.
+The MerchantSpring Public API uses **API keys** for authentication. Every request must include your key in the `x-api-key` request header.
 
 ## Getting your API key
 
-1. Log in to your [Marketplace Manager dashboard](https://app.marketplacemanager.com)
-2. Navigate to **Settings → API**
-3. Click **Generate API Key**
-4. Copy and store your key securely — it won't be shown again
+API keys are **provisioned by MerchantSpring** — they are not generated from this documentation site.
+
+1. Contact your MerchantSpring representative (or account manager) to request API access for your organisation.
+2. You'll be issued an API key tied to your organisation and plan.
+3. Store the key securely — treat it like a password.
 
 <Warning>
-  Keep your API key secret. Never expose it in client-side code or public repositories.
+  Keep your API key secret. Never embed it in client-side code, mobile apps, or public repositories. If a key is exposed, contact MerchantSpring to have it rotated.
 </Warning>
 
 ## Making authenticated requests
 
-Pass your API key in the `x-api-key` header:
+Pass your key in the `x-api-key` header on every request:
 
 ```bash
-curl -X GET "https://api.marketplacemanager.com/v1/organisations/org-123/stores" \
-  -H "x-api-key: YOUR_API_KEY"
+curl -X POST "https://api.marketplacemanager.com/v1/channels" \
+  -H "x-api-key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{}'
 ```
 
-## Rate limits
+<Note>
+  You can also try any endpoint directly from the browser using the **playground** on each API Reference page — paste your key into the `x-api-key` field and press **Send**.
+</Note>
 
-| Plan       | Requests per month |
-|------------|--------------------|
-| Starter    | 100,000            |
-| Growth     | 500,000            |
-| Enterprise | Unlimited          |
+## What your key determines
 
-The API enforces per-second throttling as well:
+Your key is associated with:
 
-| Limit       | Value |
-|-------------|-------|
-| Burst limit | 50 requests  |
-| Rate limit  | 25 requests/second |
+- **Your organisation** — requests return data only for the channels your organisation can access.
+- **Your plan / feature flags** — some endpoints require specific access enabled on your key. For example, Amazon orders and the Products report require the **Enterprise** plan; calling them without it returns `401`.
 
-When you exceed the rate limit, the API returns a `429 Too Many Requests` response. Retry after the number of seconds indicated in the `Retry-After` header.
+## Error responses
 
-## Error codes
+| Status | Meaning |
+|--------|---------|
+| `400`  | Bad request — missing or invalid parameters in the body or query. |
+| `401`  | Valid key, but it lacks permission for this endpoint (e.g. an Enterprise-only endpoint). |
+| `403`  | Missing or invalid API key. |
+| `404`  | The requested resource (e.g. a `reportId`) was not found. |
 
-| Status | Meaning                                          |
-|--------|--------------------------------------------------|
-| `400`  | Bad request — missing or invalid parameters      |
-| `401`  | Missing or invalid API key                       |
-| `403`  | Valid key but insufficient permissions           |
-| `429`  | Rate limit exceeded                              |
-| `500`  | Internal server error — contact support          |
+<Info>
+  Usage limits (request rate and volume) are governed by the usage plan attached to your API key. If you need higher limits, talk to your MerchantSpring representative.
+</Info>

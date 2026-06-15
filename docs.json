@@ -1,7 +1,7 @@
 {
   "$schema": "https://mintlify.com/docs.json",
   "theme": "mint",
-  "name": "Marketplace Manager API",
+  "name": "MerchantSpring Public API",
   "logo": {
     "light": "/logo/light.svg",
     "dark": "/logo/dark.svg"
@@ -12,20 +12,16 @@
     "light": "#748ffc",
     "dark": "#2f4ac7"
   },
-  "topbarLinks": [
-    {
-      "name": "Support",
-      "url": "mailto:support@marketplacemanager.com"
+  "api": {
+    "playground": {
+      "display": "interactive",
+      "proxy": true
     }
-  ],
-  "topbarCtaButton": {
-    "name": "Dashboard",
-    "url": "https://app.marketplacemanager.com"
   },
   "navigation": {
     "tabs": [
       {
-        "tab": "Docs",
+        "tab": "Documentation",
         "groups": [
           {
             "group": "Getting Started",
@@ -36,24 +32,108 @@
             ]
           },
           {
-            "group": "API Reference",
+            "group": "Guides",
             "pages": [
-              "api-reference/overview"
+              "guides/reports",
+              "guides/profitability",
+              "guides/conventions"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "API Reference",
+        "openapi": "api-reference/openapi.json",
+        "groups": [
+          {
+            "group": "Channels",
+            "pages": [
+              "POST /channels"
             ]
           },
           {
-            "group": "Stores",
+            "group": "Content Changes",
             "pages": [
-              "api-reference/stores/create-store",
-              "api-reference/stores/list-stores",
-              "api-reference/stores/get-store"
+              "POST /content-changes"
+            ]
+          },
+          {
+            "group": "Orders",
+            "pages": [
+              "POST /orders/amazon"
+            ]
+          },
+          {
+            "group": "Reports",
+            "pages": [
+              {
+                "group": "Create a report",
+                "pages": [
+                  "POST /reports/create/salesByProduct",
+                  "POST /reports/create/trafficAndConversion",
+                  "POST /reports/create/cancellationsAndRefunds",
+                  "POST /reports/create/customerLifetimeValue",
+                  "POST /reports/create/shippedRevenue",
+                  "POST /reports/create/orderedRevenue",
+                  "POST /reports/create/inventoryHealth",
+                  "POST /reports/create/campaigns",
+                  "POST /reports/create/inventoryReplenishment",
+                  "POST /reports/create/channelProfitAndLoss",
+                  "POST /reports/create/amazonBuyBoxPerformance",
+                  "POST /reports/create/repeatPurchase",
+                  "POST /reports/create/suppressedProduct",
+                  "POST /reports/create/marketingByProduct",
+                  "POST /reports/create/subscribeAndSave",
+                  "POST /reports/create/products"
+                ]
+              },
+              {
+                "group": "Report status",
+                "pages": [
+                  "GET /reports/status/{reportId}"
+                ]
+              },
+              {
+                "group": "View reports",
+                "pages": [
+                  "POST /reports/view/salesByPeriod",
+                  "POST /reports/view/vendorSalesByPeriod",
+                  "POST /reports/view/advertisingByChannels",
+                  "POST /reports/view/salesByChannel",
+                  "POST /reports/view/salesByProduct"
+                ]
+              }
+            ]
+          },
+          {
+            "group": "Profitability",
+            "pages": [
+              "POST /profitability/storeProfitAndLoss",
+              "POST /profitability/productProfitAndLoss",
+              "POST /profitability/directCosts",
+              "GET /profitability/directCostsJobStatus"
             ]
           }
         ]
       }
     ]
   },
-  "footerSocials": {
-    "website": "https://marketplacemanager.com"
+  "navbar": {
+    "links": [
+      {
+        "label": "Support",
+        "href": "mailto:support@merchantspring.io"
+      }
+    ],
+    "primary": {
+      "type": "button",
+      "label": "Dashboard",
+      "href": "https://app.merchantspring.io"
+    }
+  },
+  "footer": {
+    "socials": {
+      "website": "https://merchantspring.io"
+    }
   }
 }

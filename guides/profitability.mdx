@@ -1,0 +1,44 @@
+---
+title: "Profitability"
+description: "Retrieve store and product profit & loss, and manage unit COGS."
+---
+
+The Profitability endpoints return profit &amp; loss (P&amp;L) data and let you manage the unit cost of goods sold (COGS) that feeds those calculations.
+
+## Profit & loss
+
+Both P&amp;L endpoints return JSON directly in the response (no create/poll cycle). They are scoped to a channel by `merchantId` + `channelId` — discover these with [`POST /channels`](/api-reference/channel/retrieve-a-list-of-channels).
+
+- [`POST /profitability/storeProfitAndLoss`](/api-reference/profitability/get-a-store-profit-and-loss) — a store-level P&amp;L: revenue, fees, COGS, advertising and profit.
+- [`POST /profitability/productProfitAndLoss`](/api-reference/profitability/retrieve-single-or-multiple-product-profit-and-loss-details) — P&amp;L for one or more products.
+
+See each endpoint's reference page for the exact request body and response schema.
+
+## Managing unit COGS
+
+COGS values can be updated in bulk. Because an update can affect many products, it runs as an **asynchronous job** — submit the update, then poll for completion.
+
+<Steps>
+  <Step title="Submit the update">
+    [`POST /profitability/directCosts`](/api-reference/profitability/update-unit-cogs) — submit the unit COGS to update. The response identifies the job.
+  </Step>
+  <Step title="Poll the job">
+    [`GET /profitability/directCostsJobStatus`](/api-reference/profitability/get-the-status-of-a-unit-cogs-update-job) — check the status until the job is complete.
+  </Step>
+</Steps>
+
+```bash
+# 1. Submit the COGS update
+curl -X POST "https://api.marketplacemanager.com/v1/profitability/directCosts" \
+  -H "x-api-key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{ "merchantId": "YOUR_MERCHANT_ID", "channelId": "YOUR_CHANNEL_ID" }'
+
+# 2. Poll for completion
+curl -X GET "https://api.marketplacemanager.com/v1/profitability/directCostsJobStatus" \
+  -H "x-api-key: YOUR_API_KEY"
+```
+
+<Note>
+  Updated COGS values are reflected in subsequent profitability and channel-profit-and-loss results once the job completes.
+</Note>
