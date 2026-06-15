@@ -29,13 +29,13 @@ COGS values can be updated in bulk. Because an update can affect many products, 
 
 ```bash
 # 1. Submit the COGS update
-curl -X POST "https://mm-api.merchantspring.io/profitability/directCosts" \
+curl -X POST "https://api.marketplacemanager.com/v1/profitability/directCosts" \
   -H "x-api-key: YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{ "merchantId": "YOUR_MERCHANT_ID", "channelId": "YOUR_CHANNEL_ID" }'
 
 # 2. Poll for completion
-curl -X GET "https://mm-api.merchantspring.io/profitability/directCostsJobStatus" \
+curl -X GET "https://api.marketplacemanager.com/v1/profitability/directCostsJobStatus" \
   -H "x-api-key: YOUR_API_KEY"
 ```
 

@@ -17,7 +17,7 @@ Most endpoints identify a channel by two values: `merchantId` and `channelId`. C
 <CodeGroup>
 
 ```bash cURL
-curl -X POST "https://mm-api.merchantspring.io/channels" \
+curl -X POST "https://api.marketplacemanager.com/v1/channels" \
   -H "x-api-key: YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{}'
@@ -27,7 +27,7 @@ curl -X POST "https://mm-api.merchantspring.io/channels" \
 import requests
 
 resp = requests.post(
-    "https://mm-api.merchantspring.io/channels",
+    "https://api.marketplacemanager.com/v1/channels",
     headers={"x-api-key": "YOUR_API_KEY", "Content-Type": "application/json"},
     json={},
 )
@@ -35,7 +35,7 @@ print(resp.json())
 ```
 
 ```javascript Node.js
-const resp = await fetch("https://mm-api.merchantspring.io/channels", {
+const resp = await fetch("https://api.marketplacemanager.com/v1/channels", {
   method: "POST",
   headers: { "x-api-key": "YOUR_API_KEY", "Content-Type": "application/json" },
   body: JSON.stringify({}),
@@ -52,7 +52,7 @@ Each channel in the response includes the `merchantId` and `channelId` you'll pa
 Reports are generated asynchronously. You **create** a report, then **poll** for its status until a download URL is ready. For example, create a "sales by product" report:
 
 ```bash
-curl -X POST "https://mm-api.merchantspring.io/reports/create/salesByProduct" \
+curl -X POST "https://api.marketplacemanager.com/v1/reports/create/salesByProduct" \
   -H "x-api-key: YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{ "merchantId": "YOUR_MERCHANT_ID", "channelId": "YOUR_CHANNEL_ID" }'
@@ -65,7 +65,7 @@ The response returns a `reportId`.
 Check the status with the `reportId`:
 
 ```bash
-curl -X GET "https://mm-api.merchantspring.io/reports/status/YOUR_REPORT_ID" \
+curl -X GET "https://api.marketplacemanager.com/v1/reports/status/YOUR_REPORT_ID" \
   -H "x-api-key: YOUR_API_KEY"
 ```
 

@@ -8,9 +8,9 @@
   },
   "favicon": "/favicon.png",
   "colors": {
-    "primary": "#ffb446",
-    "light": "#ffc042",
-    "dark": "#f89c1c"
+    "primary": "#3B5BDB",
+    "light": "#748ffc",
+    "dark": "#2f4ac7"
   },
   "api": {
     "playground": {
