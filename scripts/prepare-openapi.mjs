@@ -60,7 +60,6 @@ async function loadSource() {
 const SERVERS = [
   { url: "https://mm-api-staging.merchantspring.io", description: "Staging" },
   // TODO: Other environments intentionally omitted for now — uncomment when ready to expose them.
-  // { url: "https://mm-api-dev.merchantspring.io", description: "Development" },
   // { url: "https://mm-api.merchantspring.io", description: "Production" },
 ];
 
@@ -137,7 +136,7 @@ async function main() {
   }
 
   // Prune top-level tags that no longer have any operations after exclusion.
-  if (Array.isArray(spec.tags)) {
+  if (Array.isArray(spec.tags)) {    
     const usedTags = new Set();
     for (const pathItem of Object.values(spec.paths || {})) {
       for (const method of HTTP_METHODS) {
