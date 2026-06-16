@@ -39,48 +39,66 @@ Open **http://localhost:3000**. The dev server hot-reloads on file changes.
 | `scripts/prepare-openapi.mjs` | Produces `openapi.json` from the source spec (see below). |
 | `logo/`, `images/`, `favicon.png` | Branding assets. |
 
-The API-reference pages are **auto-generated** from `openapi.json` — they are not MDX files.
-To change an endpoint's docs, change the source spec, not this repo.
+The API-reference pages **and their navigation** are **auto-generated** from `openapi.json` —
+they are not MDX files, and endpoints are grouped automatically by their OpenAPI tag. To change
+an endpoint, edit the source spec (not `openapi.json` by hand) — see
+[Adding (or changing) an endpoint](#adding-or-changing-an-endpoint).
 
-## Updating the API reference (the spec pipeline)
+## Updating the API reference
 
-The source of truth is `mm-api-gateway-service/swagger.yaml` (an AWS-flavored OpenAPI doc).
+The source of truth for the endpoints for now is `mm-api-gateway-service/swagger.yaml`.
 `scripts/prepare-openapi.mjs` cleans it into the Mintlify-ready `api-reference/openapi.json`:
 
 - strips AWS-only `x-amazon-apigateway-*` extensions and OPTIONS CORS mocks,
 - removes the duplicate per-operation `x-api-key` header parameter (the key is modeled once
   via the `api_key` security scheme, so the playground shows the auth field once),
 - de-quotes operation summaries (for clean page slugs),
+- derives clean navigation group headings from each tag (via `x-group`),
+- converts inline HTML in descriptions to MDX-safe Markdown (so pages compile),
 - sets the public `servers`.
 
-The input can be a **local file path or an http(s) URL**, resolved in this order:
-
-1. **CLI argument** — `node scripts/prepare-openapi.mjs <path-or-url> [output]`
-2. **`OPENAPI_SOURCE` env var** — handy in CI / Hermes where there's no sibling checkout
-3. **Default** — `../mm-api-gateway-service/swagger.yaml` (only works in the conductor checkout)
+As long as `mm-api-gateway-service` is checked out in the same parent directory as
+`mm-api-documentation` (sibling folders), we can run:
 
 ```bash
-# Default: sibling checkout of mm-api-gateway-service
 npm run prepare-openapi
-
-# Explicit local path:
-node scripts/prepare-openapi.mjs /path/to/swagger.yaml
-
-# From a URL (e.g. a hosted/exported spec) — no gateway repo needed:
-OPENAPI_SOURCE="https://example.com/swagger.yaml" npm run prepare-openapi
-node scripts/prepare-openapi.mjs "https://example.com/swagger.yaml"
 ```
 
-Output path can likewise be overridden via the 2nd CLI arg or `OPENAPI_OUTPUT`
-(default `api-reference/openapi.json`). Commit the regenerated `openapi.json`.
+Then commit the regenerated `api-reference/openapi.json`.
 
-> The sibling-path default only works inside the conductor checkout. A standalone clone or
-> CI run should pass the source via argument or `OPENAPI_SOURCE`.
+<details>
+<summary>Advanced: other input sources (CI / standalone clones)</summary>
 
-### Excluding not-yet-released endpoints
+The script reads the source spec from, in order: a CLI argument, the `OPENAPI_SOURCE` env var,
+or the default sibling path `../mm-api-gateway-service/swagger.yaml`. The input may be a local
+path or an http(s) URL; the output path can be overridden with a 2nd arg or `OPENAPI_OUTPUT`.
 
-Endpoints that aren't on staging/prod yet are excluded via `EXCLUDE_PATH_PREFIXES` in the
-script (currently `["/tags"]`). Remove a prefix and re-run to publish those endpoints.
+```bash
+node scripts/prepare-openapi.mjs /path/to/swagger.yaml
+OPENAPI_SOURCE="https://example.com/swagger.yaml" npm run prepare-openapi
+```
+</details>
+
+### Adding (or changing) an endpoint
+
+Navigation is **auto-generated**: endpoints are grouped by their OpenAPI `tag`, the group
+headings come from the spec (the script derives them), and each tag renders as its own
+collapsible group. So you normally only touch the spec:
+
+1. **Regenerate:** `npm run prepare-openapi` (pulls the latest `swagger.yaml` and rewrites
+   `api-reference/openapi.json`). A new endpoint appears automatically under its tag's group; a
+   brand-new tag creates a new group on its own — no manual nav entry needed.
+2. **Validate:** `mint validate` and `npm run broken-links`.
+3. **Commit** `api-reference/openapi.json`.
+
+You only edit `docs.json` to change the nav *structure* itself (e.g. rename the parent
+"MerchantSpring API" group). Individual endpoints never need a manual entry there.
+
+> To **change** an existing endpoint (params / responses / description), edit the source spec
+> in `mm-api-gateway-service` and re-run step 1 — don't hand-edit `openapi.json`.
+
+> To **hide** an endpoint, add `"x-excluded": true` (removes it entirely) or `"x-hidden": true`
+> (keeps the page, drops it from nav) under that operation in the source spec, then regenerate.
 
 ## Validating
 
@@ -91,7 +109,7 @@ mint validate           # validates the OpenAPI spec
 
 Run both before opening a PR.
 
-## Editing content
+## Editing Content (Non-API)
 
 - **Engineers:** edit the `.mdx` files directly and run `mint dev` to preview.
 - **Non-Engineers:** use the Mintlify web editor (visual, no Git needed). It commits
