@@ -9,9 +9,9 @@ The MerchantSpring Public API uses **API keys** for authentication. Every reques
 
 API keys are **provisioned by MerchantSpring** — they are not generated from this documentation site.
 
-1. Contact your MerchantSpring representative (or account manager) to request API access for your organisation.
-2. You'll be issued an API key tied to your organisation and plan.
-3. Store the key securely — treat it like a password.
+1. Sign in to the [developer dashboard](https://developer.merchantspring.io/dashboard).
+2. Subscribe to the API — this generates an API key, tied to your plan.
+3. Copy your key from the dashboard and store it securely — treat it like a password.
 
 <Warning>
   Keep your API key secret. Never embed it in client-side code, mobile apps, or public repositories. If a key is exposed, contact MerchantSpring to have it rotated.
@@ -22,7 +22,7 @@ API keys are **provisioned by MerchantSpring** — they are not generated from t
 Pass your key in the `x-api-key` header on every request:
 
 ```bash
-curl -X POST "https://api.marketplacemanager.com/v1/channels" \
+curl -X POST "https://mm-api.merchantspring.io/channels" \
   -H "x-api-key: YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{}'
