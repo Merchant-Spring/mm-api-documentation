@@ -8,6 +8,10 @@
     {
       "url": "https://mm-api-staging.merchantspring.io",
       "description": "Staging"
+    },
+    {
+      "url": "https://mm-api.merchantspring.io",
+      "description": "Production"
     }
   ],
   "tags": [
@@ -22,6 +26,9 @@
     },
     {
       "name": "report"
+    },
+    {
+      "name": "tag"
     }
   ],
   "paths": {
@@ -1592,6 +1599,236 @@
           },
           "404": {
             "description": "Not found",
+            "content": {}
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/tags": {
+      "get": {
+        "tags": [
+          "tag"
+        ],
+        "summary": "Retrieve all tags",
+        "description": "Retrieve a paginated list of tags across all of the caller's channels. Each item is one channel with its tags. Organisation-wide tags are prefixed with 'org://'. Pagination uses pageIndex/pageSize (zero-based); pageSize defaults to 25 and is capped at 100, pageIndex defaults to 0.",
+        "operationId": "getAllTags",
+        "parameters": [
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "Number of channels per page (default 25, max 100)",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "pageIndex",
+            "in": "query",
+            "description": "Zero-based page index (default 0)",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAllTagsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input",
+            "content": {}
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/tags/channel": {
+      "get": {
+        "tags": [
+          "tag"
+        ],
+        "summary": "Retrieve tags from a specific channel",
+        "description": "Retrieve the tags for a single channel, identified by channelId and merchantId. Organisation-wide tags are prefixed with 'org://'. A channel with no tags returns an empty tags array.",
+        "operationId": "getChannelTags",
+        "parameters": [
+          {
+            "name": "channelId",
+            "in": "query",
+            "description": "Channel (store) ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "merchantId",
+            "in": "query",
+            "description": "Merchant ID of the channel (URL-encode values containing spaces or '@')",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PublicChannelTags"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input",
+            "content": {}
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      },
+      "patch": {
+        "tags": [
+          "tag"
+        ],
+        "summary": "Add and/or remove tags on a specific channel",
+        "description": "Partially update the tags on a single channel, identified by channelId and merchantId, by supplying addTags and/or removeTags. At least one of the two must be provided, and a tag cannot appear in both lists. A maximum of 5 tags can be added in a single call. Organisation-wide tags are prefixed with 'org://'. Returns the channel's full tag set after the change.",
+        "operationId": "updateChannelTags",
+        "requestBody": {
+          "description": "Channel identifiers and the tags to add and/or remove (at least one of addTags / removeTags)",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateChannelTagsRequest"
+              },
+              "example": {
+                "channelId": "A1234567890ABC",
+                "merchantId": "XXXUS @ ATVPDKIKX0DER",
+                "addTags": [
+                  "north-america"
+                ],
+                "removeTags": [
+                  "org://ebay"
+                ]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PublicChannelTags"
+                },
+                "example": {
+                  "channelId": "A1234567890ABC",
+                  "merchantId": "XXXUS @ ATVPDKIKX0DER",
+                  "tags": [
+                    "amazon",
+                    "north-america"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input",
+            "content": {}
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/tags/convert": {
+      "post": {
+        "tags": [
+          "tag"
+        ],
+        "summary": "Convert a tag between private and shared",
+        "description": "Toggle a single tag (private/shared) across every channel that carries it. Shared tags are prefixed with 'org://'; converting a private tag makes it 'org://<tag>' and vice versa. Only one tag can be converted per request. Returns the full tag set after the conversion.",
+        "operationId": "convertTags",
+        "requestBody": {
+          "description": "The tag to convert (exactly 1)",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConvertTagsRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConvertTagsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input",
             "content": {}
           }
         },

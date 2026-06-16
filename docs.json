@@ -113,6 +113,15 @@
               "POST /profitability/directCosts",
               "GET /profitability/directCostsJobStatus"
             ]
+          },
+          {
+            "group": "Tags",
+            "pages": [
+              "GET /tags",
+              "GET /tags/channel",
+              "PATCH /tags/channel",
+              "POST /tags/convert"
+            ]
           }
         ]
       }
@@ -133,7 +142,10 @@
   },
   "footer": {
     "socials": {
-      "website": "https://merchantspring.io"
+      "website": "https://merchantspring.io",
+      "linkedin": "https://www.linkedin.com/company/merchantspring/",
+      "facebook": "https://www.facebook.com/MerchantSpring/",
+      "youtube": "https://www.youtube.com/@merchantspring"
     }
   }
 }
