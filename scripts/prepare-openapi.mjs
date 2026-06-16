@@ -59,13 +59,9 @@ async function loadSource() {
 // first to avoid accidental writes (tags / COGS endpoints mutate data) against production.
 const SERVERS = [
   { url: "https://mm-api-staging.merchantspring.io", description: "Staging" },
-  // TODO: Other environments intentionally omitted for now — uncomment when ready to expose them.
-  // { url: "https://mm-api.merchantspring.io", description: "Production" },
+  { url: "https://mm-api.merchantspring.io", description: "Production" },
 ];
 
-// Endpoints not yet deployed to staging/prod — excluded from the published docs.
-// Remove a prefix here once the endpoints ship, then re-run to publish them.
-const EXCLUDE_PATH_PREFIXES = ["/tags"];
 
 // Recursively delete any key matching `x-amazon-apigateway*` anywhere in the tree.
 function stripAwsExtensions(node) {
@@ -96,15 +92,6 @@ async function main() {
 
   // 1. Strip AWS-only extensions (incl. top-level x-amazon-apigateway-documentation).
   stripAwsExtensions(spec);
-
-  // 1b. Drop excluded paths (endpoints not yet live on staging/prod).
-  let pathsExcluded = 0;
-  for (const path of Object.keys(spec.paths || {})) {
-    if (EXCLUDE_PATH_PREFIXES.some((prefix) => path === prefix || path.startsWith(prefix + "/"))) {
-      delete spec.paths[path];
-      pathsExcluded++;
-    }
-  }
 
   let optionsRemoved = 0;
   let apiKeyParamsRemoved = 0;
@@ -170,7 +157,6 @@ async function main() {
   console.log(`✓ wrote ${OUTPUT}`);
   console.log(`  input:                 ${INPUT}${INPUT_IS_URL ? " (url)" : ""}`);
   console.log(`  operations:            ${opCount}`);
-  console.log(`  paths excluded:        ${pathsExcluded} (${EXCLUDE_PATH_PREFIXES.join(", ") || "none"})`);
   console.log(`  OPTIONS removed:       ${optionsRemoved}`);
   console.log(`  x-api-key params cut:  ${apiKeyParamsRemoved}`);
   console.log(`  summaries de-quoted:   ${summariesCleaned}`);

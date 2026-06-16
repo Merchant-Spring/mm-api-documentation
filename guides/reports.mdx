@@ -26,7 +26,7 @@ Use `displayName` and `countryCode` to pick the channel you want, then read its 
 Create a report by calling `POST /reports/create/<reportName>`. The call returns a `reportId`:
 
 ```bash
-curl -X POST "https://api.marketplacemanager.com/v1/reports/create/salesByProduct" \
+curl -X POST "https://mm-api.merchantspring.io/reports/create/salesByProduct" \
   -H "x-api-key: YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{ "merchantId": "YOUR_MERCHANT_ID", "channelId": "YOUR_CHANNEL_ID" }'
