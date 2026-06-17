@@ -65,35 +65,3 @@ When `status` is `done`, the response includes a `downloadUrl`. Open it (or fetc
   <Step title="GET /reports/status/{reportId}">Poll until <code>status: "done"</code>.</Step>
   <Step title="GET downloadUrl">Download the CSV.</Step>
 </Steps>
-
-## Instant JSON views
-
-Some performance data is available immediately as JSON via the `POST /reports/view/*` endpoints — no create/poll cycle. These return data in the response body and support pagination where applicable:
-
-- [`/reports/view/salesByPeriod`](/api-reference/report/retrieve-sales-by-period-performance) — aggregated GMV, traffic and advertising over a date range.
-- [`/reports/view/vendorSalesByPeriod`](/api-reference/report/retrieve-vendor-sales-by-period-performance) — vendor revenue with advertising metrics.
-- [`/reports/view/advertisingByChannels`](/api-reference/report/view-advertising-performance-by-channel) — advertising performance grouped by channel.
-- [`/reports/view/salesByChannel`](/api-reference/report/view-sales-by-channel-report) — sales aggregated by channel.
-- [`/reports/view/salesByProduct`](/api-reference/report/view-sales-by-product-report) — sales aggregated by product.
-
-## Available reports
-
-The `create` endpoints include (see the **Reports → Create a report** section of the API Reference for the full list and each body):
-
-| Report | Notes |
-|---|---|
-| Sales by product | Amazon Vendor uses `poValue` / `unitsOrdered` |
-| Traffic and conversion | |
-| Cancellations and refunds | |
-| Customer lifetime value | Cohort LTV / CAC metrics |
-| Shipped revenue / Ordered revenue | Amazon Vendor |
-| Inventory health | Amazon Vendor |
-| Inventory replenishment | Amazon FBA |
-| Campaigns | Amazon Advertising (multi-file CSV) |
-| Channel profit and loss | |
-| Amazon Buy Box performance | |
-| Repeat purchase | |
-| Suppressed product | |
-| Marketing by product | |
-| Subscribe and save | Amazon |
-| Products | **Requires additional access** |
