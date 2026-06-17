@@ -10,7 +10,7 @@ The MerchantSpring Public API uses **API keys** for authentication. Every reques
 API keys are **provisioned by MerchantSpring** — they are not generated from this documentation site.
 
 1. Sign in to the [developer dashboard](https://developer.merchantspring.io/dashboard).
-2. Subscribe to the API — this generates an API key, tied to your plan.
+2. Subscribe to the API — this generates an API key for your account.
 3. Copy your key from the dashboard and store it securely — treat it like a password.
 
 <Warning>
@@ -37,17 +37,17 @@ curl -X POST "https://mm-api.merchantspring.io/channels" \
 Your key is associated with:
 
 - **Your organisation** — requests return data only for the channels your organisation can access.
-- **Your plan / feature flags** — some endpoints require specific access enabled on your key. For example, Amazon orders and the Products report require the **Enterprise** plan; calling them without it returns `401`.
+- **Endpoint access** — some endpoints require additional access enabled on your key and is available on request — contact MerchantSpring to enable them.
 
 ## Error responses
 
 | Status | Meaning |
 |--------|---------|
 | `400`  | Bad request — missing or invalid parameters in the body or query. |
-| `401`  | Valid key, but it lacks permission for this endpoint (e.g. an Enterprise-only endpoint). |
+| `401`  | Valid API key, but it doesn't have access to this endpoint. |
 | `403`  | Missing or invalid API key. |
 | `404`  | The requested resource (e.g. a `reportId`) was not found. |
 
 <Info>
-  Usage limits (request rate and volume) are governed by the usage plan attached to your API key. If you need higher limits, talk to your MerchantSpring representative.
+  Usage limits (request rate and volume) are governed by the limits attached to your API key. If you need higher limits, talk to your MerchantSpring representative.
 </Info>

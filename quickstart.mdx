@@ -65,11 +65,11 @@ The response returns a `reportId`.
 Check the status with the `reportId`:
 
 ```bash
-curl -X GET "https://mm-api.merchantspring.io/reports/status/YOUR_REPORT_ID" \
+curl -X GET "https://mm-api.merchantspring.io/reports/status/YOUR_REPORT_ID?merchantId=YOUR_MERCHANT_ID&channelId=YOUR_CHANNEL_ID" \
   -H "x-api-key: YOUR_API_KEY"
 ```
 
-While processing, `status` is `started` or `inProgress`. When complete it becomes `done` and includes a `downloadUrl` to the CSV:
+While processing, `status` is `started` or `inProgress`. It ends as `done` — which includes a `downloadUrl` to the CSV — or `errored` if it failed:
 
 ```json
 {

@@ -7,16 +7,17 @@ The Profitability endpoints return profit &amp; loss (P&amp;L) data and let you 
 
 ## Profit & loss
 
-Both P&amp;L endpoints return JSON directly in the response (no create/poll cycle). They are scoped to a channel by `merchantId` + `channelId` — discover these with [`POST /channels`](/api-reference/channel/retrieve-a-list-of-channels).
+Store P&L:
+- [`POST /profitability/storeProfitAndLoss`](/api-reference/profitability/get-a-store-profit-and-loss) — a store-level P&amp;L: total revenue, total expenses, and the cost breakdown (fees, COGS, advertising).
 
-- [`POST /profitability/storeProfitAndLoss`](/api-reference/profitability/get-a-store-profit-and-loss) — a store-level P&amp;L: revenue, fees, COGS, advertising and profit.
+Product P&L:
 - [`POST /profitability/productProfitAndLoss`](/api-reference/profitability/retrieve-single-or-multiple-product-profit-and-loss-details) — P&amp;L for one or more products.
 
 See each endpoint's reference page for the exact request body and response schema.
 
 ## Managing unit COGS
 
-COGS values can be updated in bulk. Because an update can affect many products, it runs as an **asynchronous job** — submit the update, then poll for completion.
+Runs as an **asynchronous job** — submit the update, then poll for completion.
 
 <Steps>
   <Step title="Submit the update">
@@ -32,10 +33,23 @@ COGS values can be updated in bulk. Because an update can affect many products, 
 curl -X POST "https://mm-api.merchantspring.io/profitability/directCosts" \
   -H "x-api-key: YOUR_API_KEY" \
   -H "Content-Type: application/json" \
-  -d '{ "merchantId": "YOUR_MERCHANT_ID", "channelId": "YOUR_CHANNEL_ID" }'
+  -d '{
+  "channelId": "YOUR_CHANNEL_ID",
+  "merchantId": "YOUR_MERCHANT_ID",
+  "fromDate": 0,
+  "directCosts": [
+    {
+      "sellerSku": "string",
+      "cogs": 0,
+      "cogsCurrency": "string",
+      "shippingCost": 0,
+      "shippingCostCurrency": "string"
+    }
+  ]
+}'
 
-# 2. Poll for completion
-curl -X GET "https://mm-api.merchantspring.io/profitability/directCostsJobStatus" \
+# 2. Poll for completion — use the jobId from step 1; repeat until jobStatus is COMPLETED or FAILED
+curl -X GET "https://mm-api.merchantspring.io/profitability/directCostsJobStatus?merchantId=YOUR_MERCHANT_ID&channelId=YOUR_CHANNEL_ID&jobId=YOUR_JOB_ID" \
   -H "x-api-key: YOUR_API_KEY"
 ```
 

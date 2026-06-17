@@ -21,7 +21,7 @@ Paginated endpoints (such as [`POST /content-changes`](/api-reference/content-ch
 | `pageIndex` | Page number, starting at `0` (default `0`). |
 | `pageSize`  | Items per page. Defaults and caps vary by endpoint — e.g. content changes are capped at `500`. |
 
-Always check the specific endpoint's reference page for its exact default and maximum.
+Always check the specific endpoint's reference page for its exact defaults and maximum — and where the pagination parameters live, since some endpoints (e.g. content changes) nest `pageIndex` / `pageSize` under a `paginationParams` object.
 
 ## Dates
 
@@ -38,7 +38,7 @@ The API uses standard HTTP status codes:
 | Status | Meaning |
 |--------|---------|
 | `400`  | Bad request — missing or invalid parameters. |
-| `401`  | Valid key, but it lacks permission for the endpoint (e.g. an Enterprise-only endpoint). |
+| `401`  | Valid API key, but it doesn't have access to the endpoint. |
 | `403`  | Missing or invalid API key. |
 | `404`  | Resource not found (e.g. an unknown `reportId`). |
 
