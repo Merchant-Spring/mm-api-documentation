@@ -8,20 +8,40 @@
     {
       "url": "https://mm-api-staging.merchantspring.io",
       "description": "Staging"
+    },
+    {
+      "url": "https://mm-api.merchantspring.io",
+      "description": "Production"
     }
   ],
   "tags": [
     {
-      "name": "channel"
+      "name": "channel",
+      "x-group": "Channel"
     },
     {
-      "name": "content-change"
+      "name": "content-change",
+      "x-group": "Content Change"
     },
     {
-      "name": "order"
+      "name": "custom-group",
+      "x-group": "Custom Group"
     },
     {
-      "name": "report"
+      "name": "order",
+      "x-group": "Order"
+    },
+    {
+      "name": "report",
+      "x-group": "Report"
+    },
+    {
+      "name": "tag",
+      "x-group": "Tag"
+    },
+    {
+      "name": "profitability",
+      "x-group": "Profitability"
     }
   ],
   "paths": {
@@ -129,7 +149,7 @@
           "order"
         ],
         "summary": "Retrieve a list of orders for an Amazon channel (Requires Enterprise plan)",
-        "description": "Retrieve a list of orders for an Amazon channel that match the specified filter criteria. <br><br><strong>NOTE: This endpoint is only available to users on the Enterprise plan.</strong>",
+        "description": "Retrieve a list of orders for an Amazon channel that match the specified filter criteria. \n\n**NOTE: This endpoint is only available to users on the Enterprise plan.**",
         "operationId": "getOrders",
         "requestBody": {
           "description": "Filter criteria",
@@ -988,7 +1008,7 @@
           "report"
         ],
         "summary": "Create a products report (Requires Enterprise plan)",
-        "description": "Create a \"products\" report (Amazon). The generated report CSV contains the columns defined in the `ProductsReportColumns` schema including pricing, inventory, COGS, fees, and category information. <br><br><strong>NOTE: This endpoint is only available to users on the Enterprise plan.</strong> Use the /reports/status/{reportId} endpoint to check report status and obtain the download URL.",
+        "description": "Create a \"products\" report (Amazon). The generated report CSV contains the columns defined in the `ProductsReportColumns` schema including pricing, inventory, COGS, fees, and category information. \n\n**NOTE: This endpoint is only available to users on the Enterprise plan.** Use the /reports/status/{reportId} endpoint to check report status and obtain the download URL.",
         "operationId": "createProductsReport",
         "requestBody": {
           "description": "Report criteria",
@@ -1592,6 +1612,530 @@
           },
           "404": {
             "description": "Not found",
+            "content": {}
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/customGroups": {
+      "get": {
+        "tags": [
+          "custom-group"
+        ],
+        "summary": "Retrieve custom groups for a channel",
+        "description": "Retrieve the list of custom product groups defined for a given channel.",
+        "operationId": "getCustomGroups",
+        "parameters": [
+          {
+            "name": "channelId",
+            "in": "query",
+            "description": "Channel ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "merchantId",
+            "in": "query",
+            "description": "Merchant ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "Number of groups per page",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "pageIndex",
+            "in": "query",
+            "description": "Zero-based page index",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCustomGroupsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input",
+            "content": {}
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "custom-group"
+        ],
+        "summary": "Create a custom group",
+        "description": "Create a new custom product group for a channel.",
+        "operationId": "createCustomGroup",
+        "requestBody": {
+          "description": "Custom group details",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCustomGroupRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {}
+          },
+          "400": {
+            "description": "Invalid input",
+            "content": {}
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/customGroups/{id}": {
+      "get": {
+        "tags": [
+          "custom-group"
+        ],
+        "summary": "Retrieve a single custom group",
+        "description": "Retrieve a single custom group with its associated products and brands.",
+        "operationId": "getCustomGroup",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Group ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "channelId",
+            "in": "query",
+            "description": "Channel ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "merchantId",
+            "in": "query",
+            "description": "Merchant ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCustomGroupResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input",
+            "content": {}
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      },
+      "patch": {
+        "tags": [
+          "custom-group"
+        ],
+        "summary": "Update a custom group",
+        "description": "Add or remove products/brands and optionally rename the group. Provide at least one of addProducts, removeProducts, addBrands, removeBrands, or groupName. Cannot mix product and brand operations in the same request.",
+        "operationId": "editCustomGroup",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Group ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PatchGroupRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {}
+          },
+          "400": {
+            "description": "Invalid input",
+            "content": {}
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "custom-group"
+        ],
+        "summary": "Delete a custom group",
+        "description": "Delete a custom product group for a channel.",
+        "operationId": "deleteCustomGroup",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Group ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "channelId",
+            "in": "query",
+            "description": "Channel ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "merchantId",
+            "in": "query",
+            "description": "Merchant ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {}
+          },
+          "400": {
+            "description": "Invalid input",
+            "content": {}
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/tags": {
+      "get": {
+        "tags": [
+          "tag"
+        ],
+        "summary": "Retrieve all tags",
+        "description": "Retrieve a paginated list of tags across all of the caller's channels. Each item is one channel with its tags. Organisation-wide tags are prefixed with 'org://'. Pagination uses pageIndex/pageSize (zero-based); pageSize defaults to 25 and is capped at 100, pageIndex defaults to 0.",
+        "operationId": "getAllTags",
+        "parameters": [
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "Number of channels per page (default 25, max 100)",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "pageIndex",
+            "in": "query",
+            "description": "Zero-based page index (default 0)",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAllTagsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input",
+            "content": {}
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/tags/channel": {
+      "get": {
+        "tags": [
+          "tag"
+        ],
+        "summary": "Retrieve tags from a specific channel",
+        "description": "Retrieve the tags for a single channel, identified by channelId and merchantId. Organisation-wide tags are prefixed with 'org://'. A channel with no tags returns an empty tags array.",
+        "operationId": "getChannelTags",
+        "parameters": [
+          {
+            "name": "channelId",
+            "in": "query",
+            "description": "Channel (store) ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "merchantId",
+            "in": "query",
+            "description": "Merchant ID of the channel (URL-encode values containing spaces or '@')",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PublicChannelTags"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input",
+            "content": {}
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      },
+      "patch": {
+        "tags": [
+          "tag"
+        ],
+        "summary": "Add and/or remove tags on a specific channel",
+        "description": "Partially update the tags on a single channel, identified by channelId and merchantId, by supplying addTags and/or removeTags. At least one of the two must be provided, and a tag cannot appear in both lists. A maximum of 5 tags can be added in a single call. Organisation-wide tags are prefixed with 'org://'. Returns the channel's full tag set after the change.",
+        "operationId": "updateChannelTags",
+        "requestBody": {
+          "description": "Channel identifiers and the tags to add and/or remove (at least one of addTags / removeTags)",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateChannelTagsRequest"
+              },
+              "example": {
+                "channelId": "A1234567890ABC",
+                "merchantId": "XXXUS @ ATVPDKIKX0DER",
+                "addTags": [
+                  "north-america"
+                ],
+                "removeTags": [
+                  "org://ebay"
+                ]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PublicChannelTags"
+                },
+                "example": {
+                  "channelId": "A1234567890ABC",
+                  "merchantId": "XXXUS @ ATVPDKIKX0DER",
+                  "tags": [
+                    "amazon",
+                    "north-america"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input",
+            "content": {}
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/tags/convert": {
+      "post": {
+        "tags": [
+          "tag"
+        ],
+        "summary": "Convert a tag between private and shared",
+        "description": "Toggle a single tag (private/shared) across every channel that carries it. Shared tags are prefixed with 'org://'; converting a private tag makes it 'org://&lt;tag&gt;' and vice versa. Only one tag can be converted per request. Returns the full tag set after the conversion.",
+        "operationId": "convertTags",
+        "requestBody": {
+          "description": "The tag to convert (exactly 1)",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConvertTagsRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConvertTagsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input",
             "content": {}
           }
         },
@@ -3135,6 +3679,162 @@
           }
         },
         "description": "Response for request to update the Unit COGS"
+      },
+      "PatchGroupRequest": {
+        "type": "object",
+        "required": [
+          "channelId",
+          "merchantId"
+        ],
+        "description": "At least one of groupName, addProducts, removeProducts, addBrands, removeBrands must be provided. Cannot mix product and brand operations in the same request.",
+        "properties": {
+          "channelId": {
+            "type": "string"
+          },
+          "merchantId": {
+            "type": "string"
+          },
+          "groupName": {
+            "type": "string"
+          },
+          "addProducts": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "sellerSku": {
+                  "type": "string",
+                  "description": "The seller SKU of the product"
+                }
+              }
+            }
+          },
+          "removeProducts": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "sellerSku": {
+                  "type": "string",
+                  "description": "The seller SKU of the product"
+                }
+              }
+            }
+          },
+          "addBrands": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "removeBrands": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "CreateCustomGroupRequest": {
+        "type": "object",
+        "required": [
+          "channelId",
+          "merchantId",
+          "groupName"
+        ],
+        "description": "Either products or brands must be provided (not both)",
+        "properties": {
+          "channelId": {
+            "type": "string"
+          },
+          "merchantId": {
+            "type": "string"
+          },
+          "groupName": {
+            "type": "string"
+          },
+          "products": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "sellerSku": {
+                  "type": "string",
+                  "description": "The seller SKU of the product"
+                }
+              }
+            }
+          },
+          "brands": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "groupId": {
+            "type": "string",
+            "description": "Provide to update an existing group instead of creating a new one"
+          }
+        }
+      },
+      "GetCustomGroupResponse": {
+        "type": "object",
+        "description": "A single custom group with its associated products and brands",
+        "properties": {
+          "group": {
+            "type": "object",
+            "properties": {
+              "groupId": {
+                "type": "integer"
+              },
+              "groupName": {
+                "type": "string"
+              },
+              "products": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "sellerSku": {
+                      "type": "string",
+                      "description": "The seller SKU of the product"
+                    }
+                  }
+                }
+              },
+              "brands": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "GetCustomGroupsResponse": {
+        "type": "object",
+        "description": "Response containing the list of custom product groups for a channel",
+        "properties": {
+          "groups": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "groupId": {
+                  "type": "integer"
+                },
+                "groupName": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "total": {
+            "type": "integer",
+            "description": "Total number of groups for the channel. Only present when limit or offset is provided."
+          }
+        }
       },
       "DirectCostJobStatus": {
         "type": "object",
@@ -5818,7 +6518,7 @@
       },
       "ChannelProfitAndLossReportColumns": {
         "type": "object",
-        "description": "Rows present in the downloadable Channel Profit and Loss report CSV. This export is pivot-style with dynamic headers: the first column is a metric label, and remaining columns are either ['value', 'percentageIncome', 'valuePerUnit'] or ['Total', <month columns>].",
+        "description": "Rows present in the downloadable Channel Profit and Loss report CSV. This export is pivot-style with dynamic headers: the first column is a metric label, and remaining columns are either ['value', 'percentageIncome', 'valuePerUnit'] or ['Total', &lt;month columns&gt;].",
         "properties": {
           "rowLabel": {
             "type": "string",

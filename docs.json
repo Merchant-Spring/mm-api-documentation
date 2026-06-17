@@ -42,77 +42,11 @@
         ]
       },
       {
-        "tab": "API Reference",
-        "openapi": "api-reference/openapi.json",
+        "tab": "API V1",
         "groups": [
           {
-            "group": "Channels",
-            "pages": [
-              "POST /channels"
-            ]
-          },
-          {
-            "group": "Content Changes",
-            "pages": [
-              "POST /content-changes"
-            ]
-          },
-          {
-            "group": "Orders",
-            "pages": [
-              "POST /orders/amazon"
-            ]
-          },
-          {
-            "group": "Reports",
-            "pages": [
-              {
-                "group": "Create a report",
-                "pages": [
-                  "POST /reports/create/salesByProduct",
-                  "POST /reports/create/trafficAndConversion",
-                  "POST /reports/create/cancellationsAndRefunds",
-                  "POST /reports/create/customerLifetimeValue",
-                  "POST /reports/create/shippedRevenue",
-                  "POST /reports/create/orderedRevenue",
-                  "POST /reports/create/inventoryHealth",
-                  "POST /reports/create/campaigns",
-                  "POST /reports/create/inventoryReplenishment",
-                  "POST /reports/create/channelProfitAndLoss",
-                  "POST /reports/create/amazonBuyBoxPerformance",
-                  "POST /reports/create/repeatPurchase",
-                  "POST /reports/create/suppressedProduct",
-                  "POST /reports/create/marketingByProduct",
-                  "POST /reports/create/subscribeAndSave",
-                  "POST /reports/create/products"
-                ]
-              },
-              {
-                "group": "Report status",
-                "pages": [
-                  "GET /reports/status/{reportId}"
-                ]
-              },
-              {
-                "group": "View reports",
-                "pages": [
-                  "POST /reports/view/salesByPeriod",
-                  "POST /reports/view/vendorSalesByPeriod",
-                  "POST /reports/view/advertisingByChannels",
-                  "POST /reports/view/salesByChannel",
-                  "POST /reports/view/salesByProduct"
-                ]
-              }
-            ]
-          },
-          {
-            "group": "Profitability",
-            "pages": [
-              "POST /profitability/storeProfitAndLoss",
-              "POST /profitability/productProfitAndLoss",
-              "POST /profitability/directCosts",
-              "GET /profitability/directCostsJobStatus"
-            ]
+            "group": "MerchantSpring API",
+            "openapi": "api-reference/openapi.json"
           }
         ]
       }
@@ -133,7 +67,10 @@
   },
   "footer": {
     "socials": {
-      "website": "https://merchantspring.io"
+      "website": "https://merchantspring.io",
+      "linkedin": "https://www.linkedin.com/company/merchantspring/",
+      "facebook": "https://www.facebook.com/MerchantSpring/",
+      "youtube": "https://www.youtube.com/@merchantspring"
     }
   }
 }
