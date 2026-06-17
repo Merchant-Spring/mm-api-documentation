@@ -24,6 +24,10 @@
       "x-group": "Content Change"
     },
     {
+      "name": "custom-group",
+      "x-group": "Custom Group"
+    },
+    {
       "name": "order",
       "x-group": "Order"
     },
@@ -1608,6 +1612,300 @@
           },
           "404": {
             "description": "Not found",
+            "content": {}
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/customGroups": {
+      "get": {
+        "tags": [
+          "custom-group"
+        ],
+        "summary": "Retrieve custom groups for a channel",
+        "description": "Retrieve the list of custom product groups defined for a given channel.",
+        "operationId": "getCustomGroups",
+        "parameters": [
+          {
+            "name": "channelId",
+            "in": "query",
+            "description": "Channel ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "merchantId",
+            "in": "query",
+            "description": "Merchant ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "Number of groups per page",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "pageIndex",
+            "in": "query",
+            "description": "Zero-based page index",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCustomGroupsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input",
+            "content": {}
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "custom-group"
+        ],
+        "summary": "Create a custom group",
+        "description": "Create a new custom product group for a channel.",
+        "operationId": "createCustomGroup",
+        "requestBody": {
+          "description": "Custom group details",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCustomGroupRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {}
+          },
+          "400": {
+            "description": "Invalid input",
+            "content": {}
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/customGroups/{id}": {
+      "get": {
+        "tags": [
+          "custom-group"
+        ],
+        "summary": "Retrieve a single custom group",
+        "description": "Retrieve a single custom group with its associated products and brands.",
+        "operationId": "getCustomGroup",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Group ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "channelId",
+            "in": "query",
+            "description": "Channel ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "merchantId",
+            "in": "query",
+            "description": "Merchant ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCustomGroupResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input",
+            "content": {}
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      },
+      "patch": {
+        "tags": [
+          "custom-group"
+        ],
+        "summary": "Update a custom group",
+        "description": "Add or remove products/brands and optionally rename the group. Provide at least one of addProducts, removeProducts, addBrands, removeBrands, or groupName. Cannot mix product and brand operations in the same request.",
+        "operationId": "editCustomGroup",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Group ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PatchGroupRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {}
+          },
+          "400": {
+            "description": "Invalid input",
+            "content": {}
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "custom-group"
+        ],
+        "summary": "Delete a custom group",
+        "description": "Delete a custom product group for a channel.",
+        "operationId": "deleteCustomGroup",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Group ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "channelId",
+            "in": "query",
+            "description": "Channel ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "merchantId",
+            "in": "query",
+            "description": "Merchant ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {}
+          },
+          "400": {
+            "description": "Invalid input",
             "content": {}
           }
         },
@@ -3381,6 +3679,162 @@
           }
         },
         "description": "Response for request to update the Unit COGS"
+      },
+      "PatchGroupRequest": {
+        "type": "object",
+        "required": [
+          "channelId",
+          "merchantId"
+        ],
+        "description": "At least one of groupName, addProducts, removeProducts, addBrands, removeBrands must be provided. Cannot mix product and brand operations in the same request.",
+        "properties": {
+          "channelId": {
+            "type": "string"
+          },
+          "merchantId": {
+            "type": "string"
+          },
+          "groupName": {
+            "type": "string"
+          },
+          "addProducts": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "sellerSku": {
+                  "type": "string",
+                  "description": "The seller SKU of the product"
+                }
+              }
+            }
+          },
+          "removeProducts": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "sellerSku": {
+                  "type": "string",
+                  "description": "The seller SKU of the product"
+                }
+              }
+            }
+          },
+          "addBrands": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "removeBrands": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "CreateCustomGroupRequest": {
+        "type": "object",
+        "required": [
+          "channelId",
+          "merchantId",
+          "groupName"
+        ],
+        "description": "Either products or brands must be provided (not both)",
+        "properties": {
+          "channelId": {
+            "type": "string"
+          },
+          "merchantId": {
+            "type": "string"
+          },
+          "groupName": {
+            "type": "string"
+          },
+          "products": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "sellerSku": {
+                  "type": "string",
+                  "description": "The seller SKU of the product"
+                }
+              }
+            }
+          },
+          "brands": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "groupId": {
+            "type": "string",
+            "description": "Provide to update an existing group instead of creating a new one"
+          }
+        }
+      },
+      "GetCustomGroupResponse": {
+        "type": "object",
+        "description": "A single custom group with its associated products and brands",
+        "properties": {
+          "group": {
+            "type": "object",
+            "properties": {
+              "groupId": {
+                "type": "integer"
+              },
+              "groupName": {
+                "type": "string"
+              },
+              "products": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "sellerSku": {
+                      "type": "string",
+                      "description": "The seller SKU of the product"
+                    }
+                  }
+                }
+              },
+              "brands": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "GetCustomGroupsResponse": {
+        "type": "object",
+        "description": "Response containing the list of custom product groups for a channel",
+        "properties": {
+          "groups": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "groupId": {
+                  "type": "integer"
+                },
+                "groupName": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "total": {
+            "type": "integer",
+            "description": "Total number of groups for the channel. Only present when limit or offset is provided."
+          }
+        }
       },
       "DirectCostJobStatus": {
         "type": "object",
