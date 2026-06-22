@@ -72,5 +72,17 @@
       "facebook": "https://www.facebook.com/MerchantSpring/",
       "youtube": "https://www.youtube.com/@merchantspring"
     }
-  }
+  },
+  "contextual": {
+    "options": [
+      "copy",
+      "claude",
+      "chatgpt",
+      "mcp",
+      "add-mcp",
+      "cursor",
+      "vscode",
+      "download-spec"
+  ]
+}
 }
