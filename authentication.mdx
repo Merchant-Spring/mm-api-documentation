@@ -7,14 +7,22 @@ The MerchantSpring Public API uses **API keys** for authentication. Every reques
 
 ## Getting your API key
 
-API keys are **provisioned by MerchantSpring** — they are not generated from this documentation site.
+API keys are **provisioned automatically by MerchantSpring** — they are not generated from this documentation site.
 
-1. Sign in to the [developer dashboard](https://developer.merchantspring.io/dashboard).
-2. Subscribe to the API — this generates an API key for your account.
-3. Copy your key from the dashboard and store it securely — treat it like a password.
+To access your key, you must be an **Owner** or **Administrator** of an organisation that has API access enabled.
+
+1. Sign in to [MerchantSpring](https://mm.merchantspring.io).
+2. Go to **Settings → API**.
+3. Click the reveal (eye) icon, then copy your key and store it securely — treat it like a password.
+
+Each Owner and Administrator has their own individual key. The same page also shows your current plan and API usage.
+
+<Note>
+  Don't see the **API** tab? It's only visible to Owners and Administrators in organisations with API access enabled. Contact MerchantSpring if you need access.
+</Note>
 
 <Warning>
-  Keep your API key secret. Never embed it in client-side code, mobile apps, or public repositories. If a key is exposed, contact MerchantSpring to have it rotated.
+  Keep your API key secret. Never embed it in client-side code, mobile apps, or public repositories. There is no self-service rotation — if a key is exposed, contact MerchantSpring to have it rotated.
 </Warning>
 
 ## Making authenticated requests
