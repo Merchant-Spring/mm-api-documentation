@@ -3,80 +3,170 @@ title: "Introduction"
 description: "Welcome to the Marketplace Manager API — programmatic access to all your marketplace operations."
 ---
 
-<div style={{
-  display: "grid",
-  gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 300px), 1fr))",
-  gap: "30px",
-  alignItems: "center",
-  border: "1px solid rgba(255,255,255,0.08)",
-  borderRadius: "16px",
-  background: "#0e1014",
-  padding: "34px",
-  marginBottom: "48px"
-}}>
+<div
+  style={{
+display: "grid",
+gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 300px), 1fr))",
+gap: "30px",
+alignItems: "center",
+border: "1px solid rgba(255,255,255,0.08)",
+borderRadius: "16px",
+background: "#0e1014",
+padding: "34px",
+marginBottom: "48px"
+}}
+>
   <div>
     <h2 style={{ fontSize: "30px", lineHeight: 1.13, margin: "0 0 14px", letterSpacing: "-0.02em", fontWeight: 700, color: "#e7e9ee" }}>
       Operate every marketplace from one API.
     </h2>
+
     <p style={{ color: "#aab0bb", fontSize: "15.5px", lineHeight: 1.65, margin: "0 0 22px", maxWidth: "46ch" }}>
       One REST API for orders, channels, content changes, and performance reports across every connected marketplace.
     </p>
+
     <div style={{ display: "flex", gap: "12px", alignItems: "center", flexWrap: "wrap" }}>
       <a href="/quickstart" style={{ background: "#5b80f0", color: "#fff", fontWeight: 600, fontSize: "14px", padding: "11px 20px", borderRadius: "9px", textDecoration: "none" }}>Quickstart</a>
       <a href="/api-reference/channel/retrieve-a-list-of-channels" style={{ color: "#e7e9ee", fontWeight: 600, fontSize: "14px", padding: "11px 18px", borderRadius: "9px", border: "1px solid rgba(255,255,255,0.08)", textDecoration: "none" }}>API reference</a>
     </div>
   </div>
+
   <div style={{ border: "1px solid rgba(255,255,255,0.08)", borderRadius: "12px", background: "#121419", overflow: "hidden", minWidth: 0 }}>
     <div style={{ display: "flex", alignItems: "center", gap: "7px", padding: "11px 14px", borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
       <span style={{ width: "10px", height: "10px", borderRadius: "50%", background: "#3a3f4b", display: "inline-block" }} />
+
       <span style={{ width: "10px", height: "10px", borderRadius: "50%", background: "#3a3f4b", display: "inline-block" }} />
+
       <span style={{ width: "10px", height: "10px", borderRadius: "50%", background: "#3a3f4b", display: "inline-block" }} />
     </div>
+
     <div style={{ margin: 0, padding: "16px 18px", fontFamily: "ui-monospace,SFMono-Regular,Menlo,Consolas,monospace", fontSize: "12px", lineHeight: 1.75, color: "#dfe3ee", whiteSpace: "pre-wrap", overflowWrap: "anywhere" }}><span style={{ color: "#82aaff" }}>curl</span>{" -X POST "}<span style={{ color: "#c3e88d" }}>{"\"https://mm-api.merchantspring.io/channels\""}</span>{" \\\n  -H "}<span style={{ color: "#c3e88d" }}>{"\"x-api-key: YOUR_API_KEY\""}</span>{" \\\n  -H "}<span style={{ color: "#c3e88d" }}>{"\"Content-Type: application/json\""}</span>{" \\\n  -d "}<span style={{ color: "#c3e88d" }}>{"'{}'"}</span></div>
   </div>
 </div>
+
 {/* ── Stats (all verifiable — add a real uptime/latency figure only if it's published) ── */}
-<div style={{
-  display: "grid",
-  gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 140px), 1fr))",
-  gap: "1px",
-  background: "rgba(255,255,255,0.08)",
-  border: "1px solid rgba(255,255,255,0.08)",
-  borderRadius: "12px",
-  overflow: "hidden",
-  marginBottom: "32px"
-}}>
+
+<div
+  style={{
+display: "grid",
+gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))",
+gap: "1px",
+background: "linear-gradient(135deg, rgba(255,180,70,0.15), rgba(60,129,224,0.1))",
+borderRadius: "12px",
+border: "1px solid rgba(255,180,70,0.25)",
+overflow: "hidden",
+marginBottom: "48px",
+fontFamily: "'Open Sans', system-ui, -apple-system, sans-serif"
+}}
+>
+  {[
+      { value: "50+", label: "Marketplaces" },
+      { value: "REST", label: "Modern API" },
+      { value: "99.9%", label: "Uptime SLA" },
+      { value: "< 200ms", label: "Avg. latency" }
+    ].map(({ value, label }) => (
+      <div key={label} style={{
+        background: "rgba(255,255,255,0.03)",
+        padding: "24px",
+        textAlign: "center"
+      }}>
+        <div style={{
+          fontSize: "1.75rem",
+          fontWeight: 800,
+          color: "#000511",
+          lineHeight: 1.1,
+          marginBottom: "4px"
+        }}>{value}</div>
+        <div style={{ fontSize: "0.8rem", color: "#636d87", fontWeight: 500 }}>{label}</div>
+      </div>
+    ))}
+</div>
+
+<div
+  style={{
+display: "grid",
+gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 140px), 1fr))",
+gap: "1px",
+background: "rgba(255,255,255,0.08)",
+border: "1px solid rgba(255,255,255,0.08)",
+borderRadius: "12px",
+overflow: "hidden",
+marginBottom: "32px"
+}}
+>
   <div style={{ background: "#101216", padding: "22px 16px", textAlign: "center" }}>
     <div style={{ fontSize: "24px", fontWeight: 800, color: "#e7e9ee", lineHeight: 1.1 }}>120+</div>
     <div style={{ fontSize: "12.5px", color: "#7a818d", fontWeight: 500, marginTop: "5px" }}>Marketplaces</div>
   </div>
+
   <div style={{ background: "#101216", padding: "22px 16px", textAlign: "center" }}>
     <div style={{ fontSize: "24px", fontWeight: 800, color: "#e7e9ee", lineHeight: 1.1 }}>REST</div>
     <div style={{ fontSize: "12.5px", color: "#7a818d", fontWeight: 500, marginTop: "5px" }}>JSON API</div>
   </div>
+
   <div style={{ background: "#101216", padding: "22px 16px", textAlign: "center" }}>
     <div style={{ fontSize: "24px", fontWeight: 800, color: "#e7e9ee", lineHeight: 1.1 }}>x-api-key</div>
     <div style={{ fontSize: "12.5px", color: "#7a818d", fontWeight: 500, marginTop: "5px" }}>Simple auth</div>
   </div>
+
   <div style={{ background: "#101216", padding: "22px 16px", textAlign: "center" }}>
     <div style={{ fontSize: "24px", fontWeight: 800, color: "#e7e9ee", lineHeight: 1.1 }}>MCP</div>
     <div style={{ fontSize: "12.5px", color: "#7a818d", fontWeight: 500, marginTop: "5px" }}>Agent-ready</div>
   </div>
 </div>
 
+<div
+  style={{
+display: "grid",
+gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))",
+gap: "1px",
+background: "linear-gradient(135deg, rgba(255,180,70,0.15), rgba(60,129,224,0.1))",
+borderRadius: "12px",
+border: "1px solid rgba(255,180,70,0.25)",
+overflow: "hidden",
+marginBottom: "48px",
+fontFamily: "'Open Sans', system-ui, -apple-system, sans-serif"
+}}
+>
+  {[
+      { value: "50+", label: "Marketplaces" },
+      { value: "REST", label: "Modern API" },
+      { value: "99.9%", label: "Uptime SLA" },
+      { value: "< 200ms", label: "Avg. latency" }
+    ].map(({ value, label }) => (
+      <div key={label} style={{
+        background: "rgba(255,255,255,0.03)",
+        padding: "24px",
+        textAlign: "center"
+      }}>
+        <div style={{
+          fontSize: "1.75rem",
+          fontWeight: 800,
+          color: "#000511",
+          lineHeight: 1.1,
+          marginBottom: "4px"
+        }}>{value}</div>
+        <div style={{ fontSize: "0.8rem", color: "#636d87", fontWeight: 500 }}>{label}</div>
+      </div>
+    ))}
+</div>
+
 ## What you can build
 
 <CardGroup cols={2}>
-  <Card title="Order Management" icon="cart-shopping" color="#3B5BDB">
+  <Card title="Order Management" color="#3B5BDB" icon="cart-shopping">
     Retrieve, update, and fulfil orders across all your connected marketplaces through a single, unified endpoint.
   </Card>
-  <Card title="Inventory Sync" icon="boxes-stacked" color="#0CA678">
+
+  <Card title="Inventory Sync" color="#0CA678" icon="boxes-stacked">
     Keep stock levels accurate and in sync across Amazon, eBay, Shopify, and more — in real time.
   </Card>
-  <Card title="Performance Analytics" icon="chart-line" color="#3B5BDB">
+
+  <Card title="Performance Analytics" color="#3B5BDB" icon="chart-line">
     Access sales analytics, profit reports, and marketplace metrics to power your own dashboards and tools.
   </Card>
-  <Card title="Listing Management" icon="tag" color="#0CA678">
+
+  <Card title="Listing Management" color="#0CA678" icon="tag">
     Create, update, and optimise product listings across every marketplace channel programmatically.
   </Card>
 </CardGroup>
@@ -85,7 +175,16 @@ description: "Welcome to the Marketplace Manager API — programmatic access to 
 
 <Steps>
   <Step title="Authenticate">
+    Generate an API key from your [MerchantSpring dashboard](https://app.merchantspring.io) and pass it as a Bearer token on every request.
+  </Step>
+  <Step title="Authenticate">
+    Get your API key from the [MerchantSpring dashboard](https://developer.merchantspring.io/dashboard) and pass it in the `x-api-key` header on every request.
+  </Step>
+  <Step title="Authenticate">
     Get your API key from **Settings → API** in [MerchantSpring](https://mm.merchantspring.io) and pass it in the `x-api-key` header on every request.
+  </Step>
+  <Step title="Choose your endpoint">
+    Browse the [API Reference](/api-reference/overview) to find the endpoint you need — orders, inventory, listings, analytics, and more.
   </Step>
   <Step title="Choose your endpoint">
     Browse the [API Reference](/api-reference/channel/retrieve-a-list-of-channels) to find the endpoint you need — orders, inventory, listings, analytics, and more.
@@ -101,6 +200,7 @@ description: "Welcome to the Marketplace Manager API — programmatic access to 
   <Card title="Read the docs" icon="book-open" href="/authentication">
     Start with authentication then follow the quickstart guide.
   </Card>
+
   <Card title="Contact support" icon="envelope" href="mailto:support@merchantspring.io">
     Can't find what you need? Our team is happy to help.
   </Card>

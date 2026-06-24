@@ -7,7 +7,8 @@ The Reporting API is the core of the MerchantSpring Public API. Reports are gene
 
 ## Step 1 — Identify the channel
 
-Many of our endpoints require you to provide two MerchantSpring channel identifiers - ***merchantId*** & ***channelId***. In order to know what these parameters are we provide a `/channels` endpoint at the first point of contact for all report requests. The response from the channels endpoint will looks like the following:
+Many of our endpoints require you to provide two MerchantSpring channel identifiers - **_merchantId_** & **_channelId_**. In order to know what these parameters are we provide a `/channels` endpoint at the first point of contact for all report requests. The response from the channels endpoint will looks like the following:
+
 ```json
 {
   "channelId": "<channelId>",
@@ -20,6 +21,7 @@ Many of our endpoints require you to provide two MerchantSpring channel identifi
 ```
 
 You can use the `displayName` and `countryCode` to identify the record you wish to request data for.
+
 ## Step 2 — Create a report
 
 Create a report by calling `POST /reports/create/<reportName>`. The call returns a `reportId`:
@@ -59,9 +61,3 @@ When `status` is `done`, the response includes a `downloadUrl`. Open it (or fetc
   "downloadUrl": "https://.../report.csv"
 }
 ```
-
-<Steps>
-  <Step title="POST /reports/create/{name}">Returns a <code>reportId</code>.</Step>
-  <Step title="GET /reports/status/{reportId}">Poll until <code>status: "done"</code>.</Step>
-  <Step title="GET downloadUrl">Download the CSV.</Step>
-</Steps>
