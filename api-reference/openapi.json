@@ -6,12 +6,12 @@
   },
   "servers": [
     {
-      "url": "https://mm-api-staging.merchantspring.io",
-      "description": "Staging"
-    },
-    {
       "url": "https://mm-api.merchantspring.io",
       "description": "Production"
+    },
+    {
+      "url": "https://mm-api-staging.merchantspring.io",
+      "description": "Staging"
     }
   ],
   "tags": [
