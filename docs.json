@@ -62,7 +62,7 @@
     "primary": {
       "type": "button",
       "label": "Dashboard",
-      "href": "https://developer.merchantspring.io/dashboard"
+      "href": "https://mm.merchantspring.io"
     }
   },
   "footer": {
