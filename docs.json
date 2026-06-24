@@ -61,7 +61,7 @@
     ],
     "primary": {
       "type": "button",
-      "label": "Dashboard",
+      "label": "Application",
       "href": "https://mm.merchantspring.io"
     }
   },
