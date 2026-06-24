@@ -4,177 +4,64 @@ description: "Welcome to the Marketplace Manager API — programmatic access to 
 ---
 
 <div style={{
-  background: "linear-gradient(135deg, #020610 0%, #000f36 60%, #0a1d4d 100%)",
+  display: "grid",
+  gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 300px), 1fr))",
+  gap: "30px",
+  alignItems: "center",
+  border: "1px solid rgba(255,255,255,0.08)",
   borderRadius: "16px",
-  padding: "72px 48px",
-  marginBottom: "48px",
-  position: "relative",
-  overflow: "hidden",
-  fontFamily: "'Open Sans', system-ui, -apple-system, sans-serif"
+  background: "#0e1014",
+  padding: "34px",
+  marginBottom: "48px"
 }}>
-
-  {/* Animated SVG flares — wrapper isolates from Mintlify's <img> default styling */}
-  <div style={{
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    overflow: "hidden",
-    pointerEvents: "none"
-  }}>
-    <img
-      src="/images/hero-flares.svg"
-      alt="merchantspringhero"
-      aria-hidden="true"
-      style={{
-        position: "absolute",
-        top: 0,
-        left: 0,
-        width: "100%",
-        height: "100%",
-        margin: 0,
-        padding: 0,
-        border: 0,
-        maxWidth: "none",
-        maxHeight: "none",
-        minWidth: "100%",
-        minHeight: "100%",
-        objectFit: "fill",
-        display: "block",
-        verticalAlign: "top",
-        userSelect: "none"
-      }}
-    />
+  <div>
+    <h2 style={{ fontSize: "30px", lineHeight: 1.13, margin: "0 0 14px", letterSpacing: "-0.02em", fontWeight: 700, color: "#e7e9ee" }}>
+      Operate every marketplace from one API.
+    </h2>
+    <p style={{ color: "#aab0bb", fontSize: "15.5px", lineHeight: 1.65, margin: "0 0 22px", maxWidth: "46ch" }}>
+      One REST API for orders, channels, content changes, and performance reports across every connected marketplace.
+    </p>
+    <div style={{ display: "flex", gap: "12px", alignItems: "center", flexWrap: "wrap" }}>
+      <a href="/quickstart" style={{ background: "#5b80f0", color: "#fff", fontWeight: 600, fontSize: "14px", padding: "11px 20px", borderRadius: "9px", textDecoration: "none" }}>Quickstart</a>
+      <a href="/api-reference/channel/retrieve-a-list-of-channels" style={{ color: "#e7e9ee", fontWeight: 600, fontSize: "14px", padding: "11px 18px", borderRadius: "9px", border: "1px solid rgba(255,255,255,0.08)", textDecoration: "none" }}>API reference</a>
+    </div>
   </div>
-
-  {/* Eyebrow */}
-  <p style={{
-    color: "#ffb446",
-    fontSize: "0.8rem",
-    fontWeight: 700,
-    textTransform: "uppercase",
-    letterSpacing: "0.15em",
-    marginBottom: "16px",
-    position: "relative"
-  }}>
-    Marketplace Manager · Developer API
-  </p>
-
-  {/* Headline */}
-  <h1 style={{
-    fontSize: "clamp(2rem, 4vw, 3.25rem)",
-    fontWeight: 800,
-    color: "#ffffff",
-    lineHeight: 1.1,
-    marginBottom: "20px",
-    position: "relative"
-  }}>
-    Build on top of every<br />
-    <span style={{
-      background: "linear-gradient(90deg, #ffc042 0%, #f89c1c 100%)",
-      WebkitBackgroundClip: "text",
-      WebkitTextFillColor: "transparent",
-      backgroundClip: "text"
-    }}>
-      marketplace, at once.
-    </span>
-  </h1>
-
-  {/* Subtitle */}
-  <p style={{
-    fontSize: "1.125rem",
-    color: "rgba(255,255,255,0.78)",
-    maxWidth: "540px",
-    lineHeight: 1.7,
-    marginBottom: "36px",
-    position: "relative"
-  }}>
-    The Marketplace Manager API gives you unified, programmatic access to orders, inventory, listings, analytics, and more — across Amazon, eBay, Shopify, and 50+ other channels.
-  </p>
-
-  {/* CTA Buttons */}
-  <div style={{
-    display: "flex",
-    gap: "12px",
-    flexWrap: "wrap",
-    alignItems: "center",
-    position: "relative"
-  }}>
-    <a href="/quickstart" style={{
-      background: "#f89c1c",
-      color: "#000f36",
-      fontWeight: 700,
-      fontSize: "0.95rem",
-      padding: "12px 28px",
-      borderRadius: "8px",
-      textDecoration: "none",
-      boxShadow: "0 4px 14px rgba(248,156,28,0.45)",
-      transition: "all 0.2s ease",
-      display: "inline-block"
-    }}>
-      ⚡ Get started free
-    </a>
-    <a href="/api-reference/channel/retrieve-a-list-of-channels" style={{
-      background: "transparent",
-      color: "#ffffff",
-      fontWeight: 600,
-      fontSize: "0.95rem",
-      padding: "12px 28px",
-      borderRadius: "8px",
-      textDecoration: "none",
-      border: "2px solid rgba(255,255,255,0.3)",
-      display: "inline-block"
-    }}>
-      Browse API reference →
-    </a>
+  <div style={{ border: "1px solid rgba(255,255,255,0.08)", borderRadius: "12px", background: "#121419", overflow: "hidden", minWidth: 0 }}>
+    <div style={{ display: "flex", alignItems: "center", gap: "7px", padding: "11px 14px", borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
+      <span style={{ width: "10px", height: "10px", borderRadius: "50%", background: "#3a3f4b", display: "inline-block" }} />
+      <span style={{ width: "10px", height: "10px", borderRadius: "50%", background: "#3a3f4b", display: "inline-block" }} />
+      <span style={{ width: "10px", height: "10px", borderRadius: "50%", background: "#3a3f4b", display: "inline-block" }} />
+    </div>
+    <div style={{ margin: 0, padding: "16px 18px", fontFamily: "ui-monospace,SFMono-Regular,Menlo,Consolas,monospace", fontSize: "12px", lineHeight: 1.75, color: "#dfe3ee", whiteSpace: "pre-wrap", overflowWrap: "anywhere" }}><span style={{ color: "#82aaff" }}>curl</span>{" -X POST "}<span style={{ color: "#c3e88d" }}>{"\"https://mm-api.merchantspring.io/channels\""}</span>{" \\\n  -H "}<span style={{ color: "#c3e88d" }}>{"\"x-api-key: YOUR_API_KEY\""}</span>{" \\\n  -H "}<span style={{ color: "#c3e88d" }}>{"\"Content-Type: application/json\""}</span>{" \\\n  -d "}<span style={{ color: "#c3e88d" }}>{"'{}'"}</span></div>
   </div>
-
-  {/* Trust note */}
-  <p style={{
-    color: "rgba(255,255,255,0.5)",
-    fontSize: "0.8rem",
-    marginTop: "20px",
-    position: "relative"
-  }}>
-    No credit card required · 14-day free trial · 50+ marketplace integrations
-  </p>
-
 </div>
-
-{/* Stats strip */}
+{/* ── Stats (all verifiable — add a real uptime/latency figure only if it's published) ── */}
 <div style={{
   display: "grid",
-  gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))",
+  gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 140px), 1fr))",
   gap: "1px",
-  background: "linear-gradient(135deg, rgba(255,180,70,0.15), rgba(60,129,224,0.1))",
+  background: "rgba(255,255,255,0.08)",
+  border: "1px solid rgba(255,255,255,0.08)",
   borderRadius: "12px",
-  border: "1px solid rgba(255,180,70,0.25)",
   overflow: "hidden",
-  marginBottom: "48px",
-  fontFamily: "'Open Sans', system-ui, -apple-system, sans-serif"
+  marginBottom: "32px"
 }}>
-  {[
-    { value: "50+", label: "Marketplaces" },
-    { value: "REST", label: "Modern API" },
-    { value: "99.9%", label: "Uptime SLA" },
-    { value: "< 200ms", label: "Avg. latency" }
-  ].map(({ value, label }) => (
-    <div key={label} style={{
-      background: "rgba(255,255,255,0.03)",
-      padding: "24px",
-      textAlign: "center"
-    }}>
-      <div style={{
-        fontSize: "1.75rem",
-        fontWeight: 800,
-        color: "#000511",
-        lineHeight: 1.1,
-        marginBottom: "4px"
-      }}>{value}</div>
-      <div style={{ fontSize: "0.8rem", color: "#636d87", fontWeight: 500 }}>{label}</div>
-    </div>
-  ))}
+  <div style={{ background: "#101216", padding: "22px 16px", textAlign: "center" }}>
+    <div style={{ fontSize: "24px", fontWeight: 800, color: "#e7e9ee", lineHeight: 1.1 }}>120+</div>
+    <div style={{ fontSize: "12.5px", color: "#7a818d", fontWeight: 500, marginTop: "5px" }}>Marketplaces</div>
+  </div>
+  <div style={{ background: "#101216", padding: "22px 16px", textAlign: "center" }}>
+    <div style={{ fontSize: "24px", fontWeight: 800, color: "#e7e9ee", lineHeight: 1.1 }}>REST</div>
+    <div style={{ fontSize: "12.5px", color: "#7a818d", fontWeight: 500, marginTop: "5px" }}>JSON API</div>
+  </div>
+  <div style={{ background: "#101216", padding: "22px 16px", textAlign: "center" }}>
+    <div style={{ fontSize: "24px", fontWeight: 800, color: "#e7e9ee", lineHeight: 1.1 }}>x-api-key</div>
+    <div style={{ fontSize: "12.5px", color: "#7a818d", fontWeight: 500, marginTop: "5px" }}>Simple auth</div>
+  </div>
+  <div style={{ background: "#101216", padding: "22px 16px", textAlign: "center" }}>
+    <div style={{ fontSize: "24px", fontWeight: 800, color: "#e7e9ee", lineHeight: 1.1 }}>MCP</div>
+    <div style={{ fontSize: "12.5px", color: "#7a818d", fontWeight: 500, marginTop: "5px" }}>Agent-ready</div>
+  </div>
 </div>
 
 ## What you can build
