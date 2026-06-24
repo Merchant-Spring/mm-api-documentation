@@ -24,20 +24,12 @@
       "x-group": "Content Change"
     },
     {
-      "name": "custom-group",
-      "x-group": "Custom Group"
-    },
-    {
       "name": "order",
       "x-group": "Order"
     },
     {
       "name": "report",
       "x-group": "Report"
-    },
-    {
-      "name": "tag",
-      "x-group": "Tag"
     },
     {
       "name": "profitability",
@@ -1695,7 +1687,8 @@
           {
             "api_key": []
           }
-        ]
+        ],
+        "x-hidden": true
       },
       "post": {
         "tags": [
@@ -1736,7 +1729,8 @@
           {
             "api_key": []
           }
-        ]
+        ],
+        "x-hidden": true
       }
     },
     "/customGroups/{id}": {
@@ -1803,7 +1797,8 @@
           {
             "api_key": []
           }
-        ]
+        ],
+        "x-hidden": true
       },
       "patch": {
         "tags": [
@@ -1854,7 +1849,8 @@
           {
             "api_key": []
           }
-        ]
+        ],
+        "x-hidden": true
       },
       "delete": {
         "tags": [
@@ -1913,7 +1909,8 @@
           {
             "api_key": []
           }
-        ]
+        ],
+        "x-hidden": true
       }
     },
     "/tags": {
@@ -1971,7 +1968,8 @@
           {
             "api_key": []
           }
-        ]
+        ],
+        "x-hidden": true
       }
     },
     "/tags/channel": {
@@ -2029,7 +2027,8 @@
           {
             "api_key": []
           }
-        ]
+        ],
+        "x-hidden": true
       },
       "patch": {
         "tags": [
@@ -2094,7 +2093,8 @@
           {
             "api_key": []
           }
-        ]
+        ],
+        "x-hidden": true
       }
     },
     "/tags/convert": {
@@ -2143,7 +2143,8 @@
           {
             "api_key": []
           }
-        ]
+        ],
+        "x-hidden": true
       }
     }
   },
