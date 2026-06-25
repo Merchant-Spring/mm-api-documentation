@@ -51,8 +51,8 @@ const OUTPUT = resolve(
 // Order matters: the FIRST entry is the playground's default, so a non-prod host is listed
 // first to avoid accidental writes (tags / COGS endpoints mutate data) against production.
 const SERVERS = [
-  { url: "https://mm-api-staging.merchantspring.io", description: "Staging" },
   { url: "https://mm-api.merchantspring.io", description: "Production" },
+  { url: "https://mm-api-staging.merchantspring.io", description: "Staging" }
 ];
 
 // Load the source spec from a URL (fetched over HTTP) or a local file.

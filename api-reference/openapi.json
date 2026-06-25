@@ -5806,6 +5806,10 @@
             "type": "number",
             "description": "Unfulfillable inventory units"
           },
+          "fcTransfer": {
+            "type": "number",
+            "description": "Intra warehouse transfer quantity"
+          },
           "awdOnhandQuantity": {
             "type": "number",
             "description": "Amazon Warehousing and Distribution on-hand quantity"
