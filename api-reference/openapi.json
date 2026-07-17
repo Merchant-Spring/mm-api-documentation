@@ -36,6 +36,10 @@
       "x-group": "Report"
     },
     {
+      "name": "products",
+      "x-group": "Products"
+    },
+    {
       "name": "tag",
       "x-group": "Tag"
     },
@@ -127,6 +131,159 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/GetContentChangesResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input",
+            "content": {}
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/products/asinDetails": {
+      "get": {
+        "tags": [
+          "products"
+        ],
+        "summary": "Retrieve all vendor fields against an ASIN",
+        "description": "Vendor only. Returns one wide row per ASIN combining every data point we hold for the product: catalogue, retail analytics, ordered revenue, shipped revenue, inventory health, purchase orders, product profit, sourcing share and advertising. Supply asin to fetch a single product, or omit it to page through the full master list (products with sales activity in the window). The date range must not exceed 30 days. Page size defaults to 20 and is capped at 50 (rows are wide). Uses zero-based page indexing.",
+        "operationId": "getAsinDetails",
+        "parameters": [
+          {
+            "name": "channelId",
+            "in": "query",
+            "description": "Channel (store) ID. Must be an Amazon Vendor channel.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "merchantId",
+            "in": "query",
+            "description": "Merchant ID that owns the channel. URL-encode values containing spaces or '@'.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "fromDate",
+            "in": "query",
+            "description": "Start of the metric window as Unix epoch seconds.",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "toDate",
+            "in": "query",
+            "description": "End of the metric window as Unix epoch seconds. The range from fromDate must not exceed 30 days.",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "timezone",
+            "in": "query",
+            "description": "IANA timezone string, for example Australia/Sydney.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "asin",
+            "in": "query",
+            "description": "When supplied, returns only this ASIN; otherwise returns the paginated master list.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortKey",
+            "in": "query",
+            "description": "Product sales metric to sort by. Unrecognised values fall back to asin.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "asin",
+              "enum": [
+                "asin",
+                "orderedRevenue",
+                "orderedUnits",
+                "glanceViews",
+                "shippedRevenue",
+                "shippedUnits",
+                "shippedCogs",
+                "customerReturns",
+                "shippedRevenueMfg",
+                "shippedCogsMfg"
+              ]
+            }
+          },
+          {
+            "name": "sortOrder",
+            "in": "query",
+            "description": "Sort direction (default asc).",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "asc",
+              "enum": [
+                "asc",
+                "desc"
+              ]
+            }
+          },
+          {
+            "name": "pageIndex",
+            "in": "query",
+            "description": "Zero-based page index (default 0).",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "Number of ASINs per page (default 20, max 50).",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 50,
+              "default": 20
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAsinDetailsResponse"
                 }
               }
             }
@@ -2149,6 +2306,440 @@
   },
   "components": {
     "schemas": {
+      "GetAsinDetailsResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UnifiedAsinProduct"
+            }
+          },
+          "pagination": {
+            "type": "object",
+            "properties": {
+              "pageIndex": {
+                "type": "integer",
+                "description": "Zero-based page index"
+              },
+              "pageSize": {
+                "type": "integer",
+                "description": "Number of ASINs per page"
+              },
+              "count": {
+                "type": "integer",
+                "description": "Total ASINs in the master list (products with sales activity in the window)"
+              }
+            }
+          },
+          "meta": {
+            "type": "object",
+            "properties": {
+              "currency": {
+                "type": "string",
+                "description": "Currency of all monetary values (native marketplace currency)"
+              }
+            }
+          }
+        }
+      },
+      "UnifiedAsinProduct": {
+        "type": "object",
+        "description": "One ASIN's data, namespaced by source screen. Some monetary metrics intentionally repeat across groups, mirroring the source screens.",
+        "properties": {
+          "asin": {
+            "type": "string"
+          },
+          "catalogue": {
+            "type": "object",
+            "properties": {
+              "title": {
+                "type": "string"
+              },
+              "vpi": {
+                "type": "string",
+                "description": "Vendor product identifier (seller_sku)"
+              },
+              "brand": {
+                "type": "string"
+              },
+              "category": {
+                "type": "string"
+              },
+              "parentCategory": {
+                "type": "string"
+              },
+              "retailPrice": {
+                "type": "number",
+                "description": "Catalogue/list price (product_metric, fallback product)"
+              },
+              "imageUrl": {
+                "type": "string"
+              },
+              "linkUrl": {
+                "type": "string"
+              },
+              "isFulfilledByAmazon": {
+                "type": "boolean"
+              }
+            }
+          },
+          "retailAnalytics": {
+            "type": "object",
+            "properties": {
+              "glanceViews": {
+                "type": "number"
+              },
+              "orderedRevenue": {
+                "type": "number"
+              },
+              "orderedUnits": {
+                "type": "integer"
+              },
+              "conversionRate": {
+                "type": "number",
+                "description": "ordered units / glance views × 100"
+              },
+              "retailPrice": {
+                "type": "number",
+                "description": "Average selling price (ordered $ / units)"
+              },
+              "shippedRevenueMfg": {
+                "type": "number",
+                "description": "Manufacturing (total) shipped revenue"
+              },
+              "shippedCogsMfg": {
+                "type": "number",
+                "description": "Manufacturing (total) shipped COGS"
+              },
+              "customerReturns": {
+                "type": "integer"
+              },
+              "shippedUnits": {
+                "type": "integer"
+              }
+            }
+          },
+          "orderedRevenue": {
+            "type": "object",
+            "properties": {
+              "glanceViews": {
+                "type": "number"
+              },
+              "orderedRevenue": {
+                "type": "number"
+              },
+              "orderedUnits": {
+                "type": "integer"
+              },
+              "avgPrice": {
+                "type": "number"
+              },
+              "conversion": {
+                "type": "number"
+              }
+            }
+          },
+          "shippedRevenue": {
+            "type": "object",
+            "properties": {
+              "shippedRevenue": {
+                "type": "number"
+              },
+              "shippedCogs": {
+                "type": "number"
+              },
+              "shippedUnits": {
+                "type": "integer"
+              },
+              "unitCogs": {
+                "type": "number"
+              },
+              "rawMargin": {
+                "type": "number",
+                "description": "(rev − cogs) / rev × 100"
+              },
+              "netPpm": {
+                "type": "number",
+                "description": "Revenue-weighted net pure product margin"
+              }
+            }
+          },
+          "inventory": {
+            "type": "object",
+            "properties": {
+              "sellableInventory": {
+                "type": "number"
+              },
+              "unhealthyInventory": {
+                "type": "number"
+              },
+              "aged90Plus": {
+                "type": "number"
+              },
+              "sellableUnits": {
+                "type": "integer"
+              },
+              "unhealthyUnits": {
+                "type": "integer"
+              },
+              "aged90PlusUnits": {
+                "type": "integer"
+              },
+              "unsellableInventory": {
+                "type": "number"
+              },
+              "receivedInventory": {
+                "type": "number"
+              },
+              "receivedUnits": {
+                "type": "integer"
+              },
+              "unitsShipped": {
+                "type": "integer"
+              },
+              "daysCover": {
+                "type": "number",
+                "nullable": true,
+                "description": "sellable units / trailing-30-day sales rate; null when no recent sales"
+              },
+              "openPo": {
+                "type": "integer"
+              },
+              "unfilledUnits": {
+                "type": "integer"
+              },
+              "sellThroughRate": {
+                "type": "number"
+              },
+              "vendorLeadTimeDays": {
+                "type": "number"
+              },
+              "netFilledRate": {
+                "type": "number"
+              },
+              "sourceableOosPct": {
+                "type": "number"
+              },
+              "procurableOosPct": {
+                "type": "number"
+              }
+            }
+          },
+          "po": {
+            "type": "object",
+            "properties": {
+              "price": {
+                "type": "number",
+                "description": "Average per-unit list price"
+              },
+              "poValue": {
+                "type": "number",
+                "description": "Accepted PO value (sum of po_value)"
+              },
+              "unitsOrdered": {
+                "type": "integer",
+                "description": "Sum of submitted units"
+              },
+              "avgPrice": {
+                "type": "number",
+                "description": "PO value / submitted units"
+              },
+              "daysSinceLastOrder": {
+                "type": "integer",
+                "nullable": true
+              }
+            }
+          },
+          "profit": {
+            "type": "object",
+            "properties": {
+              "adSales": {
+                "type": "number"
+              },
+              "adSpend": {
+                "type": "number"
+              },
+              "acos": {
+                "type": "number"
+              },
+              "tacos": {
+                "type": "number"
+              },
+              "shippedCogs": {
+                "type": "number"
+              },
+              "advertisingCost": {
+                "type": "number"
+              },
+              "unitsShipped": {
+                "type": "integer"
+              },
+              "deductions": {
+                "type": "number"
+              },
+              "cogs": {
+                "type": "number"
+              },
+              "chargebacks": {
+                "type": "number"
+              },
+              "expenses": {
+                "type": "number"
+              },
+              "profit": {
+                "type": "number"
+              },
+              "inventory": {
+                "type": "number",
+                "description": "Sellable inventory units"
+              },
+              "snsUnits": {
+                "type": "integer",
+                "nullable": true,
+                "description": "Subscribe & Save units; null only if unavailable"
+              }
+            }
+          },
+          "sourcingShare": {
+            "type": "object",
+            "properties": {
+              "lostCogsUsa": {
+                "type": "number"
+              },
+              "lostUnitsUsa": {
+                "type": "integer"
+              },
+              "sourcingShareUsa": {
+                "type": "number"
+              },
+              "unitCogs": {
+                "type": "number"
+              },
+              "exportedCogs": {
+                "type": "number"
+              },
+              "exportedUnits": {
+                "type": "integer"
+              },
+              "exportPct": {
+                "type": "number"
+              },
+              "otherVendors": {
+                "type": "number",
+                "description": "Other-vendor cost per unit"
+              }
+            }
+          },
+          "advertising": {
+            "type": "object",
+            "properties": {
+              "adSales": {
+                "type": "number"
+              },
+              "spend": {
+                "type": "number"
+              },
+              "acos": {
+                "type": "number"
+              },
+              "impressions": {
+                "type": "integer"
+              },
+              "clicks": {
+                "type": "integer"
+              },
+              "ctr": {
+                "type": "number"
+              },
+              "cpc": {
+                "type": "number"
+              },
+              "conv": {
+                "type": "number"
+              },
+              "orders": {
+                "type": "integer"
+              },
+              "units": {
+                "type": "integer"
+              },
+              "roas": {
+                "type": "number"
+              }
+            }
+          }
+        },
+        "example": {
+          "asin": "B00949CTQQ",
+          "catalogue": {
+            "title": "Classic Eau de Toilette for Men",
+            "vpi": "B00949CTQQ",
+            "brand": "LaTinte",
+            "category": "Facial Peels",
+            "parentCategory": "Treatments & Masks",
+            "retailPrice": 77.8,
+            "imageUrl": "https://m.media-amazon.com/images/I/61dJyrTq+rL.jpg",
+            "linkUrl": "https://amazon.com/dp/B00949CTQQ",
+            "isFulfilledByAmazon": false
+          },
+          "retailAnalytics": {
+            "glanceViews": 544564,
+            "orderedRevenue": 2119116.4,
+            "orderedUnits": 27238,
+            "conversionRate": 5,
+            "retailPrice": 77.8,
+            "shippedRevenueMfg": 1759836,
+            "shippedCogsMfg": 225829.52,
+            "customerReturns": 178,
+            "shippedUnits": 16556
+          },
+          "shippedRevenue": {
+            "shippedRevenue": 1288056.8,
+            "shippedCogs": 113624.42,
+            "shippedUnits": 16556,
+            "unitCogs": 6.86,
+            "rawMargin": 91.18,
+            "netPpm": 51.08
+          },
+          "inventory": {
+            "sellableInventory": 258149.67,
+            "sellableUnits": 1314,
+            "receivedUnits": 95,
+            "unitsShipped": 16556,
+            "daysCover": 43.7,
+            "openPo": 312
+          },
+          "po": {
+            "price": 70.48,
+            "poValue": 242197.28,
+            "unitsOrdered": 11679,
+            "avgPrice": 20.74,
+            "daysSinceLastOrder": 12
+          },
+          "profit": {
+            "shippedCogs": 113624.42,
+            "chargebacks": 2697.2,
+            "expenses": 2697.2,
+            "profit": 110927.22,
+            "inventory": 1314,
+            "snsUnits": 137
+          },
+          "sourcingShare": {
+            "lostCogsUsa": 112205.1,
+            "lostUnitsUsa": 6064,
+            "sourcingShareUsa": 73.19,
+            "unitCogs": 6.86,
+            "otherVendors": 18.5
+          },
+          "advertising": {
+            "adSales": 0,
+            "spend": 0,
+            "acos": 0,
+            "roas": 0
+          }
+        }
+      },
       "ConvertTagsRequest": {
         "type": "object",
         "required": [
