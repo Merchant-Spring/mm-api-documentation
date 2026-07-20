@@ -36,8 +36,8 @@
       "x-group": "Report"
     },
     {
-      "name": "products",
-      "x-group": "Products"
+      "name": "vendor",
+      "x-group": "Vendor"
     },
     {
       "name": "tag",
@@ -147,10 +147,10 @@
         ]
       }
     },
-    "/products/asinDetails": {
+    "/vendor/asins": {
       "get": {
         "tags": [
-          "products"
+          "vendor"
         ],
         "summary": "Retrieve all vendor fields against an ASIN",
         "description": "Vendor only. Returns one wide row per ASIN combining every data point we hold for the product: catalogue, retail analytics, ordered revenue, shipped revenue, inventory health, purchase orders, product profit, sourcing share and advertising. Supply asin to fetch a single product, or omit it to page through the full master list (products with sales activity in the window). The date range must not exceed 30 days. Page size defaults to 20 and is capped at 50 (rows are wide). Uses zero-based page indexing.",
