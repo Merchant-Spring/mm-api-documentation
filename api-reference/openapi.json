@@ -298,6 +298,29 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "invalidChannel": {
+                    "summary": "channelId / merchantId not found or not accessible",
+                    "value": {
+                      "status": "error",
+                      "error": "Invalid channelId / merchantId"
+                    }
+                  },
+                  "notVendorChannel": {
+                    "summary": "Channel exists but is not an Amazon Vendor channel",
+                    "value": {
+                      "status": "error",
+                      "error": "This endpoint is only supported for vendor channels"
+                    }
+                  },
+                  "dateRangeTooLong": {
+                    "summary": "Window exceeds the 30-day maximum",
+                    "value": {
+                      "status": "error",
+                      "error": "toDate and fromDate must be no greater than 30 days apart"
+                    }
+                  }
                 }
               }
             }
@@ -2455,6 +2478,29 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "tooManyChannelIds": {
+                    "summary": "More than 5 channelId values supplied",
+                    "value": {
+                      "status": "error",
+                      "error": "a maximum of 5 channelId values is allowed"
+                    }
+                  },
+                  "noAdvertisingConnection": {
+                    "summary": "Channel is valid but has no advertising connection",
+                    "value": {
+                      "status": "error",
+                      "error": "The channelId of 4 do not have an advertising connection"
+                    }
+                  },
+                  "dateRangeTooLong": {
+                    "summary": "Window exceeds the 6-month maximum",
+                    "value": {
+                      "status": "error",
+                      "error": "Date range must not exceed 6 months"
+                    }
+                  }
                 }
               }
             }
@@ -2609,6 +2655,29 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "tooManyCampaignIds": {
+                    "summary": "More than 10 campaignId values supplied",
+                    "value": {
+                      "status": "error",
+                      "error": "a maximum of 10 campaignId values is allowed"
+                    }
+                  },
+                  "campaignIdNotNumeric": {
+                    "summary": "campaignId must be digits only",
+                    "value": {
+                      "status": "error",
+                      "error": "campaignId must be numeric"
+                    }
+                  },
+                  "channelNotAccessible": {
+                    "summary": "channelId unknown or not visible to this API key",
+                    "value": {
+                      "status": "error",
+                      "error": "The channelId of 888423 are invalid or not accessible"
+                    }
+                  }
                 }
               }
             }
@@ -2775,6 +2844,29 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "tooManyAdGroupIds": {
+                    "summary": "More than 10 adGroupId values supplied",
+                    "value": {
+                      "status": "error",
+                      "error": "a maximum of 10 adGroupId values is allowed"
+                    }
+                  },
+                  "invalidStatus": {
+                    "summary": "status outside the supported buckets",
+                    "value": {
+                      "status": "error",
+                      "error": "Status must be one of: active, paused, archived"
+                    }
+                  },
+                  "pageSizeTooLarge": {
+                    "summary": "pageSize above the 100 maximum",
+                    "value": {
+                      "status": "error",
+                      "error": "pageSize must not exceed 100"
+                    }
+                  }
                 }
               }
             }
@@ -2806,7 +2898,7 @@
         },
         "example": {
           "status": "error",
-          "error": "a maximum of 10 campaignId values is allowed"
+          "error": "Invalid request parameters"
         }
       },
       "GetAdvertisingCampaignsResponse": {
