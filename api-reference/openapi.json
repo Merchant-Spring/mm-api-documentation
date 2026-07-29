@@ -153,7 +153,7 @@
           "vendor"
         ],
         "summary": "Retrieve all vendor fields against an ASIN",
-        "description": "Vendor only. Returns one wide row per ASIN combining every data point we hold for the product: catalogue, retail analytics, ordered revenue, shipped revenue, inventory health, purchase orders, product profit, sourcing share and advertising. Supply asin to fetch a single product, or omit it to page through the full master list (products with sales activity in the window). The date range must not exceed 30 days. Page size defaults to 20 and is capped at 50 (rows are wide). Uses zero-based page indexing.",
+        "description": "Vendor only. Returns one wide row per ASIN combining every data point we hold for the product: catalogue, ordered revenue, shipped revenue (sourcing and manufacturing), inventory health, purchase orders, product profit, sourcing share and advertising. Supply asin to fetch a single product, or omit it to page through the full master list (products with sales activity in the window). The date range must not exceed 30 days. Page size defaults to 20 and is capped at 50 (rows are wide). Uses zero-based page indexing.",
         "operationId": "getAsinDetails",
         "parameters": [
           {
@@ -213,7 +213,7 @@
           {
             "name": "sortKey",
             "in": "query",
-            "description": "Product sales metric to sort by. Unrecognised values fall back to asin.",
+            "description": "Product sales metric to sort by. Unrecognised values fall back to asin. The unsuffixed shipped keys sort by shippedRevenue.sourcing.*; the Mfg-suffixed ones sort by shippedRevenue.manufacturing.*.",
             "required": false,
             "schema": {
               "type": "string",
@@ -2384,7 +2384,7 @@
               }
             }
           },
-          "retailAnalytics": {
+          "orderedRevenue": {
             "type": "object",
             "properties": {
               "glanceViews": {
@@ -2398,70 +2398,23 @@
               },
               "conversionRate": {
                 "type": "number",
-                "description": "ordered units / glance views × 100"
+                "description": "ordered units / glance views \u00d7 100"
               },
               "retailPrice": {
                 "type": "number",
-                "description": "Average selling price (ordered $ / units)"
-              },
-              "shippedRevenueMfg": {
-                "type": "number",
-                "description": "Manufacturing (total) shipped revenue"
-              },
-              "shippedCogsMfg": {
-                "type": "number",
-                "description": "Manufacturing (total) shipped COGS"
-              },
-              "customerReturns": {
-                "type": "integer"
-              },
-              "shippedUnits": {
-                "type": "integer"
-              }
-            }
-          },
-          "orderedRevenue": {
-            "type": "object",
-            "properties": {
-              "glanceViews": {
-                "type": "number"
-              },
-              "orderedRevenue": {
-                "type": "number"
-              },
-              "orderedUnits": {
-                "type": "integer"
-              },
-              "avgPrice": {
-                "type": "number"
-              },
-              "conversion": {
-                "type": "number"
+                "description": "Average selling price (ordered $ / units). The catalogue list price is catalogue.retailPrice."
               }
             }
           },
           "shippedRevenue": {
             "type": "object",
+            "description": "Sourcing is what you shipped to Amazon; manufacturing is the product total across all vendors.",
             "properties": {
-              "shippedRevenue": {
-                "type": "number"
+              "sourcing": {
+                "$ref": "#/components/schemas/VendorShippedRevenueMetrics"
               },
-              "shippedCogs": {
-                "type": "number"
-              },
-              "shippedUnits": {
-                "type": "integer"
-              },
-              "unitCogs": {
-                "type": "number"
-              },
-              "rawMargin": {
-                "type": "number",
-                "description": "(rev − cogs) / rev × 100"
-              },
-              "netPpm": {
-                "type": "number",
-                "description": "Revenue-weighted net pure product margin"
+              "manufacturing": {
+                "$ref": "#/components/schemas/VendorShippedRevenueMetrics"
               }
             }
           },
@@ -2683,24 +2636,31 @@
             "linkUrl": "https://amazon.com/dp/B00949CTQQ",
             "isFulfilledByAmazon": false
           },
-          "retailAnalytics": {
+          "orderedRevenue": {
             "glanceViews": 544564,
             "orderedRevenue": 2119116.4,
             "orderedUnits": 27238,
             "conversionRate": 5,
-            "retailPrice": 77.8,
-            "shippedRevenueMfg": 1759836,
-            "shippedCogsMfg": 225829.52,
-            "customerReturns": 178,
-            "shippedUnits": 16556
+            "retailPrice": 77.8
           },
           "shippedRevenue": {
-            "shippedRevenue": 1288056.8,
-            "shippedCogs": 113624.42,
-            "shippedUnits": 16556,
-            "unitCogs": 6.86,
-            "rawMargin": 91.18,
-            "netPpm": 51.08
+            "sourcing": {
+              "shippedRevenue": 1288056.8,
+              "shippedUnits": 16556,
+              "shippedCogs": 113624.42,
+              "customerReturns": 178,
+              "unitCogs": 6.86,
+              "rawMargin": 91.18,
+              "netPpm": 51.08
+            },
+            "manufacturing": {
+              "shippedRevenue": 1759836,
+              "shippedUnits": 16556,
+              "shippedCogs": 225829.52,
+              "customerReturns": 178,
+              "unitCogs": 13.64,
+              "rawMargin": 87.17
+            }
           },
           "inventory": {
             "sellableInventory": 258149.67,
@@ -7823,6 +7783,34 @@
           "roas": {
             "type": "number",
             "description": "Return on Ad Spend"
+          }
+        }
+      },
+      "VendorShippedRevenueMetrics": {
+        "type": "object",
+        "properties": {
+          "shippedRevenue": {
+            "type": "number"
+          },
+          "shippedUnits": {
+            "type": "integer"
+          },
+          "shippedCogs": {
+            "type": "number"
+          },
+          "customerReturns": {
+            "type": "integer"
+          },
+          "unitCogs": {
+            "type": "number"
+          },
+          "rawMargin": {
+            "type": "number",
+            "description": "(rev \u2212 cogs) / rev \u00d7 100"
+          },
+          "netPpm": {
+            "type": "number",
+            "description": "Revenue-weighted net pure product margin"
           }
         }
       }
