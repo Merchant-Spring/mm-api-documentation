@@ -16,6 +16,10 @@
   ],
   "tags": [
     {
+      "name": "advertising",
+      "x-group": "Advertising"
+    },
+    {
       "name": "channel",
       "x-group": "Channel"
     },
@@ -290,7 +294,36 @@
           },
           "400": {
             "description": "Invalid input",
-            "content": {}
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "invalidChannel": {
+                    "summary": "channelId / merchantId not found or not accessible",
+                    "value": {
+                      "status": "error",
+                      "error": "Invalid channelId / merchantId"
+                    }
+                  },
+                  "notVendorChannel": {
+                    "summary": "Channel exists but is not an Amazon Vendor channel",
+                    "value": {
+                      "status": "error",
+                      "error": "This endpoint is only supported for vendor channels"
+                    }
+                  },
+                  "dateRangeTooLong": {
+                    "summary": "Window exceeds the 30-day maximum",
+                    "value": {
+                      "status": "error",
+                      "error": "toDate and fromDate must be no greater than 30 days apart"
+                    }
+                  }
+                }
+              }
+            }
           }
         },
         "security": [
@@ -2302,10 +2335,986 @@
           }
         ]
       }
+    },
+    "/advertising/campaigns": {
+      "get": {
+        "tags": [
+          "advertising"
+        ],
+        "summary": "Retrieve multi-channel advertising campaign performance",
+        "description": "Returns paginated advertising campaign performance across up to 5 channels for the selected date range. Values are currency-adjusted based on each store's country and the requested currency. Supports filtering by campaign status and custom campaign groups, sorting by any response column, and zero-based page indexing.",
+        "operationId": "getAdvertisingCampaigns",
+        "parameters": [
+          {
+            "name": "channelId",
+            "in": "query",
+            "description": "Channel ID. Repeat the parameter for multiple channels (max 5).",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "fromDate",
+            "in": "query",
+            "description": "Start of date range as unix epoch seconds. Defaults to 30 days ago.",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "toDate",
+            "in": "query",
+            "description": "End of date range as unix epoch seconds. Defaults to now. The range must not exceed 6 months.",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "currency",
+            "in": "query",
+            "description": "3-letter ISO currency code (default USD).",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "description": "Filter by campaign status bucket. Repeatable.",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "active",
+                  "paused",
+                  "archived"
+                ]
+              }
+            }
+          },
+          {
+            "name": "customCampaignGroupId",
+            "in": "query",
+            "description": "Filter to campaigns in the given custom campaign group(s). Repeatable (max 10). Groups must belong to the caller and relate to the requested channels.",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "sortKey",
+            "in": "query",
+            "description": "Response column to sort by, e.g. campaign_name, cost, impressions, clicks, acos, roas (default campaign_name).",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortOrder",
+            "in": "query",
+            "description": "Sort direction (default desc).",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ]
+            }
+          },
+          {
+            "name": "pageIndex",
+            "in": "query",
+            "description": "Zero-based page index (default 0).",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "Number of campaigns per page, max 100 (default 10).",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAdvertisingCampaignsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "tooManyChannelIds": {
+                    "summary": "More than 5 channelId values supplied",
+                    "value": {
+                      "status": "error",
+                      "error": "a maximum of 5 channelId values is allowed"
+                    }
+                  },
+                  "noAdvertisingConnection": {
+                    "summary": "Channel is valid but has no advertising connection",
+                    "value": {
+                      "status": "error",
+                      "error": "The channelId of 4 do not have an advertising connection"
+                    }
+                  },
+                  "dateRangeTooLong": {
+                    "summary": "Window exceeds the 6-month maximum",
+                    "value": {
+                      "status": "error",
+                      "error": "Date range must not exceed 6 months"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/advertising/adGroups": {
+      "get": {
+        "tags": [
+          "advertising"
+        ],
+        "summary": "Retrieve multi-channel advertising ad group performance",
+        "description": "Returns paginated advertising ad group performance across up to 5 channels for the selected date range, optionally filtered to specific campaigns. Values are currency-adjusted based on each store's country and the requested currency. Supports filtering by ad group status, sorting by any response column, and zero-based page indexing.",
+        "operationId": "getAdvertisingAdGroups",
+        "parameters": [
+          {
+            "name": "channelId",
+            "in": "query",
+            "description": "Channel ID. Repeat the parameter for multiple channels (max 5).",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "campaignId",
+            "in": "query",
+            "description": "Filter to ad groups belonging to the given campaign(s). Repeatable (max 10), numeric.",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "fromDate",
+            "in": "query",
+            "description": "Start of date range as unix epoch seconds. Defaults to 30 days ago.",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "toDate",
+            "in": "query",
+            "description": "End of date range as unix epoch seconds. Defaults to now. The range must not exceed 6 months.",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "currency",
+            "in": "query",
+            "description": "3-letter ISO currency code (default USD).",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "description": "Filter by ad group status bucket. Repeatable.",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "active",
+                  "paused",
+                  "archived"
+                ]
+              }
+            }
+          },
+          {
+            "name": "sortKey",
+            "in": "query",
+            "description": "Response column to sort by, e.g. ad_group_name, cost, impressions, clicks, acos, roas (default ad_group_name).",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortOrder",
+            "in": "query",
+            "description": "Sort direction (default desc).",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ]
+            }
+          },
+          {
+            "name": "pageIndex",
+            "in": "query",
+            "description": "Zero-based page index (default 0).",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "Number of ad groups per page, max 100 (default 10).",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAdvertisingAdGroupsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "tooManyCampaignIds": {
+                    "summary": "More than 10 campaignId values supplied",
+                    "value": {
+                      "status": "error",
+                      "error": "a maximum of 10 campaignId values is allowed"
+                    }
+                  },
+                  "campaignIdNotNumeric": {
+                    "summary": "campaignId must be digits only",
+                    "value": {
+                      "status": "error",
+                      "error": "campaignId must be numeric"
+                    }
+                  },
+                  "channelNotAccessible": {
+                    "summary": "channelId unknown or not visible to this API key",
+                    "value": {
+                      "status": "error",
+                      "error": "The channelId of 888423 are invalid or not accessible"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/advertising/keywords": {
+      "get": {
+        "tags": [
+          "advertising"
+        ],
+        "summary": "Retrieve multi-channel advertising keyword performance",
+        "description": "Returns paginated advertising keyword performance across up to 5 channels for the selected date range, optionally filtered to specific campaigns and ad groups. Values are currency-adjusted based on each store's country and the requested currency. Supports filtering by keyword status, sorting by any response column, and zero-based page indexing.",
+        "operationId": "getAdvertisingKeywords",
+        "parameters": [
+          {
+            "name": "channelId",
+            "in": "query",
+            "description": "Channel ID. Repeat the parameter for multiple channels (max 5).",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "campaignId",
+            "in": "query",
+            "description": "Filter to keywords belonging to the given campaign(s). Repeatable (max 10), numeric.",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "adGroupId",
+            "in": "query",
+            "description": "Filter to keywords belonging to the given ad group(s). Repeatable (max 10), numeric.",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "fromDate",
+            "in": "query",
+            "description": "Start of date range as unix epoch seconds. Defaults to 30 days ago.",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "toDate",
+            "in": "query",
+            "description": "End of date range as unix epoch seconds. Defaults to now. The range must not exceed 6 months.",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "currency",
+            "in": "query",
+            "description": "3-letter ISO currency code (default USD).",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "description": "Filter by keyword status bucket. Repeatable.",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "active",
+                  "paused",
+                  "archived"
+                ]
+              }
+            }
+          },
+          {
+            "name": "sortKey",
+            "in": "query",
+            "description": "Response column to sort by, e.g. keyword_text, cost, impressions, clicks, acos, roas (default keyword_text).",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortOrder",
+            "in": "query",
+            "description": "Sort direction (default desc).",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ]
+            }
+          },
+          {
+            "name": "pageIndex",
+            "in": "query",
+            "description": "Zero-based page index (default 0).",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "Number of keywords per page, max 100 (default 10).",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAdvertisingKeywordsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "tooManyAdGroupIds": {
+                    "summary": "More than 10 adGroupId values supplied",
+                    "value": {
+                      "status": "error",
+                      "error": "a maximum of 10 adGroupId values is allowed"
+                    }
+                  },
+                  "invalidStatus": {
+                    "summary": "status outside the supported buckets",
+                    "value": {
+                      "status": "error",
+                      "error": "Status must be one of: active, paused, archived"
+                    }
+                  },
+                  "pageSizeTooLarge": {
+                    "summary": "pageSize above the 100 maximum",
+                    "value": {
+                      "status": "error",
+                      "error": "pageSize must not exceed 100"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
     }
   },
   "components": {
     "schemas": {
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "error"
+            ]
+          },
+          "error": {
+            "type": "string",
+            "description": "Human-readable message. Validation failures list every failing rule, comma-separated."
+          }
+        },
+        "example": {
+          "status": "error",
+          "error": "Invalid request parameters"
+        }
+      },
+      "GetAdvertisingCampaignsResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "channel_id": {
+                  "type": "string"
+                },
+                "campaign_id": {
+                  "type": "string"
+                },
+                "ad_type": {
+                  "type": "string"
+                },
+                "campaign_name": {
+                  "type": "string"
+                },
+                "campaign_status": {
+                  "type": "string"
+                },
+                "budget": {
+                  "type": "number"
+                },
+                "budget_type": {
+                  "type": "string"
+                },
+                "start_date": {
+                  "type": "string",
+                  "nullable": true
+                },
+                "end_date": {
+                  "type": "string",
+                  "nullable": true
+                },
+                "targeting_type": {
+                  "type": "string",
+                  "nullable": true
+                },
+                "bidding_strategy": {
+                  "type": "string",
+                  "nullable": true
+                },
+                "cost_type": {
+                  "type": "string",
+                  "nullable": true
+                },
+                "impressions": {
+                  "type": "number"
+                },
+                "clicks": {
+                  "type": "number"
+                },
+                "cost": {
+                  "type": "number"
+                },
+                "attributed_sales": {
+                  "type": "number"
+                },
+                "attributed_sales_same_sku": {
+                  "type": "number"
+                },
+                "attributed_conversions": {
+                  "type": "number"
+                },
+                "attributed_conversions_same_sku": {
+                  "type": "number"
+                },
+                "attributed_units_ordered": {
+                  "type": "number"
+                },
+                "attributed_units_ordered_same_sku": {
+                  "type": "number"
+                },
+                "attributed_orders_ntb": {
+                  "type": "number"
+                },
+                "attributed_units_ordered_ntb": {
+                  "type": "number"
+                },
+                "attributed_sales_ntb": {
+                  "type": "number"
+                },
+                "attributed_orders_ntb_percentage": {
+                  "type": "number",
+                  "nullable": true
+                },
+                "attributed_units_ordered_ntb_percentage": {
+                  "type": "number",
+                  "nullable": true
+                },
+                "attributed_sales_ntb_percentage": {
+                  "type": "number",
+                  "nullable": true
+                },
+                "attributed_detail_page_views_clicks": {
+                  "type": "number"
+                },
+                "acos": {
+                  "type": "number"
+                },
+                "click_through_rate": {
+                  "type": "number"
+                },
+                "cost_per_click": {
+                  "type": "number"
+                },
+                "cost_per_acquisition": {
+                  "type": "number"
+                },
+                "conversion_rate": {
+                  "type": "number"
+                },
+                "roas": {
+                  "type": "number"
+                }
+              }
+            }
+          },
+          "pagination": {
+            "type": "object",
+            "properties": {
+              "pageIndex": {
+                "type": "integer"
+              },
+              "pageSize": {
+                "type": "integer"
+              },
+              "count": {
+                "type": "integer"
+              }
+            }
+          },
+          "meta": {
+            "type": "object",
+            "properties": {
+              "currency": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "GetAdvertisingAdGroupsResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "channel_id": {
+                  "type": "string"
+                },
+                "campaign_id": {
+                  "type": "string"
+                },
+                "ad_group_id": {
+                  "type": "string"
+                },
+                "ad_type": {
+                  "type": "string"
+                },
+                "campaign_name": {
+                  "type": "string"
+                },
+                "ad_group_name": {
+                  "type": "string"
+                },
+                "ad_group_status": {
+                  "type": "string"
+                },
+                "default_bid": {
+                  "type": "number",
+                  "nullable": true
+                },
+                "cost_type": {
+                  "type": "string",
+                  "nullable": true
+                },
+                "impressions": {
+                  "type": "number"
+                },
+                "clicks": {
+                  "type": "number"
+                },
+                "cost": {
+                  "type": "number"
+                },
+                "attributed_sales": {
+                  "type": "number"
+                },
+                "attributed_sales_same_sku": {
+                  "type": "number"
+                },
+                "attributed_conversions": {
+                  "type": "number"
+                },
+                "attributed_conversions_same_sku": {
+                  "type": "number"
+                },
+                "attributed_units_ordered": {
+                  "type": "number"
+                },
+                "attributed_units_ordered_same_sku": {
+                  "type": "number"
+                },
+                "attributed_orders_ntb": {
+                  "type": "number"
+                },
+                "attributed_units_ordered_ntb": {
+                  "type": "number"
+                },
+                "attributed_sales_ntb": {
+                  "type": "number"
+                },
+                "attributed_orders_ntb_percentage": {
+                  "type": "number",
+                  "nullable": true
+                },
+                "attributed_units_ordered_ntb_percentage": {
+                  "type": "number",
+                  "nullable": true
+                },
+                "attributed_sales_ntb_percentage": {
+                  "type": "number",
+                  "nullable": true
+                },
+                "attributed_detail_page_views_clicks": {
+                  "type": "number"
+                },
+                "acos": {
+                  "type": "number"
+                },
+                "click_through_rate": {
+                  "type": "number"
+                },
+                "cost_per_click": {
+                  "type": "number"
+                },
+                "conversion_rate": {
+                  "type": "number"
+                },
+                "roas": {
+                  "type": "number"
+                }
+              }
+            }
+          },
+          "pagination": {
+            "type": "object",
+            "properties": {
+              "pageIndex": {
+                "type": "integer"
+              },
+              "pageSize": {
+                "type": "integer"
+              },
+              "count": {
+                "type": "integer"
+              }
+            }
+          },
+          "meta": {
+            "type": "object",
+            "properties": {
+              "currency": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "GetAdvertisingKeywordsResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "channel_id": {
+                  "type": "string"
+                },
+                "campaign_id": {
+                  "type": "string"
+                },
+                "ad_group_id": {
+                  "type": "string"
+                },
+                "keyword_id": {
+                  "type": "string"
+                },
+                "ad_type": {
+                  "type": "string"
+                },
+                "campaign_name": {
+                  "type": "string"
+                },
+                "ad_group_name": {
+                  "type": "string"
+                },
+                "keyword_text": {
+                  "type": "string"
+                },
+                "match_type": {
+                  "type": "string"
+                },
+                "keyword_status": {
+                  "type": "string"
+                },
+                "bid": {
+                  "type": "number",
+                  "nullable": true
+                },
+                "cost_type": {
+                  "type": "string",
+                  "nullable": true
+                },
+                "impressions": {
+                  "type": "number"
+                },
+                "clicks": {
+                  "type": "number"
+                },
+                "cost": {
+                  "type": "number"
+                },
+                "attributed_sales": {
+                  "type": "number"
+                },
+                "attributed_sales_same_sku": {
+                  "type": "number"
+                },
+                "attributed_conversions": {
+                  "type": "number"
+                },
+                "attributed_conversions_same_sku": {
+                  "type": "number"
+                },
+                "attributed_units_ordered": {
+                  "type": "number"
+                },
+                "attributed_units_ordered_same_sku": {
+                  "type": "number"
+                },
+                "attributed_orders_ntb": {
+                  "type": "number"
+                },
+                "attributed_units_ordered_ntb": {
+                  "type": "number"
+                },
+                "attributed_sales_ntb": {
+                  "type": "number"
+                },
+                "attributed_detail_page_views_clicks": {
+                  "type": "number"
+                },
+                "attributed_orders_ntb_percentage": {
+                  "type": "number"
+                },
+                "attributed_units_ordered_ntb_percentage": {
+                  "type": "number"
+                },
+                "attributed_sales_ntb_percentage": {
+                  "type": "number"
+                },
+                "acos": {
+                  "type": "number"
+                },
+                "click_through_rate": {
+                  "type": "number"
+                },
+                "cost_per_click": {
+                  "type": "number"
+                },
+                "conversion_rate": {
+                  "type": "number"
+                },
+                "cost_per_acquisition": {
+                  "type": "number"
+                },
+                "roas": {
+                  "type": "number"
+                }
+              }
+            }
+          },
+          "pagination": {
+            "type": "object",
+            "properties": {
+              "pageIndex": {
+                "type": "integer"
+              },
+              "pageSize": {
+                "type": "integer"
+              },
+              "count": {
+                "type": "integer"
+              }
+            }
+          },
+          "meta": {
+            "type": "object",
+            "properties": {
+              "currency": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
       "GetAsinDetailsResponse": {
         "type": "object",
         "properties": {
@@ -2340,6 +3349,34 @@
                 "description": "Currency of all monetary values (native marketplace currency)"
               }
             }
+          }
+        }
+      },
+      "VendorShippedRevenueMetrics": {
+        "type": "object",
+        "properties": {
+          "shippedRevenue": {
+            "type": "number"
+          },
+          "shippedUnits": {
+            "type": "integer"
+          },
+          "shippedCogs": {
+            "type": "number"
+          },
+          "customerReturns": {
+            "type": "integer"
+          },
+          "unitCogs": {
+            "type": "number"
+          },
+          "rawMargin": {
+            "type": "number",
+            "description": "(rev − cogs) / rev × 100"
+          },
+          "netPpm": {
+            "type": "number",
+            "description": "Revenue-weighted net pure product margin"
           }
         }
       },
@@ -2398,7 +3435,7 @@
               },
               "conversionRate": {
                 "type": "number",
-                "description": "ordered units / glance views \u00d7 100"
+                "description": "ordered units / glance views × 100"
               },
               "retailPrice": {
                 "type": "number",
@@ -3495,6 +4532,14 @@
               "includeTax": {
                 "type": "boolean",
                 "description": "Whether tax should be included in sales figures"
+              },
+              "profitabilityView": {
+                "type": "string",
+                "enum": [
+                  "settled",
+                  "accrual"
+                ],
+                "description": "Accounting basis for the P&L. 'settled' (default) is cash-basis; 'accrual' recognises revenue and costs when earned or incurred, before settlement. Defaults to 'settled' when omitted."
               }
             }
           }
@@ -3530,6 +4575,14 @@
           },
           "includeTax": {
             "type": "boolean"
+          },
+          "profitabilityView": {
+            "type": "string",
+            "enum": [
+              "settled",
+              "accrual"
+            ],
+            "description": "Accounting basis for the P&L. 'settled' (default) is cash-basis; 'accrual' recognises revenue and costs when earned or incurred, before settlement. Defaults to 'settled' when omitted."
           }
         },
         "required": [
@@ -3577,6 +4630,14 @@
           "pageIndex": {
             "type": "integer",
             "description": "The index of the current page"
+          },
+          "profitabilityView": {
+            "type": "string",
+            "enum": [
+              "settled",
+              "accrual"
+            ],
+            "description": "Accounting basis for the P&L. 'settled' (default) is cash-basis; 'accrual' recognises revenue and costs when earned or incurred, before settlement. Defaults to 'settled' when omitted."
           }
         },
         "required": [
@@ -7783,34 +8844,6 @@
           "roas": {
             "type": "number",
             "description": "Return on Ad Spend"
-          }
-        }
-      },
-      "VendorShippedRevenueMetrics": {
-        "type": "object",
-        "properties": {
-          "shippedRevenue": {
-            "type": "number"
-          },
-          "shippedUnits": {
-            "type": "integer"
-          },
-          "shippedCogs": {
-            "type": "number"
-          },
-          "customerReturns": {
-            "type": "integer"
-          },
-          "unitCogs": {
-            "type": "number"
-          },
-          "rawMargin": {
-            "type": "number",
-            "description": "(rev \u2212 cogs) / rev \u00d7 100"
-          },
-          "netPpm": {
-            "type": "number",
-            "description": "Revenue-weighted net pure product margin"
           }
         }
       }
