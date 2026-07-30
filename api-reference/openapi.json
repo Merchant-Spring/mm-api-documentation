@@ -50,6 +50,10 @@
     {
       "name": "profitability",
       "x-group": "Profitability"
+    },
+    {
+      "name": "targets",
+      "x-group": "Targets"
     }
   ],
   "paths": {
@@ -217,7 +221,7 @@
           {
             "name": "sortKey",
             "in": "query",
-            "description": "Product sales metric to sort by. Unrecognised values fall back to asin. The unsuffixed shipped keys sort by shippedRevenue.sourcing.*; the Mfg-suffixed ones sort by shippedRevenue.manufacturing.*.",
+            "description": "Product sales metric to sort by. Unrecognised values fall back to asin.",
             "required": false,
             "schema": {
               "type": "string",
@@ -324,6 +328,106 @@
                 }
               }
             }
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/targets": {
+      "get": {
+        "tags": [
+          "targets"
+        ],
+        "summary": "Retrieve budgets and forecasts (Ad Spend Budget, Sales Budget, Sales Forecast)",
+        "description": "Returns the sales budget, sales forecast and ad spend budget targets for a channel over a date range. The data object is keyed by the Unix epoch seconds of each period bucket start; the number of buckets depends on interval (for example a one-year range with interval=month returns ~12 buckets, interval=week ~52, interval=day ~366). The totals object is the summed roll-up across the whole range.",
+        "operationId": "getTargets",
+        "parameters": [
+          {
+            "name": "channelId",
+            "in": "query",
+            "description": "Channel (store) ID.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "merchantId",
+            "in": "query",
+            "description": "Merchant ID that owns the channel. URL-encode values containing spaces or '@'.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "fromDate",
+            "in": "query",
+            "description": "Start of the window as Unix epoch seconds.",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "toDate",
+            "in": "query",
+            "description": "End of the window as Unix epoch seconds.",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "timezone",
+            "in": "query",
+            "description": "IANA timezone string, for example Australia/Sydney.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "interval",
+            "in": "query",
+            "description": "Time bucket size for the data breakdown. day returns one entry per day, week per week, month per month. Defaults to day.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "day",
+              "enum": [
+                "day",
+                "week",
+                "month"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/getTargetsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input",
+            "content": {}
           }
         },
         "security": [
@@ -2878,10 +2982,244 @@
           }
         ]
       }
+    },
+    "/advertising/products": {
+      "get": {
+        "tags": [
+          "advertising"
+        ],
+        "summary": "Retrieve multi-channel advertising product performance",
+        "description": "Returns paginated advertising product (ASIN) performance across up to 5 channels for the selected date range, optionally filtered to specific products. Values are currency-adjusted based on each store's country and the requested currency. Supports sorting by any response column and zero-based page indexing.",
+        "operationId": "getAdvertisingProducts",
+        "parameters": [
+          {
+            "name": "channelId",
+            "in": "query",
+            "description": "Channel ID. Repeat the parameter for multiple channels (max 5).",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "productSku",
+            "in": "query",
+            "description": "Filter to the given product(s) by their normalised product identifier — an ASIN on Amazon, or the equivalent product identifier the channel's platform uses. Repeatable (max 10).",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "fromDate",
+            "in": "query",
+            "description": "Start of date range as unix epoch seconds. Defaults to 30 days ago.",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "toDate",
+            "in": "query",
+            "description": "End of date range as unix epoch seconds. Defaults to now. The range must not exceed 6 months.",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "currency",
+            "in": "query",
+            "description": "3-letter ISO currency code (default USD).",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortKey",
+            "in": "query",
+            "description": "Response column to sort by, e.g. product_sku, cost, impressions, clicks, acos, roas (default product_sku).",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortOrder",
+            "in": "query",
+            "description": "Sort direction (default desc).",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ]
+            }
+          },
+          {
+            "name": "pageIndex",
+            "in": "query",
+            "description": "Zero-based page index (default 0).",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "Number of products per page, max 100 (default 10).",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAdvertisingProductsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "tooManyProductSkus": {
+                    "summary": "More than 10 productSku values supplied",
+                    "value": {
+                      "status": "error",
+                      "error": "a maximum of 10 productSku values is allowed"
+                    }
+                  },
+                  "tooManyChannelIds": {
+                    "summary": "More than 5 channelId values supplied",
+                    "value": {
+                      "status": "error",
+                      "error": "a maximum of 5 channelId values is allowed"
+                    }
+                  },
+                  "dateRangeTooLong": {
+                    "summary": "Window exceeds the 6-month maximum",
+                    "value": {
+                      "status": "error",
+                      "error": "Date range must not exceed 6 months"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
     }
   },
   "components": {
     "schemas": {
+      "ForecastTargets": {
+        "type": "object",
+        "description": "Ad Spend Budget, Sales Budget, Sales Forecast. Amounts are in the currency reported in meta.currency; null means no target has been set.",
+        "properties": {
+          "salesBudget": {
+            "type": "number",
+            "nullable": true
+          },
+          "salesForecast": {
+            "type": "number",
+            "nullable": true
+          },
+          "adSpendBudget": {
+            "type": "number",
+            "nullable": true
+          }
+        },
+        "example": {
+          "salesBudget": null,
+          "salesForecast": null,
+          "adSpendBudget": 0.35
+        }
+      },
+      "getTargetsResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "description": "Map keyed by the Unix epoch seconds of each period bucket start. One entry per interval bucket.",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/ForecastTargets"
+            }
+          },
+          "totals": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ForecastTargets"
+              },
+              {
+                "description": "Summed roll-up across the whole range."
+              }
+            ]
+          },
+          "meta": {
+            "type": "object",
+            "properties": {
+              "timezone": {
+                "type": "string"
+              },
+              "currency": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "example": {
+          "data": {
+            "1752969600": {
+              "salesBudget": null,
+              "salesForecast": null,
+              "adSpendBudget": 0.35
+            }
+          },
+          "totals": {
+            "salesBudget": null,
+            "salesForecast": null,
+            "adSpendBudget": 18.25
+          },
+          "meta": {
+            "timezone": "Australia/Sydney",
+            "currency": "USD"
+          }
+        }
+      },
       "ErrorResponse": {
         "type": "object",
         "properties": {
@@ -3148,6 +3486,102 @@
                 },
                 "roas": {
                   "type": "number"
+                }
+              }
+            }
+          },
+          "pagination": {
+            "type": "object",
+            "properties": {
+              "pageIndex": {
+                "type": "integer"
+              },
+              "pageSize": {
+                "type": "integer"
+              },
+              "count": {
+                "type": "integer"
+              }
+            }
+          },
+          "meta": {
+            "type": "object",
+            "properties": {
+              "currency": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "GetAdvertisingProductsResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "channel_id": {
+                  "type": "string"
+                },
+                "product_sku": {
+                  "type": "string",
+                  "description": "Normalised product identifier — an ASIN on Amazon, or the equivalent product identifier the channel's platform uses."
+                },
+                "impressions": {
+                  "type": "number"
+                },
+                "clicks": {
+                  "type": "number"
+                },
+                "cost": {
+                  "type": "number"
+                },
+                "attributed_sales": {
+                  "type": "number"
+                },
+                "attributed_sales_same_sku": {
+                  "type": "number"
+                },
+                "attributed_conversions": {
+                  "type": "number"
+                },
+                "attributed_conversions_same_sku": {
+                  "type": "number"
+                },
+                "attributed_units_ordered": {
+                  "type": "number"
+                },
+                "attributed_units_ordered_same_sku": {
+                  "type": "number"
+                },
+                "acos": {
+                  "type": "number"
+                },
+                "click_through_rate": {
+                  "type": "number"
+                },
+                "cost_per_click": {
+                  "type": "number"
+                },
+                "conversion_rate": {
+                  "type": "number"
+                },
+                "roas": {
+                  "type": "number"
+                },
+                "product_title": {
+                  "type": "string",
+                  "nullable": true
+                },
+                "image_url": {
+                  "type": "string",
+                  "nullable": true
+                },
+                "link_url": {
+                  "type": "string",
+                  "nullable": true
                 }
               }
             }
