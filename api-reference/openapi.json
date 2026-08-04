@@ -343,7 +343,7 @@
           "targets"
         ],
         "summary": "Retrieve budgets and forecasts (Ad Spend Budget, Sales Budget, Sales Forecast)",
-        "description": "Returns the sales budget, sales forecast and ad spend budget targets for a channel over a date range. The data object is keyed by the Unix epoch seconds of each period bucket start; the number of buckets depends on interval (for example a one-year range with interval=month returns ~12 buckets, interval=week ~52, interval=day ~366). The totals object is the summed roll-up across the whole range.",
+        "description": "Returns the sales budget, sales forecast and ad spend budget targets for a channel over a date range. Data is an ordered array with ISO 8601 and Unix epoch start/end times for each period bucket; the number of buckets depends on interval (for example a one-year range with interval=month returns ~12 buckets, interval=week ~52, interval=day ~366). The totals object is the summed roll-up across the whole range.",
         "operationId": "getTargets",
         "parameters": [
           {
@@ -370,7 +370,8 @@
             "description": "Start of the window as Unix epoch seconds.",
             "required": true,
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "format": "int64"
             }
           },
           {
@@ -379,7 +380,8 @@
             "description": "End of the window as Unix epoch seconds.",
             "required": true,
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "format": "int64"
             }
           },
           {
@@ -3146,6 +3148,38 @@
   },
   "components": {
     "schemas": {
+      "StartEndTimeRange": {
+        "type": "object",
+        "description": "Start and end of a time range. ISO 8601 values preserve the UTC offset for the requested timezone; epoch values are Unix seconds for the same instants.",
+        "required": [
+          "startTime",
+          "endTime",
+          "startTimeEpoch",
+          "endTimeEpoch"
+        ],
+        "properties": {
+          "startTime": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Range start in ISO 8601 format with the requested timezone's UTC offset."
+          },
+          "endTime": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Inclusive range end in ISO 8601 format with the requested timezone's UTC offset."
+          },
+          "startTimeEpoch": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Range start as Unix epoch seconds."
+          },
+          "endTimeEpoch": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Inclusive range end as Unix epoch seconds."
+          }
+        }
+      },
       "ForecastTargets": {
         "type": "object",
         "description": "Ad Spend Budget, Sales Budget, Sales Forecast. Amounts are in the currency reported in meta.currency; null means no target has been set.",
@@ -3169,14 +3203,24 @@
           "adSpendBudget": 0.35
         }
       },
+      "TargetsBucket": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/StartEndTimeRange"
+          },
+          {
+            "$ref": "#/components/schemas/ForecastTargets"
+          }
+        ]
+      },
       "getTargetsResponse": {
         "type": "object",
         "properties": {
           "data": {
-            "type": "object",
-            "description": "Map keyed by the Unix epoch seconds of each period bucket start. One entry per interval bucket.",
-            "additionalProperties": {
-              "$ref": "#/components/schemas/ForecastTargets"
+            "type": "array",
+            "description": "Chronologically ordered, with one entry per interval bucket.",
+            "items": {
+              "$ref": "#/components/schemas/TargetsBucket"
             }
           },
           "totals": {
@@ -3202,17 +3246,21 @@
           }
         },
         "example": {
-          "data": {
-            "1752969600": {
+          "data": [
+            {
+              "startTime": "2025-07-20T00:00:00.000+10:00",
+              "endTime": "2025-07-20T23:59:59.000+10:00",
+              "startTimeEpoch": 1752933600,
+              "endTimeEpoch": 1753019999,
               "salesBudget": null,
               "salesForecast": null,
               "adSpendBudget": 0.35
             }
-          },
+          ],
           "totals": {
             "salesBudget": null,
             "salesForecast": null,
-            "adSpendBudget": 18.25
+            "adSpendBudget": 0.35
           },
           "meta": {
             "timezone": "Australia/Sydney",
