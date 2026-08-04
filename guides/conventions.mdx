@@ -1,5 +1,5 @@
 ---
-title: "Conventions"
+title: Conventions
 description: "Shared conventions across the API: requests, pagination, dates, and errors."
 ---
 
@@ -10,16 +10,16 @@ These conventions apply across the MerchantSpring Public API.
 - **HTTPS only.**
 - Requests and responses are **JSON**. Send `Content-Type: application/json` on requests with a body.
 - Authenticate with your key in the `x-api-key` header on every request — see [Authentication](/authentication).
-- Most data endpoints are scoped to a channel by `merchantId` + `channelId`; discover these via [`POST /channels`](/api-reference/channel/retrieve-a-list-of-channels).
+- Most data endpoints are scoped to a channel by `merchantId` \+ `channelId`; discover these via [`POST /channels`](/api-reference/channel/retrieve-a-list-of-channels).
 
 ## Pagination
 
 Paginated endpoints (such as [`POST /content-changes`](/api-reference/content-change/retrieve-a-list-of-content-changes)) use **zero-based** `pageIndex` / `pageSize`:
 
 | Parameter | Description |
-|---|---|
+| --- | --- |
 | `pageIndex` | Page number, starting at `0` (default `0`). |
-| `pageSize`  | Items per page. Defaults and caps vary by endpoint — e.g. content changes are capped at `500`. |
+| `pageSize` | Items per page. Defaults and caps vary by endpoint — e.g. content changes are capped at `500`. |
 
 Always check the specific endpoint's reference page for its exact defaults and maximum — and where the pagination parameters live, since some endpoints (e.g. content changes) nest `pageIndex` / `pageSize` under a `paginationParams` object.
 
@@ -36,10 +36,10 @@ Report **creation** (`POST /reports/create/*`) returns a `reportId` rather than 
 The API uses standard HTTP status codes:
 
 | Status | Meaning |
-|--------|---------|
-| `400`  | Bad request — missing or invalid parameters. |
-| `401`  | Valid API key, but it doesn't have access to the endpoint. |
-| `403`  | Missing or invalid API key. |
-| `404`  | Resource not found (e.g. an unknown `reportId`). |
+| --- | --- |
+| `400` | Bad request — missing or invalid parameters. |
+| `401` | Valid API key, but it doesn't have access to the endpoint. |
+| `403` | Missing or invalid API key. |
+| `404` | Resource not found (e.g. an unknown `reportId`). |
 
 Error responses include a message describing the problem.
