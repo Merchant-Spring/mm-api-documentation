@@ -50,6 +50,10 @@
     {
       "name": "profitability",
       "x-group": "Profitability"
+    },
+    {
+      "name": "targets",
+      "x-group": "Targets"
     }
   ],
   "paths": {
@@ -324,6 +328,108 @@
                 }
               }
             }
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/targets": {
+      "get": {
+        "tags": [
+          "targets"
+        ],
+        "summary": "Retrieve budgets and forecasts (Ad Spend Budget, Sales Budget, Sales Forecast)",
+        "description": "Returns the sales budget, sales forecast and ad spend budget targets for a channel over a date range. Data is an ordered array with ISO 8601 and Unix epoch start/end times for each period bucket; the number of buckets depends on interval (for example a one-year range with interval=month returns ~12 buckets, interval=week ~52, interval=day ~366). The totals object is the summed roll-up across the whole range.",
+        "operationId": "getTargets",
+        "parameters": [
+          {
+            "name": "channelId",
+            "in": "query",
+            "description": "Channel (store) ID.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "merchantId",
+            "in": "query",
+            "description": "Merchant ID that owns the channel. URL-encode values containing spaces or '@'.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "fromDate",
+            "in": "query",
+            "description": "Start of the window as Unix epoch seconds.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "toDate",
+            "in": "query",
+            "description": "End of the window as Unix epoch seconds.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "timezone",
+            "in": "query",
+            "description": "IANA timezone string, for example Australia/Sydney.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "interval",
+            "in": "query",
+            "description": "Time bucket size for the data breakdown. day returns one entry per day, week per week, month per month. Defaults to day.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "day",
+              "enum": [
+                "day",
+                "week",
+                "month"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/getTargetsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input",
+            "content": {}
           }
         },
         "security": [
@@ -3042,6 +3148,126 @@
   },
   "components": {
     "schemas": {
+      "StartEndTimeRange": {
+        "type": "object",
+        "description": "Start and end of a time range. ISO 8601 values preserve the UTC offset for the requested timezone; epoch values are Unix seconds for the same instants.",
+        "required": [
+          "startTime",
+          "endTime",
+          "startTimeEpoch",
+          "endTimeEpoch"
+        ],
+        "properties": {
+          "startTime": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Range start in ISO 8601 format with the requested timezone's UTC offset."
+          },
+          "endTime": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Inclusive range end in ISO 8601 format with the requested timezone's UTC offset."
+          },
+          "startTimeEpoch": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Range start as Unix epoch seconds."
+          },
+          "endTimeEpoch": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Inclusive range end as Unix epoch seconds."
+          }
+        }
+      },
+      "ForecastTargets": {
+        "type": "object",
+        "description": "Ad Spend Budget, Sales Budget, Sales Forecast. Amounts are in the currency reported in meta.currency; null means no target has been set.",
+        "properties": {
+          "salesBudget": {
+            "type": "number",
+            "nullable": true
+          },
+          "salesForecast": {
+            "type": "number",
+            "nullable": true
+          },
+          "adSpendBudget": {
+            "type": "number",
+            "nullable": true
+          }
+        },
+        "example": {
+          "salesBudget": null,
+          "salesForecast": null,
+          "adSpendBudget": 0.35
+        }
+      },
+      "TargetsBucket": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/StartEndTimeRange"
+          },
+          {
+            "$ref": "#/components/schemas/ForecastTargets"
+          }
+        ]
+      },
+      "getTargetsResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "description": "Chronologically ordered, with one entry per interval bucket.",
+            "items": {
+              "$ref": "#/components/schemas/TargetsBucket"
+            }
+          },
+          "totals": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ForecastTargets"
+              },
+              {
+                "description": "Summed roll-up across the whole range."
+              }
+            ]
+          },
+          "meta": {
+            "type": "object",
+            "properties": {
+              "timezone": {
+                "type": "string"
+              },
+              "currency": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "example": {
+          "data": [
+            {
+              "startTime": "2025-07-20T00:00:00.000+10:00",
+              "endTime": "2025-07-20T23:59:59.000+10:00",
+              "startTimeEpoch": 1752933600,
+              "endTimeEpoch": 1753019999,
+              "salesBudget": null,
+              "salesForecast": null,
+              "adSpendBudget": 0.35
+            }
+          ],
+          "totals": {
+            "salesBudget": null,
+            "salesForecast": null,
+            "adSpendBudget": 0.35
+          },
+          "meta": {
+            "timezone": "Australia/Sydney",
+            "currency": "USD"
+          }
+        }
+      },
       "ErrorResponse": {
         "type": "object",
         "properties": {
