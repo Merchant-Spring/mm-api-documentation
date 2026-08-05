@@ -34,6 +34,7 @@
           {
             "group": "Guides",
             "pages": [
+              "guides/sso",
               "guides/reports",
               "guides/profitability",
               "guides/conventions"

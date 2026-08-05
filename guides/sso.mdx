@@ -1,0 +1,85 @@
+---
+title: Single Sign-On (SSO)
+---
+
+The MerchantSpring Single Sign-On is designed to be used by other software companies that want to integrate with MerchantSpring, allowing their clients to sign-on to MerchantSpring without a username and password.
+
+For the purpose of this documentation we will refer to the software company as PartyA.
+
+### How it works
+
+1. PartyA uses their private key to sign the JWT. The JWT payload contains user information such as email, user id, company, first name and last name etc (Payload can be customised accordingly)
+2. PartyA opens a new window to a GET endpoint. The encoded JWT token and source is passed as a query string param (e.g., `https://analytics.PartyA.com/api/partner/PartyA/auth?source=PartyA&token=eyJh..`).
+3. MerchantSpring verifies the validity of the encoded JWT token.
+
+   - If not valid, return custom HTML error page with response status 401.
+   - If valid:
+
+     - Check to see whether email address (in JWT payload) already exists in our system:
+
+       - If it doesn't, provision the user, then log the user in
+       - If it does, check that the user has been originally provisioned via PartyA, and then log the user in
+     - Redirect to dashboard (`https://analytics.PartyAmarketing.com`), and set cookie with encoded JWT token
+
+       - Note: PartyA can't set cookie directly, since they are on a different domain
+     - Once channel connection is completed and "return to PartyA" is clicked, the user will be redirected to the PartyA platform. PartyA will need to provide MerchantSpring the URL to redirect the user.
+
+### Payload
+
+The payload for the JWT token must contain the following fields:
+
+- `sub` – a stable user identifier that uniquely identifies a user. An email address is typically not sufficient for this field, since the email address can be updated by the user.
+- `email` – the email address for the user
+- `firstName` – the first name for the user
+- `lastName` – the last name for the user
+- `iat` – the "Issued At" time of this JWT token, represented as seconds since Unix epoch. JWT verification will fail if the `iat` value exceeds a maximum age of 10 minutes (for GET endpoints) or 1 minute (for DELETE endpoints).
+- `iss` – the "Issuer" of this JWT token, must be "PartyA". JWT verification will fail if this value is not "PartyA".
+
+```json
+{
+  "sub": "1234567890",
+  "email": "johndoe@example.com",
+  "firstName": "John",
+  "lastName": "Doe",
+  "iat": 1516239022,
+  "iss": "PartyA"
+}
+```
+
+### New User Provisioning Flow
+
+Identical to Single Sign-On Flow
+
+### User Deprovisioning Flow
+
+1. PartyA uses their private key to sign the JWT. The JWT payload contains user information such as email, first name and last name.
+2. PartyA submits the JWT token to a DELETE endpoint. The encoded JWT token and source are passed as the DELETE body (e.g., `https://analytics.PartyA.com/api/partner/PartyA/auth`).
+3. MerchantSpring verifies the validity of the encoded JWT token.
+
+   - If not valid, return response status 401.
+   - If valid:
+
+     - Check to see whether email address (in JWT payload) already exists in our system:
+
+       - If it does not, return response status 400
+       - If it does, flag the user for deletion
+     - If successful, return response status 200
+     - If not successful, return response status 500
+
+## Webhook to receive API key
+
+The webhook process is required when PartyA wishes to retrieve data about their provisioned user.
+
+### How it works
+
+When a new user is provisioned, an API key is generated for the user. This API key can be used to make calls to endpoints on our API Gateway. The API key will be sent via a POST request to a webhook URL provided by PartyA. The payload in the request will contain the following data:
+
+```js
+{
+  //email address of the user provisioned
+  email: "john.doe@merchantspring.io",
+  apiKey: "apiKeyForTheUser",
+  //matching the externalUserId that is sent in the sub of the sign in payload
+  externalUserId: "externalUserId1"
+}
+```
