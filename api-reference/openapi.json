@@ -36,6 +36,10 @@
       "x-group": "Order"
     },
     {
+      "name": "product",
+      "x-group": "Product"
+    },
+    {
       "name": "report",
       "x-group": "Report"
     },
@@ -146,6 +150,120 @@
           "400": {
             "description": "Invalid input",
             "content": {}
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/products/amazon": {
+      "get": {
+        "tags": [
+          "product"
+        ],
+        "summary": "Retrieve Amazon product attributes",
+        "description": "Returns catalog attributes for an Amazon seller or vendor ASIN, together with seller listing data or vendor details when available.",
+        "operationId": "getProductAttribute",
+        "parameters": [
+          {
+            "name": "channelId",
+            "in": "query",
+            "description": "Channel (store) ID. Must be an Amazon seller or vendor channel.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "merchantId",
+            "in": "query",
+            "description": "Merchant ID that owns the channel. URL-encode values containing spaces or '@'.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "asin",
+            "in": "query",
+            "description": "Amazon Standard Identification Number. Must contain exactly 10 letters or numbers. Lowercase input is normalized to uppercase.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 10,
+              "maxLength": 10,
+              "pattern": "^[A-Z0-9]{10}$",
+              "example": "B0020MMCJI"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductAttributeResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input or unsupported channel",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "missingParameter": {
+                    "summary": "A required query parameter is missing",
+                    "value": {
+                      "status": "error",
+                      "error": "Asin is required"
+                    }
+                  },
+                  "invalidChannel": {
+                    "summary": "channelId / merchantId did not resolve to a channel",
+                    "value": {
+                      "status": "error",
+                      "error": "Invalid channelId / merchantId"
+                    }
+                  },
+                  "unsupportedChannel": {
+                    "summary": "Channel is not an Amazon seller or vendor channel",
+                    "value": {
+                      "status": "error",
+                      "error": "This endpoint is only supported for Amazon channels"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The user does not have access to the specified store",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "status": "error",
+                  "error": "user does not have access to specified store"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -3148,6 +3266,25 @@
   },
   "components": {
     "schemas": {
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "error"
+            ]
+          },
+          "error": {
+            "type": "string",
+            "description": "Human-readable message. Validation failures list every failing rule, comma-separated."
+          }
+        },
+        "example": {
+          "status": "error",
+          "error": "Invalid request parameters"
+        }
+      },
       "StartEndTimeRange": {
         "type": "object",
         "description": "Start and end of a time range. ISO 8601 values preserve the UTC offset for the requested timezone; epoch values are Unix seconds for the same instants.",
@@ -3268,23 +3405,785 @@
           }
         }
       },
-      "ErrorResponse": {
+      "ProductAttributeResponse": {
         "type": "object",
+        "required": [
+          "data"
+        ],
         "properties": {
-          "status": {
-            "type": "string",
-            "enum": [
-              "error"
+          "data": {
+            "type": "object",
+            "nullable": true,
+            "description": "Null when no catalog item or listings exist for the ASIN.",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ProductAttribute"
+              }
             ]
-          },
-          "error": {
-            "type": "string",
-            "description": "Human-readable message. Validation failures list every failing rule, comma-separated."
           }
         },
         "example": {
-          "status": "error",
-          "error": "Invalid request parameters"
+          "data": {
+            "channelType": "seller",
+            "asin": "B0020MMCJI",
+            "summaries": {
+              "marketplaceId": "ATVPDKIKX0DER",
+              "brandName": "A Touch Of Style",
+              "itemName": "Classic Eau de Toilette for Men - Citrusy and Earthy Scent"
+            },
+            "attributes": {
+              "brand": [
+                {
+                  "language_tag": "en_US",
+                  "marketplace_id": "ATVPDKIKX0DER",
+                  "value": "A Touch Of Style"
+                }
+              ],
+              "bullet_point": [
+                {
+                  "language_tag": "en_US",
+                  "marketplace_id": "ATVPDKIKX0DER",
+                  "value": "New range of formal shirts are designed keeping you in mind. With fits and styling that will make you stand apart"
+                },
+                {
+                  "language_tag": "en_US",
+                  "marketplace_id": "ATVPDKIKX0DER",
+                  "value": "New range of formal shirts are designed keeping you in mind. With fits and styling that will make you stand apart"
+                }
+              ],
+              "item_name": [
+                {
+                  "language_tag": "en_US",
+                  "marketplace_id": "ATVPDKIKX0DER",
+                  "value": "Classic Eau de Toilette for Men - Citrusy and Earthy Scent"
+                }
+              ]
+            },
+            "identifiers": [
+              {
+                "identifier": "688772402712",
+                "identifierType": "UPC"
+              }
+            ],
+            "images": [
+              {
+                "variant": "MAIN",
+                "link": "https://m.media-amazon.com/images/I/51C+9Ww5AaL.*SL1000*.jpg",
+                "height": 500,
+                "width": 500
+              }
+            ],
+            "salesRanks": {
+              "marketplaceId": "ATVPDKIKX0DER",
+              "classificationRanks": [
+                {
+                  "classificationId": "14024031",
+                  "title": "Lotions",
+                  "link": "https://www.amazon.com/gp/bestsellers/beauty/14024031",
+                  "rank": 385
+                }
+              ]
+            },
+            "classifications": [
+              {
+                "classificationId": "14024031",
+                "displayName": "Lotions",
+                "parent": {
+                  "classificationId": "11060661",
+                  "displayName": "Moisturizers",
+                  "parent": {
+                    "classificationId": "11060521",
+                    "displayName": "Body",
+                    "parent": {
+                      "classificationId": "11060451",
+                      "displayName": "Skin Care",
+                      "parent": {
+                        "classificationId": "11055981",
+                        "displayName": "Products",
+                        "parent": {
+                          "classificationId": "3760911",
+                          "displayName": "Beauty & Personal Care"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            ],
+            "productTypes": [
+              "BEAUTY"
+            ],
+            "relationships": [],
+            "sellerListings": [
+              {
+                "offers": [
+                  {
+                    "marketplaceId": "ATVPDKIKX0DER",
+                    "offerType": "B2C",
+                    "price": {
+                      "currency": "USD",
+                      "amount": "19.99"
+                    }
+                  }
+                ],
+                "fulfillmentAvailability": [
+                  {
+                    "fulfillmentChannelCode": "AMAZON_NA",
+                    "quantity": 10
+                  }
+                ],
+                "issues": [],
+                "sku": "LOCAL-B0020MMCJI",
+                "status": [
+                  "BUYABLE"
+                ],
+                "conditionType": "new_new",
+                "createdDate": "2026-07-23T07:50:56.276Z",
+                "lastUpdatedDate": "2026-07-23T07:50:56.276Z"
+              }
+            ],
+            "vendorListing": null
+          }
+        }
+      },
+      "ProductAttribute": {
+        "type": "object",
+        "required": [
+          "channelType",
+          "asin",
+          "summaries",
+          "attributes",
+          "identifiers",
+          "images",
+          "salesRanks",
+          "classifications",
+          "productTypes",
+          "relationships",
+          "sellerListings",
+          "vendorListing"
+        ],
+        "properties": {
+          "channelType": {
+            "type": "string",
+            "enum": [
+              "seller",
+              "vendor"
+            ]
+          },
+          "asin": {
+            "type": "string",
+            "example": "B0020MMCJI"
+          },
+          "summaries": {
+            "type": "object",
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AmazonProductSummary"
+              }
+            ]
+          },
+          "attributes": {
+            "type": "object",
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AmazonCatalogAttributes"
+              }
+            ]
+          },
+          "identifiers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AmazonProductIdentifier"
+            }
+          },
+          "images": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AmazonProductImage"
+            }
+          },
+          "salesRanks": {
+            "type": "object",
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AmazonSalesRanks"
+              }
+            ]
+          },
+          "classifications": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AmazonProductClassification"
+            }
+          },
+          "productTypes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "example": [
+              "BEAUTY"
+            ]
+          },
+          "relationships": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AmazonProductRelationship"
+            }
+          },
+          "sellerListings": {
+            "type": "array",
+            "nullable": true,
+            "description": "Seller SKU-level data. Null for vendor channels.",
+            "items": {
+              "$ref": "#/components/schemas/AmazonSellerListing"
+            }
+          },
+          "vendorListing": {
+            "type": "object",
+            "nullable": true,
+            "description": "Vendor-specific data. Null for seller channels.",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AmazonVendorListing"
+              }
+            ]
+          }
+        }
+      },
+      "AmazonProductSummary": {
+        "type": "object",
+        "required": [
+          "marketplaceId"
+        ],
+        "properties": {
+          "marketplaceId": {
+            "type": "string",
+            "example": "ATVPDKIKX0DER"
+          },
+          "brand": {
+            "type": "string"
+          },
+          "brandName": {
+            "type": "string",
+            "example": "A Touch Of Style"
+          },
+          "itemClassification": {
+            "type": "string",
+            "enum": [
+              "BASE_PRODUCT",
+              "OTHER",
+              "PRODUCT_BUNDLE",
+              "VARIATION_PARENT"
+            ]
+          },
+          "color": {
+            "type": "string"
+          },
+          "itemName": {
+            "type": "string",
+            "example": "Classic Eau de Toilette for Men - Citrusy and Earthy Scent"
+          },
+          "manufacturer": {
+            "type": "string"
+          },
+          "modelNumber": {
+            "type": "string"
+          },
+          "packageQuantity": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "partNumber": {
+            "type": "string"
+          },
+          "size": {
+            "type": "string"
+          },
+          "style": {
+            "type": "string"
+          },
+          "websiteDisplayGroup": {
+            "type": "string"
+          },
+          "websiteDisplayGroupName": {
+            "type": "string"
+          }
+        }
+      },
+      "AmazonCatalogAttributes": {
+        "type": "object",
+        "description": "Catalog attributes returned by Amazon.",
+        "properties": {
+          "brand": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AmazonCatalogTextAttribute"
+            }
+          },
+          "bullet_point": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AmazonCatalogTextAttribute"
+            }
+          },
+          "item_name": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AmazonCatalogTextAttribute"
+            }
+          }
+        }
+      },
+      "AmazonCatalogTextAttribute": {
+        "type": "object",
+        "required": [
+          "marketplace_id",
+          "value"
+        ],
+        "properties": {
+          "language_tag": {
+            "type": "string",
+            "example": "en_US"
+          },
+          "marketplace_id": {
+            "type": "string",
+            "example": "ATVPDKIKX0DER"
+          },
+          "value": {
+            "type": "string",
+            "example": "A Touch Of Style"
+          }
+        }
+      },
+      "AmazonProductIdentifier": {
+        "type": "object",
+        "required": [
+          "identifier",
+          "identifierType"
+        ],
+        "properties": {
+          "identifier": {
+            "type": "string",
+            "example": "688772402712"
+          },
+          "identifierType": {
+            "type": "string",
+            "example": "UPC"
+          }
+        }
+      },
+      "AmazonProductImage": {
+        "type": "object",
+        "required": [
+          "variant",
+          "link",
+          "height",
+          "width"
+        ],
+        "properties": {
+          "variant": {
+            "type": "string",
+            "example": "MAIN"
+          },
+          "link": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://m.media-amazon.com/images/I/51C+9Ww5AaL.*SL1000*.jpg"
+          },
+          "height": {
+            "type": "integer",
+            "format": "int32",
+            "example": 500
+          },
+          "width": {
+            "type": "integer",
+            "format": "int32",
+            "example": 500
+          }
+        }
+      },
+      "AmazonSalesRanks": {
+        "type": "object",
+        "required": [
+          "marketplaceId"
+        ],
+        "properties": {
+          "marketplaceId": {
+            "type": "string",
+            "example": "ATVPDKIKX0DER"
+          },
+          "classificationRanks": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AmazonClassificationRank"
+            }
+          },
+          "displayGroupRanks": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AmazonDisplayGroupRank"
+            }
+          }
+        }
+      },
+      "AmazonClassificationRank": {
+        "type": "object",
+        "required": [
+          "classificationId",
+          "title",
+          "link",
+          "rank"
+        ],
+        "properties": {
+          "classificationId": {
+            "type": "string",
+            "example": "14024031"
+          },
+          "title": {
+            "type": "string",
+            "example": "Lotions"
+          },
+          "link": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://www.amazon.com/gp/bestsellers/beauty/14024031"
+          },
+          "rank": {
+            "type": "integer",
+            "format": "int32",
+            "example": 385
+          }
+        }
+      },
+      "AmazonDisplayGroupRank": {
+        "type": "object",
+        "required": [
+          "websiteDisplayGroup",
+          "title",
+          "link",
+          "rank"
+        ],
+        "properties": {
+          "websiteDisplayGroup": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "link": {
+            "type": "string",
+            "format": "uri"
+          },
+          "rank": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "AmazonProductClassification": {
+        "type": "object",
+        "required": [
+          "classificationId",
+          "displayName"
+        ],
+        "properties": {
+          "classificationId": {
+            "type": "string",
+            "example": "14024031"
+          },
+          "displayName": {
+            "type": "string",
+            "example": "Lotions"
+          },
+          "parent": {
+            "type": "object",
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AmazonProductClassification"
+              }
+            ]
+          }
+        }
+      },
+      "AmazonProductRelationship": {
+        "type": "object",
+        "required": [
+          "type"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "VARIATION",
+              "PACKAGE_HIERACHY"
+            ]
+          },
+          "childAsins": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "parentAsins": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "AmazonSellerListing": {
+        "type": "object",
+        "required": [
+          "sku",
+          "offers",
+          "fulfillmentAvailability",
+          "issues"
+        ],
+        "properties": {
+          "offers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AmazonListingOffer"
+            }
+          },
+          "fulfillmentAvailability": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AmazonFulfillmentAvailability"
+            }
+          },
+          "issues": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AmazonListingIssue"
+            }
+          },
+          "sku": {
+            "type": "string",
+            "example": "LOCAL-B0020MMCJI"
+          },
+          "status": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "example": [
+              "BUYABLE"
+            ]
+          },
+          "conditionType": {
+            "type": "string",
+            "example": "new_new"
+          },
+          "createdDate": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-07-23T07:50:56.276Z"
+          },
+          "lastUpdatedDate": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-07-23T07:50:56.276Z"
+          }
+        }
+      },
+      "AmazonListingOffer": {
+        "type": "object",
+        "required": [
+          "marketplaceId",
+          "offerType",
+          "price"
+        ],
+        "properties": {
+          "marketplaceId": {
+            "type": "string",
+            "example": "ATVPDKIKX0DER"
+          },
+          "offerType": {
+            "type": "string",
+            "example": "B2C"
+          },
+          "price": {
+            "$ref": "#/components/schemas/AmazonListingPrice"
+          }
+        }
+      },
+      "AmazonListingPrice": {
+        "type": "object",
+        "required": [
+          "currency",
+          "amount"
+        ],
+        "properties": {
+          "currency": {
+            "type": "string",
+            "example": "USD"
+          },
+          "amount": {
+            "type": "string",
+            "example": "19.99"
+          }
+        }
+      },
+      "AmazonFulfillmentAvailability": {
+        "type": "object",
+        "required": [
+          "fulfillmentChannelCode",
+          "quantity"
+        ],
+        "properties": {
+          "fulfillmentChannelCode": {
+            "type": "string",
+            "example": "AMAZON_NA"
+          },
+          "quantity": {
+            "type": "integer",
+            "format": "int32",
+            "example": 10
+          }
+        }
+      },
+      "AmazonListingIssue": {
+        "type": "object",
+        "required": [
+          "message",
+          "severity",
+          "attributeNames"
+        ],
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "severity": {
+            "type": "string"
+          },
+          "attributeNames": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "AmazonVendorListing": {
+        "type": "object",
+        "required": [
+          "vendorDetails",
+          "procurement",
+          "vendorCode"
+        ],
+        "properties": {
+          "vendorDetails": {
+            "type": "object",
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AmazonVendorDetails"
+              }
+            ]
+          },
+          "procurement": {
+            "type": "array",
+            "description": "Vendor procurement info from the listings item. Empty array when absent.",
+            "items": {
+              "$ref": "#/components/schemas/AmazonProcurement"
+            }
+          },
+          "vendorCode": {
+            "type": "string",
+            "nullable": true,
+            "example": "ABCDE"
+          }
+        }
+      },
+      "AmazonProcurement": {
+        "type": "object",
+        "required": [
+          "costPrice"
+        ],
+        "properties": {
+          "costPrice": {
+            "type": "object",
+            "required": [
+              "currencyCode",
+              "amount"
+            ],
+            "properties": {
+              "currencyCode": {
+                "type": "string",
+                "example": "USD"
+              },
+              "amount": {
+                "type": "string",
+                "example": "12.50"
+              },
+              "currency": {
+                "type": "string",
+                "example": "USD"
+              }
+            }
+          }
+        }
+      },
+      "AmazonVendorDetails": {
+        "type": "object",
+        "required": [
+          "brandCode",
+          "manufacturerCode",
+          "manufacturerCodeParent",
+          "marketplaceId",
+          "productCategory",
+          "productGroup",
+          "productSubcategory",
+          "replenishmentCategory"
+        ],
+        "properties": {
+          "brandCode": {
+            "type": "string"
+          },
+          "manufacturerCode": {
+            "type": "string"
+          },
+          "manufacturerCodeParent": {
+            "type": "string"
+          },
+          "marketplaceId": {
+            "type": "string",
+            "example": "ATVPDKIKX0DER"
+          },
+          "productCategory": {
+            "$ref": "#/components/schemas/AmazonVendorCategory"
+          },
+          "productGroup": {
+            "type": "string"
+          },
+          "productSubcategory": {
+            "$ref": "#/components/schemas/AmazonVendorCategory"
+          },
+          "replenishmentCategory": {
+            "type": "string"
+          }
+        }
+      },
+      "AmazonVendorCategory": {
+        "type": "object",
+        "required": [
+          "displayName",
+          "value"
+        ],
+        "properties": {
+          "displayName": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          }
         }
       },
       "GetAdvertisingCampaignsResponse": {
