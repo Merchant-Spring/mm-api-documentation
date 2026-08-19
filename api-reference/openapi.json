@@ -63,9 +63,7 @@
   "paths": {
     "/channels": {
       "post": {
-        "tags": [
-          "channel"
-        ],
+        "tags": ["channel"],
         "summary": "Retrieve a list of channels",
         "description": "Retrieve a list of channels that match the specified filter criteria",
         "operationId": "getChannels",
@@ -112,9 +110,7 @@
     },
     "/content-changes": {
       "post": {
-        "tags": [
-          "content-change"
-        ],
+        "tags": ["content-change"],
         "summary": "Retrieve a list of content changes",
         "description": "Retrieve a paginated list of product content changes for a given store. Returns one record per product with per-field change status, original value, benchmark value and last-changed timestamp. Page size is capped at 500 items per request. Uses zero-based page indexing (pageIndex starts at 0).",
         "operationId": "getContentChanges",
@@ -161,9 +157,7 @@
     },
     "/products/amazon": {
       "get": {
-        "tags": [
-          "product"
-        ],
+        "tags": ["product"],
         "summary": "Retrieve Amazon product attributes",
         "description": "Returns catalog attributes for an Amazon seller or vendor ASIN, together with seller listing data or vendor details when available.",
         "operationId": "getProductAttribute",
@@ -275,9 +269,7 @@
     },
     "/vendor/asins": {
       "get": {
-        "tags": [
-          "vendor"
-        ],
+        "tags": ["vendor"],
         "summary": "Retrieve all vendor fields against an ASIN",
         "description": "Vendor only. Returns one wide row per ASIN combining every data point we hold for the product: catalogue, ordered revenue, shipped revenue (sourcing and manufacturing), inventory health, purchase orders, product profit, sourcing share and advertising. Supply asin to fetch a single product, or omit it to page through the full master list (products with sales activity in the window). The date range must not exceed 30 days. Page size defaults to 20 and is capped at 50 (rows are wide). Uses zero-based page indexing.",
         "operationId": "getAsinDetails",
@@ -366,10 +358,7 @@
             "schema": {
               "type": "string",
               "default": "asc",
-              "enum": [
-                "asc",
-                "desc"
-              ]
+              "enum": ["asc", "desc"]
             }
           },
           {
@@ -457,9 +446,7 @@
     },
     "/targets": {
       "get": {
-        "tags": [
-          "targets"
-        ],
+        "tags": ["targets"],
         "summary": "Retrieve budgets and forecasts (Ad Spend Budget, Sales Budget, Sales Forecast)",
         "description": "Returns the sales budget, sales forecast and ad spend budget targets for a channel over a date range. Data is an ordered array with ISO 8601 and Unix epoch start/end times for each period bucket; the number of buckets depends on interval (for example a one-year range with interval=month returns ~12 buckets, interval=week ~52, interval=day ~366). The totals object is the summed roll-up across the whole range.",
         "operationId": "getTargets",
@@ -519,11 +506,7 @@
             "schema": {
               "type": "string",
               "default": "day",
-              "enum": [
-                "day",
-                "week",
-                "month"
-              ]
+              "enum": ["day", "week", "month"]
             }
           }
         ],
@@ -559,9 +542,7 @@
     },
     "/orders/amazon": {
       "post": {
-        "tags": [
-          "order"
-        ],
+        "tags": ["order"],
         "summary": "Retrieve a list of orders for an Amazon channel (Requires Enterprise plan)",
         "description": "Retrieve a list of orders for an Amazon channel that match the specified filter criteria. \n\n**NOTE: This endpoint is only available to users on the Enterprise plan.**",
         "operationId": "getOrders",
@@ -608,9 +589,7 @@
     },
     "/reports/create/salesByProduct": {
       "post": {
-        "tags": [
-          "report"
-        ],
+        "tags": ["report"],
         "summary": "Create a sales by product report",
         "description": "Create a \"sales by product\" report. The generated report CSV contains the columns defined in the `SalesByProductReportColumns` schema. For Amazon Vendor channels, 'totalSales' is replaced by 'poValue' and 'unitsSold' by 'unitsOrdered'. Use the /reports/status/{reportId} endpoint to check report status and obtain the download URL.",
         "operationId": "createSalesByProductReport",
@@ -662,9 +641,7 @@
     },
     "/reports/create/trafficAndConversion": {
       "post": {
-        "tags": [
-          "report"
-        ],
+        "tags": ["report"],
         "summary": "Create a traffic and conversion report",
         "description": "Create a \"traffic and conversion\" report. The generated report CSV contains the columns defined in the `TrafficAndConversionReportColumns` schema. When the 'view' option is set to 'skus', additional columns 'sku' and 'brand' are included. Use the /reports/status/{reportId} endpoint to check report status and obtain the download URL.",
         "operationId": "createTrafficAndConversionReport",
@@ -716,9 +693,7 @@
     },
     "/reports/create/cancellationsAndRefunds": {
       "post": {
-        "tags": [
-          "report"
-        ],
+        "tags": ["report"],
         "summary": "Create a cancellations and refunds report",
         "description": "Create a \"cancellations and refunds\" report. The generated report CSV contains the columns defined in the `CancellationsAndRefundsReportColumns` schema. Note that cancelledSales, cancelRate, and their prior period equivalents are hidden for Amazon seller channels. Use the /reports/status/{reportId} endpoint to check report status and obtain the download URL.",
         "operationId": "createCancellationsAndRefundsReport",
@@ -770,9 +745,7 @@
     },
     "/reports/create/customerLifetimeValue": {
       "post": {
-        "tags": [
-          "report"
-        ],
+        "tags": ["report"],
         "summary": "Create a customer lifetime value report",
         "description": "Create a \"customer lifetime value\" report. The generated report CSV contains the columns defined in the `CustomerLifetimeValueReportColumns` schema including cohort metrics such as LTV, CAC, and repeat purchase frequency. Use the /reports/status/{reportId} endpoint to check report status and obtain the download URL.",
         "operationId": "createCustomerLifetimeValueReport",
@@ -824,9 +797,7 @@
     },
     "/reports/create/shippedRevenue": {
       "post": {
-        "tags": [
-          "report"
-        ],
+        "tags": ["report"],
         "summary": "Create a shipped revenue report",
         "description": "Create a \"shipped revenue\" report (Amazon Vendor). The generated report CSV contains the columns defined in the `ShippedRevenueReportColumns` schema. The 'view' option selects between 'sourcing' and 'manufacturing' data. Use the /reports/status/{reportId} endpoint to check report status and obtain the download URL.",
         "operationId": "createShippedRevenueReport",
@@ -878,10 +849,8 @@
     },
     "/reports/create/orderedRevenue": {
       "post": {
-        "tags": [
-          "report"
-        ],
-        "summary": "Create a ordered revenue report",
+        "tags": ["report"],
+        "summary": "Create an ordered revenue report",
         "description": "Create an \"ordered revenue\" report (Amazon Vendor). The generated report CSV contains the columns defined in the `OrderedRevenueReportColumns` schema. Use the /reports/status/{reportId} endpoint to check report status and obtain the download URL.",
         "operationId": "createOrderedRevenueReport",
         "requestBody": {
@@ -932,10 +901,8 @@
     },
     "/reports/create/inventoryHealth": {
       "post": {
-        "tags": [
-          "report"
-        ],
-        "summary": "Create a inventory health report",
+        "tags": ["report"],
+        "summary": "Create an inventory health report",
         "description": "Create an \"inventory health\" report (Amazon Vendor). The generated report CSV contains the columns defined in the `InventoryHealthReportColumns` schema including sellable, unhealthy, aged, and unsellable inventory metrics. Use the /reports/status/{reportId} endpoint to check report status and obtain the download URL.",
         "operationId": "createInventoryHealthReport",
         "requestBody": {
@@ -986,9 +953,7 @@
     },
     "/reports/create/campaigns": {
       "post": {
-        "tags": [
-          "report"
-        ],
+        "tags": ["report"],
         "summary": "Create a campaigns report",
         "description": "Create a \"campaigns\" report (Amazon Advertising). The download contains multiple CSV files: campaigns, ad groups, keywords, product ads, and products. See the `CampaignsReportCampaignColumns`, `CampaignsReportAdGroupColumns`, `CampaignsReportKeywordColumns`, `CampaignsReportProductAdColumns`, and `CampaignsReportProductColumns` schemas for the columns in each file. Use the /reports/status/{reportId} endpoint to check report status and obtain the download URL.",
         "operationId": "createCampaignsReport",
@@ -1040,10 +1005,8 @@
     },
     "/reports/create/inventoryReplenishment": {
       "post": {
-        "tags": [
-          "report"
-        ],
-        "summary": "Create a inventory replenishment report",
+        "tags": ["report"],
+        "summary": "Create an inventory replenishment report",
         "description": "Create an \"inventory replenishment\" report (Amazon FBA). The generated report CSV contains the columns defined in the `InventoryReplenishmentReportColumns` schema including days cover, projected OOS dates, and replenishment recommendations. Use the /reports/status/{reportId} endpoint to check report status and obtain the download URL.",
         "operationId": "createInventoryReplenishmentReport",
         "requestBody": {
@@ -1094,9 +1057,7 @@
     },
     "/reports/create/channelProfitAndLoss": {
       "post": {
-        "tags": [
-          "report"
-        ],
+        "tags": ["report"],
         "summary": "Create a channel profit and loss report",
         "description": "Create a \"channel profit and loss\" report. The generated report CSV contains the columns defined in the `ChannelProfitAndLossReportColumns` schema including revenue, fees, COGS, advertising, and profit breakdown by store. Use the /reports/status/{reportId} endpoint to check report status and obtain the download URL.",
         "operationId": "createChannelProfitAndLossReport",
@@ -1148,10 +1109,8 @@
     },
     "/reports/create/amazonBuyBoxPerformance": {
       "post": {
-        "tags": [
-          "report"
-        ],
-        "summary": "Create an Amazon Buy Box Performance Report report",
+        "tags": ["report"],
+        "summary": "Create an Amazon Buy Box Performance report",
         "description": "Create an Amazon Buy Box Performance report. The generated report CSV contains the columns defined in the `AmazonBuyBoxPerformanceReportColumns` schema including your price, competitive price, and detailed offer attributes. An additional 'offerPoints' column is included for Japanese marketplaces. Use the /reports/status/{reportId} endpoint to check report status and obtain the download URL.",
         "operationId": "createAmazonBuyBoxPerformanceReport",
         "requestBody": {
@@ -1202,9 +1161,7 @@
     },
     "/reports/create/repeatPurchase": {
       "post": {
-        "tags": [
-          "report"
-        ],
+        "tags": ["report"],
         "summary": "Create a repeat purchase report",
         "description": "Create a \"repeat purchase\" report. The generated report CSV contains the columns defined in the `RepeatPurchaseReportColumns` schema including repeat customer counts, sales percentages, and per-customer revenue metrics. Use the /reports/status/{reportId} endpoint to check report status and obtain the download URL.",
         "operationId": "createRepeatPurchaseReport",
@@ -1256,9 +1213,7 @@
     },
     "/reports/create/suppressedProduct": {
       "post": {
-        "tags": [
-          "report"
-        ],
+        "tags": ["report"],
         "summary": "Create a suppressed product report",
         "description": "Create a \"suppressed product\" report. The generated report CSV contains the columns defined in the `SuppressedProductReportColumns` schema including suppression dates, issue types, estimated lost sales, and fix URLs. Use the /reports/status/{reportId} endpoint to check report status and obtain the download URL.",
         "operationId": "createSuppressedProductReport",
@@ -1310,9 +1265,7 @@
     },
     "/reports/create/marketingByProduct": {
       "post": {
-        "tags": [
-          "report"
-        ],
+        "tags": ["report"],
         "summary": "Create a marketing by product report",
         "description": "Create a \"marketing by product\" report. The generated report CSV contains the columns defined in the `MarketingByProductReportColumns` schema including ad sales, spend, ACOS, ROAS, TACOS, and new-to-brand metrics by store. Use the /reports/status/{reportId} endpoint to check report status and obtain the download URL.",
         "operationId": "createMarketingByProductReport",
@@ -1364,9 +1317,7 @@
     },
     "/reports/create/subscribeAndSave": {
       "post": {
-        "tags": [
-          "report"
-        ],
+        "tags": ["report"],
         "summary": "Create a subscribe and save report",
         "description": "Create a \"subscribe and save\" report (Amazon). The generated report CSV contains the columns defined in the `SubscribeAndSaveReportColumns` schema including subscriber counts, shipped revenue, revenue penetration, and discount tiers. Use the /reports/status/{reportId} endpoint to check report status and obtain the download URL.",
         "operationId": "createSubscribeAndSaveReport",
@@ -1418,9 +1369,7 @@
     },
     "/reports/create/products": {
       "post": {
-        "tags": [
-          "report"
-        ],
+        "tags": ["report"],
         "summary": "Create a products report (Requires Enterprise plan)",
         "description": "Create a \"products\" report (Amazon). The generated report CSV contains the columns defined in the `ProductsReportColumns` schema including pricing, inventory, COGS, fees, and category information. \n\n**NOTE: This endpoint is only available to users on the Enterprise plan.** Use the /reports/status/{reportId} endpoint to check report status and obtain the download URL.",
         "operationId": "createProductsReport",
@@ -1472,9 +1421,7 @@
     },
     "/reports/status/{reportId}": {
       "get": {
-        "tags": [
-          "report"
-        ],
+        "tags": ["report"],
         "summary": "Get the status of a report request",
         "description": "Get the status of a report request",
         "operationId": "getReportStatus",
@@ -1543,9 +1490,7 @@
     },
     "/reports/view/vendorSalesByPeriod": {
       "post": {
-        "tags": [
-          "report"
-        ],
+        "tags": ["report"],
         "summary": "Retrieve vendor sales-by-period performance",
         "description": "Retrieve aggregated revenue with advertising metrics for a merchant over the selected date range, grouped by the requested interval.",
         "operationId": "getVendorSalesByPeriodReport",
@@ -1608,9 +1553,7 @@
     },
     "/reports/view/salesByPeriod": {
       "post": {
-        "tags": [
-          "report"
-        ],
+        "tags": ["report"],
         "summary": "Retrieve sales-by-period performance",
         "description": "Retrieve aggregated GMV, traffic, and advertising metrics for a merchant over the selected date range, grouped by the requested interval.",
         "operationId": "getSalesByPeriodReport",
@@ -1673,11 +1616,9 @@
     },
     "/reports/view/advertisingByChannels": {
       "post": {
-        "tags": [
-          "report"
-        ],
-        "summary": "View advertising performance by channel",
-        "description": "Returns a paginated JSON summary of advertising performance grouped by channel for the selected store and date range. Values are currency-adjusted based on the store's country and the provided currency context.",
+        "tags": ["report"],
+        "summary": "Retrieve advertising performance by channel",
+        "description": "Retrieve a paginated JSON summary of advertising performance grouped by channel for the selected store and date range. Values are currency-adjusted based on the store's country and the provided currency context.",
         "operationId": "getAdvertisingByChannels",
         "requestBody": {
           "description": "Advertising by channels criteria",
@@ -1722,11 +1663,9 @@
     },
     "/reports/view/salesByChannel": {
       "post": {
-        "tags": [
-          "report"
-        ],
-        "summary": "View sales by channel report",
-        "description": "View sales by channel report",
+        "tags": ["report"],
+        "summary": "Retrieve sales performance by channel",
+        "description": "Retrieve sales performance broken down by store/channel for the selected filters and date range, with prior-period comparison.",
         "operationId": "viewSalesByChannelReport",
         "requestBody": {
           "description": "Sales by channel report criteria",
@@ -1771,11 +1710,9 @@
     },
     "/reports/view/salesByProduct": {
       "post": {
-        "tags": [
-          "report"
-        ],
-        "summary": "View sales by product report",
-        "description": "View sales by product report as JSON",
+        "tags": ["report"],
+        "summary": "Retrieve sales performance by product",
+        "description": "Retrieve sales performance broken down by product for the selected channel and date range, with prior-period comparison.",
         "operationId": "viewSalesByProductReport",
         "requestBody": {
           "description": "Sales by product report criteria",
@@ -1820,9 +1757,7 @@
     },
     "/profitability/storeProfitAndLoss": {
       "post": {
-        "tags": [
-          "profitability"
-        ],
+        "tags": ["profitability"],
         "summary": "Get a store profit and loss",
         "description": "Get a \"store profit and loss\"",
         "operationId": "getStoreProfitAndLoss",
@@ -1869,9 +1804,7 @@
     },
     "/profitability/productProfitAndLoss": {
       "post": {
-        "tags": [
-          "profitability"
-        ],
+        "tags": ["profitability"],
         "summary": "Retrieve single or multiple product profit and loss details",
         "description": "Retrieve single or multiple product profit and loss details",
         "operationId": "getProductProfitAndLoss",
@@ -1918,9 +1851,7 @@
     },
     "/profitability/directCosts": {
       "post": {
-        "tags": [
-          "profitability"
-        ],
+        "tags": ["profitability"],
         "summary": "Update Unit COGS",
         "description": "Update Unit COGS",
         "operationId": "updateDirectCosts",
@@ -1967,9 +1898,7 @@
     },
     "/profitability/directCostsJobStatus": {
       "get": {
-        "tags": [
-          "profitability"
-        ],
+        "tags": ["profitability"],
         "summary": "Get the status of a Unit COGS update job",
         "description": "Get the status of a Unit COGS update job",
         "operationId": "getDirectCostsJobStatus",
@@ -2038,9 +1967,7 @@
     },
     "/customGroups": {
       "get": {
-        "tags": [
-          "custom-group"
-        ],
+        "tags": ["custom-group"],
         "summary": "Retrieve custom groups for a channel",
         "description": "Retrieve the list of custom product groups defined for a given channel.",
         "operationId": "getCustomGroups",
@@ -2112,9 +2039,7 @@
         ]
       },
       "post": {
-        "tags": [
-          "custom-group"
-        ],
+        "tags": ["custom-group"],
         "summary": "Create a custom group",
         "description": "Create a new custom product group for a channel.",
         "operationId": "createCustomGroup",
@@ -2155,9 +2080,7 @@
     },
     "/customGroups/{id}": {
       "get": {
-        "tags": [
-          "custom-group"
-        ],
+        "tags": ["custom-group"],
         "summary": "Retrieve a single custom group",
         "description": "Retrieve a single custom group with its associated products and brands.",
         "operationId": "getCustomGroup",
@@ -2220,9 +2143,7 @@
         ]
       },
       "patch": {
-        "tags": [
-          "custom-group"
-        ],
+        "tags": ["custom-group"],
         "summary": "Update a custom group",
         "description": "Add or remove products/brands and optionally rename the group. Provide at least one of addProducts, removeProducts, addBrands, removeBrands, or groupName. Cannot mix product and brand operations in the same request.",
         "operationId": "editCustomGroup",
@@ -2271,9 +2192,7 @@
         ]
       },
       "delete": {
-        "tags": [
-          "custom-group"
-        ],
+        "tags": ["custom-group"],
         "summary": "Delete a custom group",
         "description": "Delete a custom product group for a channel.",
         "operationId": "deleteCustomGroup",
@@ -2332,11 +2251,9 @@
     },
     "/tags": {
       "get": {
-        "tags": [
-          "tag"
-        ],
+        "tags": ["tag"],
         "summary": "Retrieve all tags",
-        "description": "Retrieve a paginated list of tags across all of the caller's channels. Each item is one channel with its tags. Organisation-wide tags are prefixed with 'org://'. Pagination uses pageIndex/pageSize (zero-based); pageSize defaults to 25 and is capped at 100, pageIndex defaults to 0.",
+        "description": "Retrieve a paginated list of tags across all of the caller's channels. Each item is one channel with its tags. Shared tags are prefixed with 'org://'. Pagination uses pageIndex/pageSize (zero-based); pageSize defaults to 25 and is capped at 100, pageIndex defaults to 0.",
         "operationId": "getAllTags",
         "parameters": [
           {
@@ -2390,11 +2307,9 @@
     },
     "/tags/channel": {
       "get": {
-        "tags": [
-          "tag"
-        ],
+        "tags": ["tag"],
         "summary": "Retrieve tags from a specific channel",
-        "description": "Retrieve the tags for a single channel, identified by channelId and merchantId. Organisation-wide tags are prefixed with 'org://'. A channel with no tags returns an empty tags array.",
+        "description": "Retrieve the tags for a single channel, identified by channelId and merchantId. Shared tags are prefixed with 'org://'. A channel with no tags returns an empty tags array.",
         "operationId": "getChannelTags",
         "parameters": [
           {
@@ -2446,11 +2361,9 @@
         ]
       },
       "patch": {
-        "tags": [
-          "tag"
-        ],
+        "tags": ["tag"],
         "summary": "Add and/or remove tags on a specific channel",
-        "description": "Partially update the tags on a single channel, identified by channelId and merchantId, by supplying addTags and/or removeTags. At least one of the two must be provided, and a tag cannot appear in both lists. A maximum of 5 tags can be added in a single call. Organisation-wide tags are prefixed with 'org://'. Returns the channel's full tag set after the change.",
+        "description": "Partially update the tags on a single channel, identified by channelId and merchantId, by supplying addTags and/or removeTags. At least one of the two must be provided, and a tag cannot appear in both lists. A maximum of 5 tags can be added in a single call. Shared tags are prefixed with 'org://'. Returns the channel's full tag set after the change.",
         "operationId": "updateChannelTags",
         "requestBody": {
           "description": "Channel identifiers and the tags to add and/or remove (at least one of addTags / removeTags)",
@@ -2462,12 +2375,8 @@
               "example": {
                 "channelId": "A1234567890ABC",
                 "merchantId": "XXXUS @ ATVPDKIKX0DER",
-                "addTags": [
-                  "north-america"
-                ],
-                "removeTags": [
-                  "org://ebay"
-                ]
+                "addTags": ["north-america"],
+                "removeTags": ["org://ebay"]
               }
             }
           },
@@ -2491,10 +2400,7 @@
                 "example": {
                   "channelId": "A1234567890ABC",
                   "merchantId": "XXXUS @ ATVPDKIKX0DER",
-                  "tags": [
-                    "amazon",
-                    "north-america"
-                  ]
+                  "tags": ["amazon", "north-america"]
                 }
               }
             }
@@ -2513,9 +2419,7 @@
     },
     "/tags/convert": {
       "post": {
-        "tags": [
-          "tag"
-        ],
+        "tags": ["tag"],
         "summary": "Convert a tag between private and shared",
         "description": "Toggle a single tag (private/shared) across every channel that carries it. Shared tags are prefixed with 'org://'; converting a private tag makes it 'org://&lt;tag&gt;' and vice versa. Only one tag can be converted per request. Returns the full tag set after the conversion.",
         "operationId": "convertTags",
@@ -2562,9 +2466,7 @@
     },
     "/advertising/campaigns": {
       "get": {
-        "tags": [
-          "advertising"
-        ],
+        "tags": ["advertising"],
         "summary": "Retrieve multi-channel advertising campaign performance",
         "description": "Returns paginated advertising campaign performance across up to 5 channels for the selected date range. Values are currency-adjusted based on each store's country and the requested currency. Supports filtering by campaign status and custom campaign groups, sorting by any response column, and zero-based page indexing.",
         "operationId": "getAdvertisingCampaigns",
@@ -2617,11 +2519,7 @@
               "type": "array",
               "items": {
                 "type": "string",
-                "enum": [
-                  "active",
-                  "paused",
-                  "archived"
-                ]
+                "enum": ["active", "paused", "archived"]
               }
             }
           },
@@ -2653,10 +2551,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "enum": [
-                "asc",
-                "desc"
-              ]
+              "enum": ["asc", "desc"]
             }
           },
           {
@@ -2739,9 +2634,7 @@
     },
     "/advertising/adGroups": {
       "get": {
-        "tags": [
-          "advertising"
-        ],
+        "tags": ["advertising"],
         "summary": "Retrieve multi-channel advertising ad group performance",
         "description": "Returns paginated advertising ad group performance across up to 5 channels for the selected date range, optionally filtered to specific campaigns. Values are currency-adjusted based on each store's country and the requested currency. Supports filtering by ad group status, sorting by any response column, and zero-based page indexing.",
         "operationId": "getAdvertisingAdGroups",
@@ -2806,11 +2699,7 @@
               "type": "array",
               "items": {
                 "type": "string",
-                "enum": [
-                  "active",
-                  "paused",
-                  "archived"
-                ]
+                "enum": ["active", "paused", "archived"]
               }
             }
           },
@@ -2830,10 +2719,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "enum": [
-                "asc",
-                "desc"
-              ]
+              "enum": ["asc", "desc"]
             }
           },
           {
@@ -2916,9 +2802,7 @@
     },
     "/advertising/keywords": {
       "get": {
-        "tags": [
-          "advertising"
-        ],
+        "tags": ["advertising"],
         "summary": "Retrieve multi-channel advertising keyword performance",
         "description": "Returns paginated advertising keyword performance across up to 5 channels for the selected date range, optionally filtered to specific campaigns and ad groups. Values are currency-adjusted based on each store's country and the requested currency. Supports filtering by keyword status, sorting by any response column, and zero-based page indexing.",
         "operationId": "getAdvertisingKeywords",
@@ -2995,11 +2879,7 @@
               "type": "array",
               "items": {
                 "type": "string",
-                "enum": [
-                  "active",
-                  "paused",
-                  "archived"
-                ]
+                "enum": ["active", "paused", "archived"]
               }
             }
           },
@@ -3019,10 +2899,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "enum": [
-                "asc",
-                "desc"
-              ]
+              "enum": ["asc", "desc"]
             }
           },
           {
@@ -3105,9 +2982,7 @@
     },
     "/advertising/products": {
       "get": {
-        "tags": [
-          "advertising"
-        ],
+        "tags": ["advertising"],
         "summary": "Retrieve multi-channel advertising product performance",
         "description": "Returns paginated advertising product (ASIN) performance across up to 5 channels for the selected date range, optionally filtered to specific products. Values are currency-adjusted based on each store's country and the requested currency. Supports sorting by any response column and zero-based page indexing.",
         "operationId": "getAdvertisingProducts",
@@ -3179,10 +3054,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "enum": [
-                "asc",
-                "desc"
-              ]
+              "enum": ["asc", "desc"]
             }
           },
           {
@@ -3271,9 +3143,7 @@
         "properties": {
           "status": {
             "type": "string",
-            "enum": [
-              "error"
-            ]
+            "enum": ["error"]
           },
           "error": {
             "type": "string",
@@ -3288,12 +3158,7 @@
       "StartEndTimeRange": {
         "type": "object",
         "description": "Start and end of a time range. ISO 8601 values preserve the UTC offset for the requested timezone; epoch values are Unix seconds for the same instants.",
-        "required": [
-          "startTime",
-          "endTime",
-          "startTimeEpoch",
-          "endTimeEpoch"
-        ],
+        "required": ["startTime", "endTime", "startTimeEpoch", "endTimeEpoch"],
         "properties": {
           "startTime": {
             "type": "string",
@@ -3407,9 +3272,7 @@
       },
       "ProductAttributeResponse": {
         "type": "object",
-        "required": [
-          "data"
-        ],
+        "required": ["data"],
         "properties": {
           "data": {
             "type": "object",
@@ -3510,9 +3373,7 @@
                 }
               }
             ],
-            "productTypes": [
-              "BEAUTY"
-            ],
+            "productTypes": ["BEAUTY"],
             "relationships": [],
             "sellerListings": [
               {
@@ -3534,9 +3395,7 @@
                 ],
                 "issues": [],
                 "sku": "LOCAL-B0020MMCJI",
-                "status": [
-                  "BUYABLE"
-                ],
+                "status": ["BUYABLE"],
                 "conditionType": "new_new",
                 "createdDate": "2026-07-23T07:50:56.276Z",
                 "lastUpdatedDate": "2026-07-23T07:50:56.276Z"
@@ -3565,10 +3424,7 @@
         "properties": {
           "channelType": {
             "type": "string",
-            "enum": [
-              "seller",
-              "vendor"
-            ]
+            "enum": ["seller", "vendor"]
           },
           "asin": {
             "type": "string",
@@ -3624,9 +3480,7 @@
             "items": {
               "type": "string"
             },
-            "example": [
-              "BEAUTY"
-            ]
+            "example": ["BEAUTY"]
           },
           "relationships": {
             "type": "array",
@@ -3656,9 +3510,7 @@
       },
       "AmazonProductSummary": {
         "type": "object",
-        "required": [
-          "marketplaceId"
-        ],
+        "required": ["marketplaceId"],
         "properties": {
           "marketplaceId": {
             "type": "string",
@@ -3740,10 +3592,7 @@
       },
       "AmazonCatalogTextAttribute": {
         "type": "object",
-        "required": [
-          "marketplace_id",
-          "value"
-        ],
+        "required": ["marketplace_id", "value"],
         "properties": {
           "language_tag": {
             "type": "string",
@@ -3761,10 +3610,7 @@
       },
       "AmazonProductIdentifier": {
         "type": "object",
-        "required": [
-          "identifier",
-          "identifierType"
-        ],
+        "required": ["identifier", "identifierType"],
         "properties": {
           "identifier": {
             "type": "string",
@@ -3778,12 +3624,7 @@
       },
       "AmazonProductImage": {
         "type": "object",
-        "required": [
-          "variant",
-          "link",
-          "height",
-          "width"
-        ],
+        "required": ["variant", "link", "height", "width"],
         "properties": {
           "variant": {
             "type": "string",
@@ -3808,9 +3649,7 @@
       },
       "AmazonSalesRanks": {
         "type": "object",
-        "required": [
-          "marketplaceId"
-        ],
+        "required": ["marketplaceId"],
         "properties": {
           "marketplaceId": {
             "type": "string",
@@ -3832,12 +3671,7 @@
       },
       "AmazonClassificationRank": {
         "type": "object",
-        "required": [
-          "classificationId",
-          "title",
-          "link",
-          "rank"
-        ],
+        "required": ["classificationId", "title", "link", "rank"],
         "properties": {
           "classificationId": {
             "type": "string",
@@ -3861,12 +3695,7 @@
       },
       "AmazonDisplayGroupRank": {
         "type": "object",
-        "required": [
-          "websiteDisplayGroup",
-          "title",
-          "link",
-          "rank"
-        ],
+        "required": ["websiteDisplayGroup", "title", "link", "rank"],
         "properties": {
           "websiteDisplayGroup": {
             "type": "string"
@@ -3886,10 +3715,7 @@
       },
       "AmazonProductClassification": {
         "type": "object",
-        "required": [
-          "classificationId",
-          "displayName"
-        ],
+        "required": ["classificationId", "displayName"],
         "properties": {
           "classificationId": {
             "type": "string",
@@ -3912,16 +3738,11 @@
       },
       "AmazonProductRelationship": {
         "type": "object",
-        "required": [
-          "type"
-        ],
+        "required": ["type"],
         "properties": {
           "type": {
             "type": "string",
-            "enum": [
-              "VARIATION",
-              "PACKAGE_HIERACHY"
-            ]
+            "enum": ["VARIATION", "PACKAGE_HIERARCHY"]
           },
           "childAsins": {
             "type": "array",
@@ -3939,12 +3760,7 @@
       },
       "AmazonSellerListing": {
         "type": "object",
-        "required": [
-          "sku",
-          "offers",
-          "fulfillmentAvailability",
-          "issues"
-        ],
+        "required": ["sku", "offers", "fulfillmentAvailability", "issues"],
         "properties": {
           "offers": {
             "type": "array",
@@ -3973,9 +3789,7 @@
             "items": {
               "type": "string"
             },
-            "example": [
-              "BUYABLE"
-            ]
+            "example": ["BUYABLE"]
           },
           "conditionType": {
             "type": "string",
@@ -3995,11 +3809,7 @@
       },
       "AmazonListingOffer": {
         "type": "object",
-        "required": [
-          "marketplaceId",
-          "offerType",
-          "price"
-        ],
+        "required": ["marketplaceId", "offerType", "price"],
         "properties": {
           "marketplaceId": {
             "type": "string",
@@ -4016,10 +3826,7 @@
       },
       "AmazonListingPrice": {
         "type": "object",
-        "required": [
-          "currency",
-          "amount"
-        ],
+        "required": ["currency", "amount"],
         "properties": {
           "currency": {
             "type": "string",
@@ -4033,10 +3840,7 @@
       },
       "AmazonFulfillmentAvailability": {
         "type": "object",
-        "required": [
-          "fulfillmentChannelCode",
-          "quantity"
-        ],
+        "required": ["fulfillmentChannelCode", "quantity"],
         "properties": {
           "fulfillmentChannelCode": {
             "type": "string",
@@ -4051,11 +3855,7 @@
       },
       "AmazonListingIssue": {
         "type": "object",
-        "required": [
-          "message",
-          "severity",
-          "attributeNames"
-        ],
+        "required": ["message", "severity", "attributeNames"],
         "properties": {
           "message": {
             "type": "string"
@@ -4073,11 +3873,7 @@
       },
       "AmazonVendorListing": {
         "type": "object",
-        "required": [
-          "vendorDetails",
-          "procurement",
-          "vendorCode"
-        ],
+        "required": ["vendorDetails", "procurement", "vendorCode"],
         "properties": {
           "vendorDetails": {
             "type": "object",
@@ -4104,16 +3900,11 @@
       },
       "AmazonProcurement": {
         "type": "object",
-        "required": [
-          "costPrice"
-        ],
+        "required": ["costPrice"],
         "properties": {
           "costPrice": {
             "type": "object",
-            "required": [
-              "currencyCode",
-              "amount"
-            ],
+            "required": ["currencyCode", "amount"],
             "properties": {
               "currencyCode": {
                 "type": "string",
@@ -4173,10 +3964,7 @@
       },
       "AmazonVendorCategory": {
         "type": "object",
-        "required": [
-          "displayName",
-          "value"
-        ],
+        "required": ["displayName", "value"],
         "properties": {
           "displayName": {
             "type": "string"
@@ -5120,9 +4908,7 @@
       },
       "ConvertTagsRequest": {
         "type": "object",
-        "required": [
-          "tag"
-        ],
+        "required": ["tag"],
         "properties": {
           "tag": {
             "type": "string",
@@ -5162,15 +4948,11 @@
           "items": [
             {
               "merchantId": "XXXUS @ ATVPDKIKX0DER",
-              "tags": [
-                "org://amazon"
-              ]
+              "tags": ["org://amazon"]
             },
             {
               "merchantId": "google_demo_001",
-              "tags": [
-                "org://amazon"
-              ]
+              "tags": ["org://amazon"]
             }
           ]
         }
@@ -5230,10 +5012,7 @@
               },
               "sortOrder": {
                 "type": "string",
-                "enum": [
-                  "asc",
-                  "desc"
-                ],
+                "enum": ["asc", "desc"],
                 "description": "Sort direction",
                 "default": "asc"
               }
@@ -5383,10 +5162,7 @@
         "properties": {
           "status": {
             "type": "string",
-            "enum": [
-              "same",
-              "different"
-            ],
+            "enum": ["same", "different"],
             "description": "Whether the current value differs from the benchmark"
           },
           "original": {
@@ -5439,7 +5215,7 @@
           },
           "tags": {
             "type": "array",
-            "description": "Tags for the channel. Organisation-wide tags are prefixed with 'org://'.",
+            "description": "Tags for the channel. Shared tags are prefixed with 'org://'.",
             "items": {
               "type": "string"
             }
@@ -5448,10 +5224,7 @@
         "example": {
           "channelId": "A1234567890ABC",
           "merchantId": "XXXUS @ ATVPDKIKX0DER",
-          "tags": [
-            "amazon",
-            "org://ebay"
-          ]
+          "tags": ["amazon", "org://ebay"]
         }
       },
       "GetAllTagsResponse": {
@@ -5489,27 +5262,19 @@
             {
               "channelId": "A1234567890ABC",
               "merchantId": "XXXUS @ ATVPDKIKX0DER",
-              "tags": [
-                "amazon",
-                "org://ebay"
-              ]
+              "tags": ["amazon", "org://ebay"]
             },
             {
               "channelId": "google_demo_001",
               "merchantId": "google_demo_001",
-              "tags": [
-                "north-america"
-              ]
+              "tags": ["north-america"]
             }
           ]
         }
       },
       "GetChannelTagsRequest": {
         "type": "object",
-        "required": [
-          "channelId",
-          "merchantId"
-        ],
+        "required": ["channelId", "merchantId"],
         "properties": {
           "channelId": {
             "type": "string",
@@ -5523,10 +5288,7 @@
       },
       "UpdateChannelTagsRequest": {
         "type": "object",
-        "required": [
-          "channelId",
-          "merchantId"
-        ],
+        "required": ["channelId", "merchantId"],
         "properties": {
           "channelId": {
             "type": "string",
@@ -5538,7 +5300,7 @@
           },
           "addTags": {
             "type": "array",
-            "description": "Tags to add to the channel. Non-empty strings only. Organisation-wide tags are prefixed with 'org://'.",
+            "description": "Tags to add to the channel. Non-empty strings only. Shared tags are prefixed with 'org://'.",
             "items": {
               "type": "string"
             }
@@ -5554,12 +5316,8 @@
         "example": {
           "channelId": "A1234567890ABC",
           "merchantId": "XXXUS @ ATVPDKIKX0DER",
-          "addTags": [
-            "north-america"
-          ],
-          "removeTags": [
-            "org://ebay"
-          ]
+          "addTags": ["north-america"],
+          "removeTags": ["org://ebay"]
         }
       },
       "CreateReportResponse": {
@@ -5785,10 +5543,7 @@
           },
           "dateField": {
             "type": "string",
-            "enum": [
-              "createdAt",
-              "updatedAt"
-            ],
+            "enum": ["createdAt", "updatedAt"],
             "description": "(Optional) The field to which fromDate and toDate filter are applied - either 'createdAt' or 'updatedAt'"
           },
           "fromDate": {
@@ -5916,10 +5671,7 @@
               },
               "profitabilityView": {
                 "type": "string",
-                "enum": [
-                  "settled",
-                  "accrual"
-                ],
+                "enum": ["settled", "accrual"],
                 "description": "Accounting basis for the P&L. 'settled' (default) is cash-basis; 'accrual' recognises revenue and costs when earned or incurred, before settlement. Defaults to 'settled' when omitted."
               }
             }
@@ -5949,7 +5701,7 @@
           },
           "toDate": {
             "type": "integer",
-            "description": "Unix epoch time (seconds) representing the edn of the reporting period"
+            "description": "Unix epoch time (seconds) representing the end of the reporting period"
           },
           "timezone": {
             "type": "string"
@@ -5959,19 +5711,11 @@
           },
           "profitabilityView": {
             "type": "string",
-            "enum": [
-              "settled",
-              "accrual"
-            ],
+            "enum": ["settled", "accrual"],
             "description": "Accounting basis for the P&L. 'settled' (default) is cash-basis; 'accrual' recognises revenue and costs when earned or incurred, before settlement. Defaults to 'settled' when omitted."
           }
         },
-        "required": [
-          "fromDate",
-          "toDate",
-          "includeTax",
-          "timezone"
-        ]
+        "required": ["fromDate", "toDate", "includeTax", "timezone"]
       },
       "CreateProductsReportOptions": {
         "type": "object",
@@ -6014,18 +5758,11 @@
           },
           "profitabilityView": {
             "type": "string",
-            "enum": [
-              "settled",
-              "accrual"
-            ],
+            "enum": ["settled", "accrual"],
             "description": "Accounting basis for the P&L. 'settled' (default) is cash-basis; 'accrual' recognises revenue and costs when earned or incurred, before settlement. Defaults to 'settled' when omitted."
           }
         },
-        "required": [
-          "fromDate",
-          "toDate",
-          "includeTax"
-        ]
+        "required": ["fromDate", "toDate", "includeTax"]
       },
       "CreateShippedRevenueReportOptions": {
         "allOf": [
@@ -6037,10 +5774,7 @@
             "properties": {
               "view": {
                 "type": "string",
-                "enum": [
-                  "sourcing",
-                  "manufacturing"
-                ],
+                "enum": ["sourcing", "manufacturing"],
                 "description": "The level at which you wish to view revenue metrics - either 'sourcing' or 'manufacturing'"
               }
             }
@@ -6057,10 +5791,7 @@
             "properties": {
               "view": {
                 "type": "string",
-                "enum": [
-                  "parents",
-                  "skus"
-                ],
+                "enum": ["parents", "skus"],
                 "description": "The level at which you wish to view product metrics - either 'parents' or 'skus'"
               }
             }
@@ -6071,31 +5802,6 @@
         "allOf": [
           {
             "$ref": "#/components/schemas/CommonReportOptions"
-          },
-          {
-            "type": "object",
-            "properties": {
-              "fromDate": {
-                "type": "integer",
-                "description": "Unix epoch time (seconds) representing the start of the reporting period"
-              },
-              "toDate": {
-                "type": "integer",
-                "description": "Unix epoch time (seconds) representing the end of the reporting period"
-              },
-              "priorFromDate": {
-                "type": "number",
-                "description": "Unix epoch time (seconds) representing the start of the comparison period"
-              },
-              "priorToDate": {
-                "type": "number",
-                "description": "Unix epoch time (seconds) representing the end of the comparison period"
-              },
-              "timezone": {
-                "type": "string",
-                "description": "The timezone string you wish to see the report in (e.g. 'America/Los_Angeles') see https://en.wikipedia.org/wiki/List_of_tz_database_time_zones"
-              }
-            }
           }
         ]
       },
@@ -6107,26 +5813,6 @@
           {
             "type": "object",
             "properties": {
-              "fromDate": {
-                "type": "integer",
-                "description": "Unix epoch time (seconds) representing the start of the reporting period"
-              },
-              "toDate": {
-                "type": "integer",
-                "description": "Unix epoch time (seconds) representing the end of the reporting period"
-              },
-              "priorFromDate": {
-                "type": "number",
-                "description": "Unix epoch time (seconds) representing the start of the comparison period"
-              },
-              "priorToDate": {
-                "type": "number",
-                "description": "Unix epoch time (seconds) representing the end of the comparison period"
-              },
-              "timezone": {
-                "type": "string",
-                "description": "The timezone string you wish to see the report in (e.g. 'America/Los_Angeles') see https://en.wikipedia.org/wiki/List_of_tz_database_time_zones"
-              },
               "includeTax": {
                 "type": "boolean",
                 "description": "Whether tax should be included in sales figures"
@@ -6143,26 +5829,6 @@
           {
             "type": "object",
             "properties": {
-              "fromDate": {
-                "type": "integer",
-                "description": "Unix epoch time (seconds) representing the start of the reporting period"
-              },
-              "toDate": {
-                "type": "integer",
-                "description": "Unix epoch time (seconds) representing the end of the reporting period"
-              },
-              "priorFromDate": {
-                "type": "number",
-                "description": "Unix epoch time (seconds) representing the start of the comparison period"
-              },
-              "priorToDate": {
-                "type": "number",
-                "description": "Unix epoch time (seconds) representing the end of the comparison period"
-              },
-              "timezone": {
-                "type": "string",
-                "description": "The timezone string you wish to see the report in (e.g. 'America/Los_Angeles') see https://en.wikipedia.org/wiki/List_of_tz_database_time_zones"
-              },
               "includeTax": {
                 "type": "boolean",
                 "description": "Whether tax should be included in sales figures"
@@ -6200,26 +5866,6 @@
           {
             "type": "object",
             "properties": {
-              "fromDate": {
-                "type": "integer",
-                "description": "Unix epoch time (seconds) representing the start of the reporting period"
-              },
-              "toDate": {
-                "type": "integer",
-                "description": "Unix epoch time (seconds) representing the end of the reporting period"
-              },
-              "priorFromDate": {
-                "type": "number",
-                "description": "Unix epoch time (seconds) representing the start of the comparison period"
-              },
-              "priorToDate": {
-                "type": "number",
-                "description": "Unix epoch time (seconds) representing the end of the comparison period"
-              },
-              "timezone": {
-                "type": "string",
-                "description": "The timezone string you wish to see the report in (e.g. 'America/Los_Angeles') see https://en.wikipedia.org/wiki/List_of_tz_database_time_zones"
-              },
               "includeTax": {
                 "type": "boolean",
                 "description": "Whether tax should be included in sales figures"
@@ -6263,10 +5909,7 @@
           },
           "vendorRevenueType": {
             "type": "string",
-            "enum": [
-              "orderedRevenue",
-              "shippedRevenue"
-            ],
+            "enum": ["orderedRevenue", "shippedRevenue"],
             "description": "Determine whether the revenue type of a vendor should be retrieved by ordered or shipped revenue",
             "example": "orderedRevenue"
           },
@@ -6323,10 +5966,7 @@
             "example": "Amazon US"
           }
         },
-        "required": [
-          "reportOptions",
-          "currentCurrency"
-        ],
+        "required": ["reportOptions", "currentCurrency"],
         "description": "Criteria to view advertising performance by channel"
       },
       "AdvertisingByChannelsItem": {
@@ -6342,19 +5982,19 @@
           },
           "adsales": {
             "type": "string",
-            "description": "Attributed advertising sales (converted to current currency)"
+            "description": "Attributed advertising sales"
           },
           "priorAdsales": {
             "type": "string",
-            "description": "Attributed advertising sales for the prior comparison period"
+            "description": "Attributed advertising sales (comparison period)"
           },
           "spend": {
             "type": "string",
-            "description": "Advertising spend (converted to current currency)"
+            "description": "Advertising spend"
           },
           "priorSpend": {
             "type": "string",
-            "description": "Advertising spend for the prior comparison period"
+            "description": "Advertising spend (comparison period)"
           },
           "acos": {
             "type": "string",
@@ -6362,7 +6002,7 @@
           },
           "priorAcos": {
             "type": "string",
-            "description": "Prior period ACOS (%)"
+            "description": "Advertising cost of sales (%) (comparison period)"
           },
           "roas": {
             "type": "string",
@@ -6370,7 +6010,7 @@
           },
           "priorRoas": {
             "type": "string",
-            "description": "Prior period ROAS"
+            "description": "Return on ad spend (comparison period)"
           },
           "tacos": {
             "type": "string",
@@ -6378,7 +6018,7 @@
           },
           "priorTacos": {
             "type": "string",
-            "description": "Prior period TACOS (%)"
+            "description": "Total advertising cost of sales (%) (comparison period)"
           },
           "troas": {
             "type": "string",
@@ -6386,7 +6026,7 @@
           },
           "priorTroas": {
             "type": "string",
-            "description": "Prior period TROAS"
+            "description": "Total return on ad spend (comparison period)"
           },
           "impressions": {
             "type": "number"
@@ -6400,7 +6040,7 @@
           },
           "cpc": {
             "type": "string",
-            "description": "Cost per click (converted)"
+            "description": "Cost per click"
           },
           "conv": {
             "type": "string",
@@ -6414,7 +6054,7 @@
           },
           "NTB_sales": {
             "type": "string",
-            "description": "New-to-brand attributed sales (converted)"
+            "description": "New-to-brand attributed sales"
           },
           "percentage_sales_NTB": {
             "type": "string",
@@ -6449,10 +6089,7 @@
         "properties": {
           "status": {
             "type": "string",
-            "enum": [
-              "success",
-              "error"
-            ]
+            "enum": ["success", "error"]
           },
           "data": {
             "type": "object",
@@ -6540,11 +6177,7 @@
             "$ref": "#/components/schemas/GetProductProfitLossReportOptions"
           }
         },
-        "required": [
-          "channelId",
-          "merchantId",
-          "reportOptions"
-        ],
+        "required": ["channelId", "merchantId", "reportOptions"],
         "description": "Request a single or multiple products profit and loss details."
       },
       "GetProductProfitAndLossResponse": {
@@ -6613,7 +6246,7 @@
             "type": "number"
           }
         },
-        "description": "Response for a single or multiple products profit and loss details"
+        "description": "Response for single or multiple products profit and loss details"
       },
       "UpdateDirectCostsRequest": {
         "type": "object",
@@ -6642,7 +6275,7 @@
                 },
                 "cogsCurrency": {
                   "type": "string",
-                  "description": "Valid 3 letter currency code, for ex: USD, AUD, etc"
+                  "description": "Valid 3 letter currency code, e.g. USD, AUD, etc"
                 },
                 "shippingCost": {
                   "type": "number",
@@ -6650,18 +6283,13 @@
                 },
                 "shippingCostCurrency": {
                   "type": "string",
-                  "description": "(Optional) Valid 3 letter currency code, for ex: USD, AUD, etc"
+                  "description": "(Optional) Valid 3 letter currency code, e.g. USD, AUD, etc"
                 }
               }
             }
           }
         },
-        "required": [
-          "channelId",
-          "merchantId",
-          "fromDate",
-          "directCosts"
-        ],
+        "required": ["channelId", "merchantId", "fromDate", "directCosts"],
         "description": "Input data for request to update the Unit COGS"
       },
       "UpdateDirectCostsResponse": {
@@ -6675,11 +6303,8 @@
       },
       "PatchGroupRequest": {
         "type": "object",
-        "required": [
-          "channelId",
-          "merchantId"
-        ],
-        "description": "At least one of groupName, addProducts, removeProducts, addBrands, removeBrands must be provided. Cannot mix product and brand operations in the same request.",
+        "required": ["channelId", "merchantId"],
+        "description": "At least one of groupName, addProducts, removeProducts, addBrands, or removeBrands must be provided. Use addProducts/removeProducts only for product-based groups, and addBrands/removeBrands only for brand-based groups — these cannot be mixed in the same request.",
         "properties": {
           "channelId": {
             "type": "string"
@@ -6730,11 +6355,7 @@
       },
       "CreateCustomGroupRequest": {
         "type": "object",
-        "required": [
-          "channelId",
-          "merchantId",
-          "groupName"
-        ],
+        "required": ["channelId", "merchantId", "groupName"],
         "description": "Either products or brands must be provided (not both)",
         "properties": {
           "channelId": {
@@ -6766,7 +6387,7 @@
           },
           "groupId": {
             "type": "string",
-            "description": "Provide to update an existing group instead of creating a new one"
+            "description": "Optional. The ID of an existing custom group, as returned by the GET custom groups endpoint. Providing this value will completely overwrite the existing group. To add or remove individual items instead, use the PATCH endpoint."
           }
         }
       },
@@ -6834,11 +6455,7 @@
         "properties": {
           "jobStatus": {
             "type": "string",
-            "enum": [
-              "COMPLETED",
-              "FAILED",
-              "IN_PROGRESS"
-            ]
+            "enum": ["COMPLETED", "FAILED", "IN_PROGRESS"]
           }
         },
         "description": "Response for status of a Unit COGS update job"
@@ -7060,16 +6677,11 @@
             "type": "string"
           },
           "reportOptions": {
-            "type": "object",
             "$ref": "#/components/schemas/GetStoreProfitLossReportOptions"
           }
         },
-        "required": [
-          "channelId",
-          "merchantId",
-          "reportOptions"
-        ],
-        "description": "Fetch a stores profit and loss in raw json"
+        "required": ["channelId", "merchantId", "reportOptions"],
+        "description": "Fetch a store's profit and loss in raw json"
       },
       "CreateProductsReportRequest": {
         "type": "object",
@@ -7081,7 +6693,6 @@
             "type": "string"
           },
           "reportOptions": {
-            "type": "object",
             "$ref": "#/components/schemas/CreateProductsReportOptions"
           }
         }
@@ -7163,11 +6774,7 @@
             }
           }
         },
-        "required": [
-          "merchantId",
-          "channelId",
-          "reportOptions"
-        ]
+        "required": ["merchantId", "channelId", "reportOptions"]
       },
       "VendorSalesByPeriodRequest": {
         "type": "object",
@@ -7197,11 +6804,7 @@
             }
           }
         },
-        "required": [
-          "merchantId",
-          "channelId",
-          "reportOptions"
-        ]
+        "required": ["merchantId", "channelId", "reportOptions"]
       },
       "VendorSalesByPeriodReportOptions": {
         "allOf": [
@@ -7214,14 +6817,7 @@
             "properties": {
               "interval": {
                 "type": "string",
-                "enum": [
-                  "y",
-                  "Q",
-                  "M",
-                  "w",
-                  "d",
-                  "h"
-                ],
+                "enum": ["y", "Q", "M", "w", "d", "h"],
                 "description": "Interval code that controls how results are bucketed (y=year, Q=quarter, M=month, w=week, d=day, h=hour)."
               }
             },
@@ -7247,14 +6843,7 @@
             "properties": {
               "interval": {
                 "type": "string",
-                "enum": [
-                  "y",
-                  "Q",
-                  "M",
-                  "w",
-                  "d",
-                  "h"
-                ],
+                "enum": ["y", "Q", "M", "w", "d", "h"],
                 "description": "Interval code that controls how results are bucketed (y=year, Q=quarter, M=month, w=week, d=day, h=hour)."
               }
             },
@@ -7346,17 +6935,17 @@
           "clickThroughRate": {
             "type": "number",
             "format": "double",
-            "description": "Ratio of ad clicks to impressions expressed as a percentage."
+            "description": "Ratio of ad clicks to impressions (%)."
           },
           "acos": {
             "type": "number",
             "format": "double",
-            "description": "Advertising cost of sales (ad spend divided by ad sales) expressed as a percentage."
+            "description": "Advertising cost of sales (%)."
           },
           "tacos": {
             "type": "number",
             "format": "double",
-            "description": "Total advertising cost of sales (ad spend divided by total sales) expressed as a percentage."
+            "description": "Total advertising cost of sales (%)."
           }
         }
       },
@@ -7420,11 +7009,11 @@
           },
           "pageViewsConversions": {
             "type": "string",
-            "description": "Current-period units per view ratio formatted to one decimal place."
+            "description": "Current-period units per view ratio."
           },
           "priorPageViewsConversions": {
             "type": "string",
-            "description": "Comparison-period units per view ratio formatted to one decimal place."
+            "description": "Comparison-period units per view ratio."
           },
           "totalSessions": {
             "type": "integer",
@@ -7438,19 +7027,19 @@
           },
           "sessionConversions": {
             "type": "string",
-            "description": "Current-period units per session ratio formatted to one decimal place."
+            "description": "Current-period units per session ratio."
           },
           "priorSessionConversions": {
             "type": "string",
-            "description": "Comparison-period units per session ratio formatted to one decimal place."
+            "description": "Comparison-period units per session ratio."
           },
           "buyboxWinPercentage": {
             "type": "string",
-            "description": "Current-period Buy Box win rate formatted to one decimal place."
+            "description": "Current-period Buy Box win rate."
           },
           "priorBuyboxWinPercentage": {
             "type": "string",
-            "description": "Comparison-period Buy Box win rate formatted to one decimal place."
+            "description": "Comparison-period Buy Box win rate."
           },
           "adSpend": {
             "type": "string",
@@ -7480,27 +7069,27 @@
           },
           "clickThroughRate": {
             "type": "string",
-            "description": "Current-period ad click-through rate formatted to one decimal place."
+            "description": "Current-period ad click-through rate."
           },
           "priorClickThroughRate": {
             "type": "string",
-            "description": "Comparison-period ad click-through rate formatted to one decimal place."
+            "description": "Comparison-period ad click-through rate."
           },
           "acos": {
             "type": "string",
-            "description": "Current-period advertising cost of sales formatted to one decimal place."
+            "description": "Current-period advertising cost of sales."
           },
           "priorAcos": {
             "type": "string",
-            "description": "Comparison-period advertising cost of sales formatted to one decimal place."
+            "description": "Comparison-period advertising cost of sales."
           },
           "tacos": {
             "type": "string",
-            "description": "Current-period total advertising cost of sales formatted to one decimal place."
+            "description": "Current-period total advertising cost of sales."
           },
           "priorTacos": {
             "type": "string",
-            "description": "Comparison-period total advertising cost of sales formatted to one decimal place."
+            "description": "Comparison-period total advertising cost of sales."
           },
           "currency": {
             "type": "string",
@@ -7582,19 +7171,19 @@
           },
           "shippedCogs": {
             "type": "string",
-            "description": "Shipped cogs during the current period."
+            "description": "Shipped COGS during the current period."
           },
           "priorShippedCogs": {
             "type": "string",
-            "description": "Shipped cogs during the comparison period."
+            "description": "Shipped COGS during the comparison period."
           },
           "shippedCogsManufacturing": {
             "type": "string",
-            "description": "Shipped cogs manufacturing during the current period."
+            "description": "Shipped COGS manufacturing during the current period."
           },
           "priorShippedCogsManufacturing": {
             "type": "string",
-            "description": "Shipped cogs manufacturing during the comparison period."
+            "description": "Shipped COGS manufacturing during the comparison period."
           },
           "shippedUnits": {
             "type": "integer",
@@ -7634,35 +7223,35 @@
           },
           "acos": {
             "type": "string",
-            "description": "Acos during the current period."
+            "description": "Advertising cost of sales during the current period."
           },
           "priorAcos": {
             "type": "string",
-            "description": "Acos during the comparison period."
+            "description": "Advertising cost of sales during the comparison period."
           },
           "tacosOrderedRevenue": {
             "type": "string",
-            "description": "Tacos ordered revenue during the current period."
+            "description": "Total advertising cost of sales against ordered revenue during the current period."
           },
           "priorTacosOrderedRevenue": {
             "type": "string",
-            "description": "Tacos ordered revenue during the comparison period."
+            "description": "Total advertising cost of sales against ordered revenue during the comparison period."
           },
           "tacosShippedRevenue": {
             "type": "string",
-            "description": "Tacos shipped revenue during the current period."
+            "description": "Total advertising cost of sales against shipped revenue, sourcing, during the current period."
           },
           "priorTacosShippedRevenue": {
             "type": "string",
-            "description": "Tacos shipped revenue during the comparison period."
+            "description": "Total advertising cost of sales against shipped revenue, sourcing, during the comparison period."
           },
           "tacosManufacturing": {
             "type": "string",
-            "description": "Tacos manufacturing during the current period."
+            "description": "Total advertising cost of sales against shipped revenue, manufacturing, during the current period."
           },
           "priorTacosManufacturing": {
             "type": "string",
-            "description": "Tacos manufacturing during the comparison period."
+            "description": "Total advertising cost of sales against shipped revenue, manufacturing, during the comparison period."
           },
           "impressions": {
             "type": "integer",
@@ -7704,9 +7293,7 @@
         "properties": {
           "status": {
             "type": "string",
-            "enum": [
-              "success"
-            ],
+            "enum": ["success"],
             "description": "Indicates that the request completed successfully."
           },
           "currency": {
@@ -7721,11 +7308,7 @@
             }
           }
         },
-        "required": [
-          "status",
-          "currency",
-          "formattedChartData"
-        ]
+        "required": ["status", "currency", "formattedChartData"]
       },
       "SalesByPeriodSuccessResponse": {
         "type": "object",
@@ -7733,9 +7316,7 @@
         "properties": {
           "status": {
             "type": "string",
-            "enum": [
-              "success"
-            ],
+            "enum": ["success"],
             "description": "Indicates that the request completed successfully."
           },
           "currency": {
@@ -7750,12 +7331,7 @@
             }
           }
         },
-        "required": [
-          "status",
-          "currency",
-          "chartData",
-          "formattedChartData"
-        ]
+        "required": ["status", "currency", "formattedChartData"]
       },
       "SalesByPeriodErrorResponse": {
         "type": "object",
@@ -7763,9 +7339,7 @@
         "properties": {
           "status": {
             "type": "string",
-            "enum": [
-              "error"
-            ],
+            "enum": ["error"],
             "description": "Identifies the response as an error."
           },
           "error": {
@@ -7773,10 +7347,7 @@
             "description": "Human-readable explanation of what went wrong."
           }
         },
-        "required": [
-          "status",
-          "error"
-        ]
+        "required": ["status", "error"]
       },
       "VendorSalesByPeriodErrorResponse": {
         "type": "object",
@@ -7784,9 +7355,7 @@
         "properties": {
           "status": {
             "type": "string",
-            "enum": [
-              "error"
-            ],
+            "enum": ["error"],
             "description": "Identifies the response as an error."
           },
           "error": {
@@ -7794,10 +7363,7 @@
             "description": "Human-readable explanation of what went wrong."
           }
         },
-        "required": [
-          "status",
-          "error"
-        ]
+        "required": ["status", "error"]
       },
       "ViewSalesByChannelRequest": {
         "allOf": [
@@ -7862,10 +7428,7 @@
               "vendorRevenueType": {
                 "type": "string",
                 "description": "Type of vendor revenue to calculate",
-                "enum": [
-                  "orderedRevenue",
-                  "shippedRevenue"
-                ],
+                "enum": ["orderedRevenue", "shippedRevenue"],
                 "default": "orderedRevenue",
                 "example": "orderedRevenue"
               },
@@ -7891,10 +7454,7 @@
               "sortOrder": {
                 "type": "string",
                 "description": "Sort order direction",
-                "enum": [
-                  "asc",
-                  "desc"
-                ],
+                "enum": ["asc", "desc"],
                 "default": "desc",
                 "example": "desc"
               },
@@ -7961,7 +7521,7 @@
                 },
                 "salesSplit": {
                   "type": "number",
-                  "description": "Sales split percentage"
+                  "description": "Sales split (%)"
                 },
                 "storeId": {
                   "type": "string",
@@ -8142,10 +7702,7 @@
           },
           "sortOrder": {
             "type": "string",
-            "enum": [
-              "asc",
-              "desc"
-            ],
+            "enum": ["asc", "desc"],
             "default": "desc"
           },
           "searchText": {
@@ -8252,11 +7809,11 @@
           },
           "acos": {
             "type": "number",
-            "description": "Advertising cost of sales percentage"
+            "description": "Advertising cost of sales (%)"
           },
           "tacos": {
             "type": "number",
-            "description": "Total advertising cost of sales percentage"
+            "description": "Total advertising cost of sales (%)"
           },
           "directFulfillmentPOValue": {
             "type": "number",
@@ -8275,11 +7832,7 @@
             "description": "Direct fulfillment units as percentage of sold units (vendor only)"
           }
         },
-        "required": [
-          "productId",
-          "totalSales",
-          "unitsSold"
-        ]
+        "required": ["productId", "totalSales", "unitsSold"]
       },
       "SalesByProductReportColumns": {
         "type": "object",
@@ -8383,11 +7936,11 @@
           },
           "acos": {
             "type": "number",
-            "description": "Advertising Cost of Sale (percentage)"
+            "description": "Advertising cost of sales (%)"
           },
           "tacos": {
             "type": "number",
-            "description": "Total Advertising Cost of Sale (percentage)"
+            "description": "Total advertising cost of sales (%)"
           },
           "fulfillmentChannel": {
             "type": "string",
@@ -8531,27 +8084,27 @@
           },
           "glanceViews": {
             "type": "number",
-            "description": "Number of product detail page views (current period)"
+            "description": "Number of product detail page views"
           },
           "priorGlanceViews": {
             "type": "number",
-            "description": "Number of product detail page views (prior period)"
+            "description": "Number of product detail page views (comparison period)"
           },
           "orderedRevenue": {
             "type": "number",
-            "description": "Ordered revenue (current period)"
+            "description": "Ordered revenue"
           },
           "priorOrderedRevenue": {
             "type": "number",
-            "description": "Ordered revenue (prior period)"
+            "description": "Ordered revenue (comparison period)"
           },
           "orderedUnits": {
             "type": "number",
-            "description": "Units ordered (current period)"
+            "description": "Units ordered"
           },
           "priorOrderedUnits": {
             "type": "number",
-            "description": "Units ordered (prior period)"
+            "description": "Units ordered (comparison period)"
           },
           "avgPrice": {
             "type": "number",
@@ -8563,11 +8116,11 @@
           },
           "conversionRate": {
             "type": "number",
-            "description": "Conversion rate: Units per view (current period)"
+            "description": "Conversion rate: Units per view"
           },
           "priorConversionRate": {
             "type": "number",
-            "description": "Conversion rate: Units per view (prior period)"
+            "description": "Conversion rate: Units per view (comparison period)"
           }
         }
       },
@@ -8601,35 +8154,35 @@
           },
           "shippedRevenue": {
             "type": "number",
-            "description": "Shipped revenue (current period)"
+            "description": "Shipped revenue"
           },
           "priorShippedRevenue": {
             "type": "number",
-            "description": "Shipped revenue (prior period)"
+            "description": "Shipped revenue (comparison period)"
           },
           "shippedCogs": {
             "type": "number",
-            "description": "Shipped Cost of Goods Sold (current period)"
+            "description": "Shipped Cost of Goods Sold"
           },
           "priorShippedCogs": {
             "type": "number",
-            "description": "Shipped COGS (prior period)"
+            "description": "Shipped Cost of Goods Sold (comparison period)"
           },
           "shippedUnits": {
             "type": "number",
-            "description": "Units shipped (current period)"
+            "description": "Units shipped"
           },
           "priorShippedUnits": {
             "type": "number",
-            "description": "Units shipped (prior period)"
+            "description": "Units shipped (comparison period)"
           },
           "unitCogs": {
             "type": "number",
-            "description": "Cost of goods per unit"
+            "description": "Cost of Goods Sold per unit"
           },
           "priorUnitCogs": {
             "type": "number",
-            "description": "Prior period cost of goods per unit"
+            "description": "Cost of Goods Sold per unit (comparison period)"
           },
           "amazonMargin": {
             "type": "number",
@@ -8727,7 +8280,7 @@
           },
           "sellThroughRate": {
             "type": "number",
-            "description": "Sell-through rate percentage"
+            "description": "Sell-through rate (%)"
           },
           "averageVendorLeadTimeDays": {
             "type": "number",
@@ -8739,11 +8292,11 @@
           },
           "sourceableProductOutOfStockRate": {
             "type": "number",
-            "description": "Out of stock rate for sourceable products (percentage)"
+            "description": "Out of stock rate for sourceable products (%)"
           },
           "procurableProductOutOfStockRate": {
             "type": "number",
-            "description": "Out of stock rate for procurable products (percentage)"
+            "description": "Out of stock rate for procurable products (%)"
           }
         }
       },
@@ -8904,7 +8457,7 @@
           },
           "budget": {
             "type": "number",
-            "description": "Campaign budget (in target currency)"
+            "description": "Campaign budget"
           },
           "budget_type": {
             "type": "string",
@@ -8939,15 +8492,15 @@
           },
           "cost": {
             "type": "number",
-            "description": "Total ad spend (in target currency)"
+            "description": "Total ad spend"
           },
           "attributed_sales": {
             "type": "number",
-            "description": "Total sales attributed to ads (in target currency)"
+            "description": "Total sales attributed to ads"
           },
           "attributed_sales_same_sku": {
             "type": "number",
-            "description": "Sales attributed to the same SKU (in target currency)"
+            "description": "Sales attributed to the same SKU"
           },
           "attributed_conversions": {
             "type": "number",
@@ -8983,7 +8536,7 @@
           },
           "attributed_sales_ntb": {
             "type": "number",
-            "description": "New-to-brand sales (in target currency)"
+            "description": "New-to-brand sales"
           },
           "attributed_sales_ntb_percentage": {
             "type": "number",
@@ -8995,19 +8548,19 @@
           },
           "acos": {
             "type": "number",
-            "description": "Advertising Cost of Sale (percentage)"
+            "description": "Advertising cost of sales (%)"
           },
           "click_through_rate": {
             "type": "number",
-            "description": "Click-through rate (percentage)"
+            "description": "Click-through rate (%)"
           },
           "cost_per_click": {
             "type": "number",
-            "description": "Average cost per click (in target currency)"
+            "description": "Average cost per click"
           },
           "conversion_rate": {
             "type": "number",
-            "description": "Conversion rate (percentage)"
+            "description": "Conversion rate (%)"
           },
           "roas": {
             "type": "number",
@@ -9058,7 +8611,7 @@
           "default_bid": {
             "type": "number",
             "nullable": true,
-            "description": "Default bid amount (in target currency)"
+            "description": "Default bid amount"
           },
           "impressions": {
             "type": "number",
@@ -9070,15 +8623,15 @@
           },
           "cost": {
             "type": "number",
-            "description": "Total ad spend (in target currency)"
+            "description": "Total ad spend"
           },
           "attributed_sales": {
             "type": "number",
-            "description": "Total sales attributed to ads (in target currency)"
+            "description": "Total sales attributed to ads"
           },
           "attributed_sales_same_sku": {
             "type": "number",
-            "description": "Sales attributed to the same SKU (in target currency)"
+            "description": "Sales attributed to the same SKU"
           },
           "attributed_conversions": {
             "type": "number",
@@ -9114,7 +8667,7 @@
           },
           "attributed_sales_ntb": {
             "type": "number",
-            "description": "New-to-brand sales (in target currency)"
+            "description": "New-to-brand sales"
           },
           "attributed_sales_ntb_percentage": {
             "type": "number",
@@ -9126,19 +8679,19 @@
           },
           "acos": {
             "type": "number",
-            "description": "Advertising Cost of Sale (percentage)"
+            "description": "Advertising cost of sales (%)"
           },
           "click_through_rate": {
             "type": "number",
-            "description": "Click-through rate (percentage)"
+            "description": "Click-through rate (%)"
           },
           "cost_per_click": {
             "type": "number",
-            "description": "Average cost per click (in target currency)"
+            "description": "Average cost per click"
           },
           "conversion_rate": {
             "type": "number",
-            "description": "Conversion rate (percentage)"
+            "description": "Conversion rate (%)"
           },
           "roas": {
             "type": "number",
@@ -9201,7 +8754,7 @@
           "bid": {
             "type": "number",
             "nullable": true,
-            "description": "Keyword bid amount (in target currency)"
+            "description": "Keyword bid amount"
           },
           "impressions": {
             "type": "number",
@@ -9213,15 +8766,15 @@
           },
           "cost": {
             "type": "number",
-            "description": "Total ad spend (in target currency)"
+            "description": "Total ad spend"
           },
           "attributed_sales": {
             "type": "number",
-            "description": "Total sales attributed to ads (in target currency)"
+            "description": "Total sales attributed to ads"
           },
           "attributed_sales_same_sku": {
             "type": "number",
-            "description": "Sales attributed to the same SKU (in target currency)"
+            "description": "Sales attributed to the same SKU"
           },
           "attributed_conversions": {
             "type": "number",
@@ -9257,7 +8810,7 @@
           },
           "attributed_sales_ntb": {
             "type": "number",
-            "description": "New-to-brand sales (in target currency)"
+            "description": "New-to-brand sales"
           },
           "attributed_sales_ntb_percentage": {
             "type": "number",
@@ -9269,19 +8822,19 @@
           },
           "acos": {
             "type": "number",
-            "description": "Advertising Cost of Sale (percentage)"
+            "description": "Advertising cost of sales (%)"
           },
           "click_through_rate": {
             "type": "number",
-            "description": "Click-through rate (percentage)"
+            "description": "Click-through rate (%)"
           },
           "cost_per_click": {
             "type": "number",
-            "description": "Average cost per click (in target currency)"
+            "description": "Average cost per click"
           },
           "conversion_rate": {
             "type": "number",
-            "description": "Conversion rate (percentage)"
+            "description": "Conversion rate (%)"
           },
           "roas": {
             "type": "number",
@@ -9363,15 +8916,15 @@
           },
           "cost": {
             "type": "number",
-            "description": "Total ad spend (in target currency)"
+            "description": "Total ad spend"
           },
           "attributed_sales": {
             "type": "number",
-            "description": "Total sales attributed to ads (in target currency)"
+            "description": "Total sales attributed to ads"
           },
           "attributed_sales_same_sku": {
             "type": "number",
-            "description": "Sales attributed to the same SKU (in target currency)"
+            "description": "Sales attributed to the same SKU"
           },
           "attributed_conversions": {
             "type": "number",
@@ -9391,19 +8944,19 @@
           },
           "acos": {
             "type": "number",
-            "description": "Advertising Cost of Sale (percentage)"
+            "description": "Advertising cost of sales (%)"
           },
           "click_through_rate": {
             "type": "number",
-            "description": "Click-through rate (percentage)"
+            "description": "Click-through rate (%)"
           },
           "cost_per_click": {
             "type": "number",
-            "description": "Average cost per click (in target currency)"
+            "description": "Average cost per click"
           },
           "conversion_rate": {
             "type": "number",
-            "description": "Conversion rate (percentage)"
+            "description": "Conversion rate (%)"
           },
           "roas": {
             "type": "number",
@@ -9465,15 +9018,15 @@
           },
           "cost": {
             "type": "number",
-            "description": "Total ad spend (in target currency)"
+            "description": "Total ad spend"
           },
           "attributed_sales": {
             "type": "number",
-            "description": "Total sales attributed to ads (in target currency)"
+            "description": "Total sales attributed to ads"
           },
           "attributed_sales_same_sku": {
             "type": "number",
-            "description": "Sales attributed to the same SKU (in target currency)"
+            "description": "Sales attributed to the same SKU"
           },
           "attributed_conversions": {
             "type": "number",
@@ -9493,19 +9046,19 @@
           },
           "acos": {
             "type": "number",
-            "description": "Advertising Cost of Sale (percentage)"
+            "description": "Advertising cost of sales (%)"
           },
           "click_through_rate": {
             "type": "number",
-            "description": "Click-through rate (percentage)"
+            "description": "Click-through rate (%)"
           },
           "cost_per_click": {
             "type": "number",
-            "description": "Average cost per click (in target currency)"
+            "description": "Average cost per click"
           },
           "conversion_rate": {
             "type": "number",
-            "description": "Conversion rate (percentage)"
+            "description": "Conversion rate (%)"
           },
           "roas": {
             "type": "number",
@@ -9654,7 +9207,7 @@
           },
           "offerSellerPositiveFeedbackRating": {
             "type": "number",
-            "description": "Seller's positive feedback rating percentage"
+            "description": "Seller's positive feedback rating (%)"
           },
           "offerFeedbackCount": {
             "type": "number",
@@ -9758,83 +9311,83 @@
           },
           "grossSales": {
             "type": "number",
-            "description": "Gross sales (current period)"
+            "description": "Gross sales"
           },
           "priorGrossSales": {
             "type": "number",
-            "description": "Gross sales (prior period)"
+            "description": "Gross sales (comparison period)"
           },
           "cancelledSales": {
             "type": "number",
-            "description": "Cancelled sales value (current period, hidden for Amazon sellers)"
+            "description": "Cancelled sales value. Not available for Amazon sellers"
           },
           "priorCancelledSales": {
             "type": "number",
-            "description": "Cancelled sales value (prior period, hidden for Amazon sellers)"
+            "description": "Cancelled sales value (comparison period). Not available for Amazon sellers"
           },
           "cancelRate": {
             "type": "number",
-            "description": "Cancellation rate percentage (hidden for Amazon sellers)"
+            "description": "Cancellation rate (%). Not available for Amazon sellers"
           },
           "priorCancelRate": {
             "type": "number",
-            "description": "Prior period cancellation rate (hidden for Amazon sellers)"
+            "description": "Cancellation rate (%) (comparison period). Not available for Amazon sellers"
           },
           "netSales": {
             "type": "number",
-            "description": "Net sales (current period)"
+            "description": "Net sales"
           },
           "priorNetSales": {
             "type": "number",
-            "description": "Net sales (prior period)"
+            "description": "Net sales (comparison period)"
           },
           "grossQty": {
             "type": "number",
-            "description": "Gross quantity ordered (current period)"
+            "description": "Gross quantity ordered"
           },
           "priorGrossQty": {
             "type": "number",
-            "description": "Gross quantity ordered (prior period)"
+            "description": "Gross quantity ordered (comparison period)"
           },
           "refundedSales": {
             "type": "number",
-            "description": "Refunded sales value (current period)"
+            "description": "Refunded sales value"
           },
           "priorRefundedSales": {
             "type": "number",
-            "description": "Refunded sales value (prior period)"
+            "description": "Refunded sales value (comparison period)"
           },
           "unitsRefunded": {
             "type": "number",
-            "description": "Number of units refunded (current period)"
+            "description": "Number of units refunded"
           },
           "priorUnitsRefunded": {
             "type": "number",
-            "description": "Number of units refunded (prior period)"
+            "description": "Number of units refunded (comparison period)"
           },
           "refundRate": {
             "type": "number",
-            "description": "Refund rate percentage (current period)"
+            "description": "Refund rate percentage"
           },
           "priorRefundRate": {
             "type": "number",
-            "description": "Refund rate percentage (prior period)"
+            "description": "Refund rate percentage (comparison period)"
           },
           "refundRateUnits": {
             "type": "number",
-            "description": "Refund rate by units (current period)"
+            "description": "Refund rate by units"
           },
           "priorRefundRateUnits": {
             "type": "number",
-            "description": "Refund rate by units (prior period)"
+            "description": "Refund rate by units (comparison period)"
           },
           "unitsCancelled": {
             "type": "number",
-            "description": "Number of units cancelled (current period)"
+            "description": "Number of units cancelled"
           },
           "priorUnitsCancelled": {
             "type": "number",
-            "description": "Number of units cancelled (prior period)"
+            "description": "Number of units cancelled (comparison period)"
           },
           "currency": {
             "type": "string",
@@ -9856,59 +9409,59 @@
           },
           "totalSales": {
             "type": "number",
-            "description": "Total sales (current period)"
+            "description": "Total sales"
           },
           "priorTotalSales": {
             "type": "number",
-            "description": "Total sales (prior period)"
+            "description": "Total sales (comparison period)"
           },
           "repeatCustomerSales": {
             "type": "number",
-            "description": "Sales from repeat customers (current period)"
+            "description": "Sales from repeat customers"
           },
           "priorRepeatCustomerSales": {
             "type": "number",
-            "description": "Sales from repeat customers (prior period)"
+            "description": "Sales from repeat customers (comparison period)"
           },
           "repeatSalesPercentage": {
             "type": "number",
-            "description": "Percentage of sales from repeat customers (current period)"
+            "description": "Percentage of sales from repeat customers"
           },
           "priorRepeatSalesPercentage": {
             "type": "number",
-            "description": "Percentage of sales from repeat customers (prior period)"
+            "description": "Percentage of sales from repeat customers (comparison period)"
           },
           "totalCustomers": {
             "type": "number",
-            "description": "Total customers (current period)"
+            "description": "Total customers"
           },
           "priorTotalCustomers": {
             "type": "number",
-            "description": "Total customers (prior period)"
+            "description": "Total customers (comparison period)"
           },
           "newCustomers": {
             "type": "number",
-            "description": "New customers (current period)"
+            "description": "New customers"
           },
           "priorNewCustomers": {
             "type": "number",
-            "description": "New customers (prior period)"
+            "description": "New customers (comparison period)"
           },
           "repeatCustomers": {
             "type": "number",
-            "description": "Repeat customers (current period)"
+            "description": "Repeat customers"
           },
           "priorRepeatCustomers": {
             "type": "number",
-            "description": "Repeat customers (prior period)"
+            "description": "Repeat customers (comparison period)"
           },
           "repeatCustomersPercentage": {
             "type": "number",
-            "description": "Percentage of customers who are repeat buyers (current period)"
+            "description": "Percentage of customers who are repeat buyers"
           },
           "priorRepeatCustomersPercentage": {
             "type": "number",
-            "description": "Percentage of repeat customers (prior period)"
+            "description": "Percentage of customers who are repeat buyers (comparison period)"
           },
           "salesPerCustomer": {
             "type": "number",
@@ -9942,43 +9495,43 @@
           },
           "currentSubscriberShippedRevenue": {
             "type": "number",
-            "description": "Subscriber shipped revenue (current period)"
+            "description": "Subscriber shipped revenue"
           },
           "priorSubscriberShippedRevenue": {
             "type": "number",
-            "description": "Subscriber shipped revenue (prior period)"
+            "description": "Subscriber shipped revenue (comparison period)"
           },
           "currentSubscribers": {
             "type": "number",
-            "description": "Number of active subscribers (current period)"
+            "description": "Number of active subscribers"
           },
           "priorSubscribers": {
             "type": "number",
-            "description": "Number of active subscribers (prior period)"
+            "description": "Number of active subscribers (comparison period)"
           },
           "currentRevenuePerSubscriber": {
             "type": "number",
-            "description": "Revenue per subscriber (current period)"
+            "description": "Revenue per subscriber"
           },
           "priorRevenuePerSubscriber": {
             "type": "number",
-            "description": "Revenue per subscriber (prior period)"
+            "description": "Revenue per subscriber (comparison period)"
           },
           "currentShippedSubscriptionUnits": {
             "type": "number",
-            "description": "Shipped subscription units (current period)"
+            "description": "Shipped subscription units"
           },
           "priorShippedSubscriptionUnits": {
             "type": "number",
-            "description": "Shipped subscription units (prior period)"
+            "description": "Shipped subscription units (comparison period)"
           },
           "currentRevenuePenetration": {
             "type": "number",
-            "description": "Revenue penetration rate (current period)"
+            "description": "Revenue penetration rate"
           },
           "priorRevenuePenetration": {
             "type": "number",
-            "description": "Revenue penetration rate (prior period)"
+            "description": "Revenue penetration rate (comparison period)"
           },
           "notDeliveredDueToOOSPercent": {
             "type": "number",
@@ -10040,7 +9593,7 @@
           },
           "cogs": {
             "type": "number",
-            "description": "Cost of goods sold per unit"
+            "description": "Cost of Goods Sold per unit"
           },
           "imageUrl": {
             "type": "string",
@@ -10180,15 +9733,15 @@
           },
           "cost": {
             "type": "number",
-            "description": "Total ad spend (in target currency)"
+            "description": "Total ad spend"
           },
           "attributed_sales": {
             "type": "number",
-            "description": "Total sales attributed to ads (in target currency)"
+            "description": "Total sales attributed to ads"
           },
           "attributed_sales_same_sku": {
             "type": "number",
-            "description": "Sales attributed to the same SKU (in target currency)"
+            "description": "Sales attributed to the same SKU"
           },
           "attributed_conversions": {
             "type": "number",
@@ -10208,19 +9761,19 @@
           },
           "acos": {
             "type": "number",
-            "description": "Advertising Cost of Sale (percentage)"
+            "description": "Advertising cost of sales (%)"
           },
           "click_through_rate": {
             "type": "number",
-            "description": "Click-through rate (percentage)"
+            "description": "Click-through rate (%)"
           },
           "cost_per_click": {
             "type": "number",
-            "description": "Average cost per click (in target currency)"
+            "description": "Average cost per click"
           },
           "conversion_rate": {
             "type": "number",
-            "description": "Conversion rate (percentage)"
+            "description": "Conversion rate (%)"
           },
           "roas": {
             "type": "number",
