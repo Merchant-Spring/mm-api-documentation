@@ -5982,19 +5982,19 @@
           },
           "adsales": {
             "type": "string",
-            "description": "Attributed advertising sales (converted to current currency)"
+            "description": "Attributed advertising sales"
           },
           "priorAdsales": {
             "type": "string",
-            "description": "Attributed advertising sales for the prior comparison period"
+            "description": "Attributed advertising sales (comparison period)"
           },
           "spend": {
             "type": "string",
-            "description": "Advertising spend (converted to current currency)"
+            "description": "Advertising spend"
           },
           "priorSpend": {
             "type": "string",
-            "description": "Advertising spend for the prior comparison period"
+            "description": "Advertising spend (comparison period)"
           },
           "acos": {
             "type": "string",
@@ -6002,7 +6002,7 @@
           },
           "priorAcos": {
             "type": "string",
-            "description": "Prior period ACOS (%)"
+            "description": "Advertising cost of sales (%) (comparison period)"
           },
           "roas": {
             "type": "string",
@@ -6010,7 +6010,7 @@
           },
           "priorRoas": {
             "type": "string",
-            "description": "Prior period ROAS"
+            "description": "Return on ad spend (comparison period)"
           },
           "tacos": {
             "type": "string",
@@ -6018,7 +6018,7 @@
           },
           "priorTacos": {
             "type": "string",
-            "description": "Prior period TACOS (%)"
+            "description": "Total advertising cost of sales (%) (comparison period)"
           },
           "troas": {
             "type": "string",
@@ -6026,7 +6026,7 @@
           },
           "priorTroas": {
             "type": "string",
-            "description": "Prior period TROAS"
+            "description": "Total return on ad spend (comparison period)"
           },
           "impressions": {
             "type": "number"
@@ -6040,7 +6040,7 @@
           },
           "cpc": {
             "type": "string",
-            "description": "Cost per click (converted)"
+            "description": "Cost per click"
           },
           "conv": {
             "type": "string",
@@ -6054,7 +6054,7 @@
           },
           "NTB_sales": {
             "type": "string",
-            "description": "New-to-brand attributed sales (converted)"
+            "description": "New-to-brand attributed sales"
           },
           "percentage_sales_NTB": {
             "type": "string",
@@ -6935,17 +6935,17 @@
           "clickThroughRate": {
             "type": "number",
             "format": "double",
-            "description": "Ratio of ad clicks to impressions expressed as a percentage."
+            "description": "Ratio of ad clicks to impressions (%)."
           },
           "acos": {
             "type": "number",
             "format": "double",
-            "description": "Advertising cost of sales (ad spend divided by ad sales) expressed as a percentage."
+            "description": "Advertising cost of sales (%)."
           },
           "tacos": {
             "type": "number",
             "format": "double",
-            "description": "Total advertising cost of sales (ad spend divided by total sales) expressed as a percentage."
+            "description": "Total advertising cost of sales (%)."
           }
         }
       },
@@ -7009,11 +7009,11 @@
           },
           "pageViewsConversions": {
             "type": "string",
-            "description": "Current-period units per view ratio formatted to one decimal place."
+            "description": "Current-period units per view ratio."
           },
           "priorPageViewsConversions": {
             "type": "string",
-            "description": "Comparison-period units per view ratio formatted to one decimal place."
+            "description": "Comparison-period units per view ratio."
           },
           "totalSessions": {
             "type": "integer",
@@ -7027,19 +7027,19 @@
           },
           "sessionConversions": {
             "type": "string",
-            "description": "Current-period units per session ratio formatted to one decimal place."
+            "description": "Current-period units per session ratio."
           },
           "priorSessionConversions": {
             "type": "string",
-            "description": "Comparison-period units per session ratio formatted to one decimal place."
+            "description": "Comparison-period units per session ratio."
           },
           "buyboxWinPercentage": {
             "type": "string",
-            "description": "Current-period Buy Box win rate formatted to one decimal place."
+            "description": "Current-period Buy Box win rate."
           },
           "priorBuyboxWinPercentage": {
             "type": "string",
-            "description": "Comparison-period Buy Box win rate formatted to one decimal place."
+            "description": "Comparison-period Buy Box win rate."
           },
           "adSpend": {
             "type": "string",
@@ -7069,27 +7069,27 @@
           },
           "clickThroughRate": {
             "type": "string",
-            "description": "Current-period ad click-through rate formatted to one decimal place."
+            "description": "Current-period ad click-through rate."
           },
           "priorClickThroughRate": {
             "type": "string",
-            "description": "Comparison-period ad click-through rate formatted to one decimal place."
+            "description": "Comparison-period ad click-through rate."
           },
           "acos": {
             "type": "string",
-            "description": "Current-period advertising cost of sales formatted to one decimal place."
+            "description": "Current-period advertising cost of sales."
           },
           "priorAcos": {
             "type": "string",
-            "description": "Comparison-period advertising cost of sales formatted to one decimal place."
+            "description": "Comparison-period advertising cost of sales."
           },
           "tacos": {
             "type": "string",
-            "description": "Current-period total advertising cost of sales formatted to one decimal place."
+            "description": "Current-period total advertising cost of sales."
           },
           "priorTacos": {
             "type": "string",
-            "description": "Comparison-period total advertising cost of sales formatted to one decimal place."
+            "description": "Comparison-period total advertising cost of sales."
           },
           "currency": {
             "type": "string",
@@ -7171,19 +7171,19 @@
           },
           "shippedCogs": {
             "type": "string",
-            "description": "Shipped cogs during the current period."
+            "description": "Shipped COGS during the current period."
           },
           "priorShippedCogs": {
             "type": "string",
-            "description": "Shipped cogs during the comparison period."
+            "description": "Shipped COGS during the comparison period."
           },
           "shippedCogsManufacturing": {
             "type": "string",
-            "description": "Shipped cogs manufacturing during the current period."
+            "description": "Shipped COGS manufacturing during the current period."
           },
           "priorShippedCogsManufacturing": {
             "type": "string",
-            "description": "Shipped cogs manufacturing during the comparison period."
+            "description": "Shipped COGS manufacturing during the comparison period."
           },
           "shippedUnits": {
             "type": "integer",
@@ -7223,35 +7223,35 @@
           },
           "acos": {
             "type": "string",
-            "description": "Current-period advertising cost of sales."
+            "description": "Advertising cost of sales during the current period."
           },
           "priorAcos": {
             "type": "string",
-            "description": "Comparison-period advertising cost of sales."
+            "description": "Advertising cost of sales during the comparison period."
           },
           "tacosOrderedRevenue": {
             "type": "string",
-            "description": "Current-period total advertising cost of sales against ordered revenue."
+            "description": "Total advertising cost of sales against ordered revenue during the current period."
           },
           "priorTacosOrderedRevenue": {
             "type": "string",
-            "description": "Comparison-period total advertising cost of sales against ordered revenue."
+            "description": "Total advertising cost of sales against ordered revenue during the comparison period."
           },
           "tacosShippedRevenue": {
             "type": "string",
-            "description": "Current-period total advertising cost of sales against shipped revenue, sourcing."
+            "description": "Total advertising cost of sales against shipped revenue, sourcing, during the current period."
           },
           "priorTacosShippedRevenue": {
             "type": "string",
-            "description": "Comparison-period total advertising cost of sales against shipped revenue, sourcing."
+            "description": "Total advertising cost of sales against shipped revenue, sourcing, during the comparison period."
           },
           "tacosManufacturing": {
             "type": "string",
-            "description": "Current-period total advertising cost of sales against shipped revenue, manufacturing."
+            "description": "Total advertising cost of sales against shipped revenue, manufacturing, during the current period."
           },
           "priorTacosManufacturing": {
             "type": "string",
-            "description": "Comparison-period total advertising cost of sales against shipped revenue, manufacturing."
+            "description": "Total advertising cost of sales against shipped revenue, manufacturing, during the comparison period."
           },
           "impressions": {
             "type": "integer",
@@ -7521,7 +7521,7 @@
                 },
                 "salesSplit": {
                   "type": "number",
-                  "description": "Sales split percentage"
+                  "description": "Sales split (%)"
                 },
                 "storeId": {
                   "type": "string",
@@ -7809,11 +7809,11 @@
           },
           "acos": {
             "type": "number",
-            "description": "Advertising cost of sales expressed as a percentage."
+            "description": "Advertising cost of sales (%)"
           },
           "tacos": {
             "type": "number",
-            "description": "Total advertising cost of sales expressed as a percentage."
+            "description": "Total advertising cost of sales (%)"
           },
           "directFulfillmentPOValue": {
             "type": "number",
@@ -7936,11 +7936,11 @@
           },
           "acos": {
             "type": "number",
-            "description": "Advertising cost of sales expressed as a percentage."
+            "description": "Advertising cost of sales (%)"
           },
           "tacos": {
             "type": "number",
-            "description": "Total advertising cost of sales expressed as a percentage."
+            "description": "Total advertising cost of sales (%)"
           },
           "fulfillmentChannel": {
             "type": "string",
@@ -8084,27 +8084,27 @@
           },
           "glanceViews": {
             "type": "number",
-            "description": "Number of product detail page views (current period)"
+            "description": "Number of product detail page views"
           },
           "priorGlanceViews": {
             "type": "number",
-            "description": "Number of product detail page views (prior period)"
+            "description": "Number of product detail page views (comparison period)"
           },
           "orderedRevenue": {
             "type": "number",
-            "description": "Ordered revenue (current period)"
+            "description": "Ordered revenue"
           },
           "priorOrderedRevenue": {
             "type": "number",
-            "description": "Ordered revenue (prior period)"
+            "description": "Ordered revenue (comparison period)"
           },
           "orderedUnits": {
             "type": "number",
-            "description": "Units ordered (current period)"
+            "description": "Units ordered"
           },
           "priorOrderedUnits": {
             "type": "number",
-            "description": "Units ordered (prior period)"
+            "description": "Units ordered (comparison period)"
           },
           "avgPrice": {
             "type": "number",
@@ -8116,11 +8116,11 @@
           },
           "conversionRate": {
             "type": "number",
-            "description": "Conversion rate: Units per view (current period)"
+            "description": "Conversion rate: Units per view"
           },
           "priorConversionRate": {
             "type": "number",
-            "description": "Conversion rate: Units per view (prior period)"
+            "description": "Conversion rate: Units per view (comparison period)"
           }
         }
       },
@@ -8154,35 +8154,35 @@
           },
           "shippedRevenue": {
             "type": "number",
-            "description": "Shipped revenue (current period)"
+            "description": "Shipped revenue"
           },
           "priorShippedRevenue": {
             "type": "number",
-            "description": "Shipped revenue (prior period)"
+            "description": "Shipped revenue (comparison period)"
           },
           "shippedCogs": {
             "type": "number",
-            "description": "Shipped Cost of Goods Sold (current period)"
+            "description": "Shipped Cost of Goods Sold"
           },
           "priorShippedCogs": {
             "type": "number",
-            "description": "Shipped Cost of Goods Sold (prior period)"
+            "description": "Shipped Cost of Goods Sold (comparison period)"
           },
           "shippedUnits": {
             "type": "number",
-            "description": "Units shipped (current period)"
+            "description": "Units shipped"
           },
           "priorShippedUnits": {
             "type": "number",
-            "description": "Units shipped (prior period)"
+            "description": "Units shipped (comparison period)"
           },
           "unitCogs": {
             "type": "number",
-            "description": "Cost of Goods Sold (COGS) per unit"
+            "description": "Cost of Goods Sold per unit"
           },
           "priorUnitCogs": {
             "type": "number",
-            "description": "Prior period Cost of Goods Sold (COGS) per unit"
+            "description": "Cost of Goods Sold per unit (comparison period)"
           },
           "amazonMargin": {
             "type": "number",
@@ -8280,7 +8280,7 @@
           },
           "sellThroughRate": {
             "type": "number",
-            "description": "Sell-through rate percentage"
+            "description": "Sell-through rate (%)"
           },
           "averageVendorLeadTimeDays": {
             "type": "number",
@@ -8292,11 +8292,11 @@
           },
           "sourceableProductOutOfStockRate": {
             "type": "number",
-            "description": "Out of stock rate for sourceable products (percentage)"
+            "description": "Out of stock rate for sourceable products (%)"
           },
           "procurableProductOutOfStockRate": {
             "type": "number",
-            "description": "Out of stock rate for procurable products (percentage)"
+            "description": "Out of stock rate for procurable products (%)"
           }
         }
       },
@@ -8457,7 +8457,7 @@
           },
           "budget": {
             "type": "number",
-            "description": "Campaign budget (in target currency)"
+            "description": "Campaign budget"
           },
           "budget_type": {
             "type": "string",
@@ -8492,15 +8492,15 @@
           },
           "cost": {
             "type": "number",
-            "description": "Total ad spend (in target currency)"
+            "description": "Total ad spend"
           },
           "attributed_sales": {
             "type": "number",
-            "description": "Total sales attributed to ads (in target currency)"
+            "description": "Total sales attributed to ads"
           },
           "attributed_sales_same_sku": {
             "type": "number",
-            "description": "Sales attributed to the same SKU (in target currency)"
+            "description": "Sales attributed to the same SKU"
           },
           "attributed_conversions": {
             "type": "number",
@@ -8536,7 +8536,7 @@
           },
           "attributed_sales_ntb": {
             "type": "number",
-            "description": "New-to-brand sales (in target currency)"
+            "description": "New-to-brand sales"
           },
           "attributed_sales_ntb_percentage": {
             "type": "number",
@@ -8548,19 +8548,19 @@
           },
           "acos": {
             "type": "number",
-            "description": "Advertising Cost of Sale (percentage)"
+            "description": "Advertising cost of sales (%)"
           },
           "click_through_rate": {
             "type": "number",
-            "description": "Click-through rate (percentage)"
+            "description": "Click-through rate (%)"
           },
           "cost_per_click": {
             "type": "number",
-            "description": "Average cost per click (in target currency)"
+            "description": "Average cost per click"
           },
           "conversion_rate": {
             "type": "number",
-            "description": "Conversion rate (percentage)"
+            "description": "Conversion rate (%)"
           },
           "roas": {
             "type": "number",
@@ -8611,7 +8611,7 @@
           "default_bid": {
             "type": "number",
             "nullable": true,
-            "description": "Default bid amount (in target currency)"
+            "description": "Default bid amount"
           },
           "impressions": {
             "type": "number",
@@ -8623,15 +8623,15 @@
           },
           "cost": {
             "type": "number",
-            "description": "Total ad spend (in target currency)"
+            "description": "Total ad spend"
           },
           "attributed_sales": {
             "type": "number",
-            "description": "Total sales attributed to ads (in target currency)"
+            "description": "Total sales attributed to ads"
           },
           "attributed_sales_same_sku": {
             "type": "number",
-            "description": "Sales attributed to the same SKU (in target currency)"
+            "description": "Sales attributed to the same SKU"
           },
           "attributed_conversions": {
             "type": "number",
@@ -8667,7 +8667,7 @@
           },
           "attributed_sales_ntb": {
             "type": "number",
-            "description": "New-to-brand sales (in target currency)"
+            "description": "New-to-brand sales"
           },
           "attributed_sales_ntb_percentage": {
             "type": "number",
@@ -8679,19 +8679,19 @@
           },
           "acos": {
             "type": "number",
-            "description": "Advertising Cost of Sale (percentage)"
+            "description": "Advertising cost of sales (%)"
           },
           "click_through_rate": {
             "type": "number",
-            "description": "Click-through rate (percentage)"
+            "description": "Click-through rate (%)"
           },
           "cost_per_click": {
             "type": "number",
-            "description": "Average cost per click (in target currency)"
+            "description": "Average cost per click"
           },
           "conversion_rate": {
             "type": "number",
-            "description": "Conversion rate (percentage)"
+            "description": "Conversion rate (%)"
           },
           "roas": {
             "type": "number",
@@ -8754,7 +8754,7 @@
           "bid": {
             "type": "number",
             "nullable": true,
-            "description": "Keyword bid amount (in target currency)"
+            "description": "Keyword bid amount"
           },
           "impressions": {
             "type": "number",
@@ -8766,15 +8766,15 @@
           },
           "cost": {
             "type": "number",
-            "description": "Total ad spend (in target currency)"
+            "description": "Total ad spend"
           },
           "attributed_sales": {
             "type": "number",
-            "description": "Total sales attributed to ads (in target currency)"
+            "description": "Total sales attributed to ads"
           },
           "attributed_sales_same_sku": {
             "type": "number",
-            "description": "Sales attributed to the same SKU (in target currency)"
+            "description": "Sales attributed to the same SKU"
           },
           "attributed_conversions": {
             "type": "number",
@@ -8810,7 +8810,7 @@
           },
           "attributed_sales_ntb": {
             "type": "number",
-            "description": "New-to-brand sales (in target currency)"
+            "description": "New-to-brand sales"
           },
           "attributed_sales_ntb_percentage": {
             "type": "number",
@@ -8822,19 +8822,19 @@
           },
           "acos": {
             "type": "number",
-            "description": "Advertising Cost of Sale (percentage)"
+            "description": "Advertising cost of sales (%)"
           },
           "click_through_rate": {
             "type": "number",
-            "description": "Click-through rate (percentage)"
+            "description": "Click-through rate (%)"
           },
           "cost_per_click": {
             "type": "number",
-            "description": "Average cost per click (in target currency)"
+            "description": "Average cost per click"
           },
           "conversion_rate": {
             "type": "number",
-            "description": "Conversion rate (percentage)"
+            "description": "Conversion rate (%)"
           },
           "roas": {
             "type": "number",
@@ -8916,15 +8916,15 @@
           },
           "cost": {
             "type": "number",
-            "description": "Total ad spend (in target currency)"
+            "description": "Total ad spend"
           },
           "attributed_sales": {
             "type": "number",
-            "description": "Total sales attributed to ads (in target currency)"
+            "description": "Total sales attributed to ads"
           },
           "attributed_sales_same_sku": {
             "type": "number",
-            "description": "Sales attributed to the same SKU (in target currency)"
+            "description": "Sales attributed to the same SKU"
           },
           "attributed_conversions": {
             "type": "number",
@@ -8944,19 +8944,19 @@
           },
           "acos": {
             "type": "number",
-            "description": "Advertising Cost of Sale (percentage)"
+            "description": "Advertising cost of sales (%)"
           },
           "click_through_rate": {
             "type": "number",
-            "description": "Click-through rate (percentage)"
+            "description": "Click-through rate (%)"
           },
           "cost_per_click": {
             "type": "number",
-            "description": "Average cost per click (in target currency)"
+            "description": "Average cost per click"
           },
           "conversion_rate": {
             "type": "number",
-            "description": "Conversion rate (percentage)"
+            "description": "Conversion rate (%)"
           },
           "roas": {
             "type": "number",
@@ -9018,15 +9018,15 @@
           },
           "cost": {
             "type": "number",
-            "description": "Total ad spend (in target currency)"
+            "description": "Total ad spend"
           },
           "attributed_sales": {
             "type": "number",
-            "description": "Total sales attributed to ads (in target currency)"
+            "description": "Total sales attributed to ads"
           },
           "attributed_sales_same_sku": {
             "type": "number",
-            "description": "Sales attributed to the same SKU (in target currency)"
+            "description": "Sales attributed to the same SKU"
           },
           "attributed_conversions": {
             "type": "number",
@@ -9046,19 +9046,19 @@
           },
           "acos": {
             "type": "number",
-            "description": "Advertising Cost of Sale (percentage)"
+            "description": "Advertising cost of sales (%)"
           },
           "click_through_rate": {
             "type": "number",
-            "description": "Click-through rate (percentage)"
+            "description": "Click-through rate (%)"
           },
           "cost_per_click": {
             "type": "number",
-            "description": "Average cost per click (in target currency)"
+            "description": "Average cost per click"
           },
           "conversion_rate": {
             "type": "number",
-            "description": "Conversion rate (percentage)"
+            "description": "Conversion rate (%)"
           },
           "roas": {
             "type": "number",
@@ -9207,7 +9207,7 @@
           },
           "offerSellerPositiveFeedbackRating": {
             "type": "number",
-            "description": "Seller's positive feedback rating percentage"
+            "description": "Seller's positive feedback rating (%)"
           },
           "offerFeedbackCount": {
             "type": "number",
@@ -9311,83 +9311,83 @@
           },
           "grossSales": {
             "type": "number",
-            "description": "Gross sales (current period)"
+            "description": "Gross sales"
           },
           "priorGrossSales": {
             "type": "number",
-            "description": "Gross sales (prior period)"
+            "description": "Gross sales (comparison period)"
           },
           "cancelledSales": {
             "type": "number",
-            "description": "Cancelled sales value (current period, hidden for Amazon sellers)"
+            "description": "Cancelled sales value. Not available for Amazon sellers"
           },
           "priorCancelledSales": {
             "type": "number",
-            "description": "Cancelled sales value (prior period, hidden for Amazon sellers)"
+            "description": "Cancelled sales value (comparison period). Not available for Amazon sellers"
           },
           "cancelRate": {
             "type": "number",
-            "description": "Cancellation rate percentage (hidden for Amazon sellers)"
+            "description": "Cancellation rate (%). Not available for Amazon sellers"
           },
           "priorCancelRate": {
             "type": "number",
-            "description": "Prior period cancellation rate (hidden for Amazon sellers)"
+            "description": "Cancellation rate (%) (comparison period). Not available for Amazon sellers"
           },
           "netSales": {
             "type": "number",
-            "description": "Net sales (current period)"
+            "description": "Net sales"
           },
           "priorNetSales": {
             "type": "number",
-            "description": "Net sales (prior period)"
+            "description": "Net sales (comparison period)"
           },
           "grossQty": {
             "type": "number",
-            "description": "Gross quantity ordered (current period)"
+            "description": "Gross quantity ordered"
           },
           "priorGrossQty": {
             "type": "number",
-            "description": "Gross quantity ordered (prior period)"
+            "description": "Gross quantity ordered (comparison period)"
           },
           "refundedSales": {
             "type": "number",
-            "description": "Refunded sales value (current period)"
+            "description": "Refunded sales value"
           },
           "priorRefundedSales": {
             "type": "number",
-            "description": "Refunded sales value (prior period)"
+            "description": "Refunded sales value (comparison period)"
           },
           "unitsRefunded": {
             "type": "number",
-            "description": "Number of units refunded (current period)"
+            "description": "Number of units refunded"
           },
           "priorUnitsRefunded": {
             "type": "number",
-            "description": "Number of units refunded (prior period)"
+            "description": "Number of units refunded (comparison period)"
           },
           "refundRate": {
             "type": "number",
-            "description": "Refund rate percentage (current period)"
+            "description": "Refund rate percentage"
           },
           "priorRefundRate": {
             "type": "number",
-            "description": "Refund rate percentage (prior period)"
+            "description": "Refund rate percentage (comparison period)"
           },
           "refundRateUnits": {
             "type": "number",
-            "description": "Refund rate by units (current period)"
+            "description": "Refund rate by units"
           },
           "priorRefundRateUnits": {
             "type": "number",
-            "description": "Refund rate by units (prior period)"
+            "description": "Refund rate by units (comparison period)"
           },
           "unitsCancelled": {
             "type": "number",
-            "description": "Number of units cancelled (current period)"
+            "description": "Number of units cancelled"
           },
           "priorUnitsCancelled": {
             "type": "number",
-            "description": "Number of units cancelled (prior period)"
+            "description": "Number of units cancelled (comparison period)"
           },
           "currency": {
             "type": "string",
@@ -9409,59 +9409,59 @@
           },
           "totalSales": {
             "type": "number",
-            "description": "Total sales (current period)"
+            "description": "Total sales"
           },
           "priorTotalSales": {
             "type": "number",
-            "description": "Total sales (prior period)"
+            "description": "Total sales (comparison period)"
           },
           "repeatCustomerSales": {
             "type": "number",
-            "description": "Sales from repeat customers (current period)"
+            "description": "Sales from repeat customers"
           },
           "priorRepeatCustomerSales": {
             "type": "number",
-            "description": "Sales from repeat customers (prior period)"
+            "description": "Sales from repeat customers (comparison period)"
           },
           "repeatSalesPercentage": {
             "type": "number",
-            "description": "Percentage of sales from repeat customers (current period)"
+            "description": "Percentage of sales from repeat customers"
           },
           "priorRepeatSalesPercentage": {
             "type": "number",
-            "description": "Percentage of sales from repeat customers (prior period)"
+            "description": "Percentage of sales from repeat customers (comparison period)"
           },
           "totalCustomers": {
             "type": "number",
-            "description": "Total customers (current period)"
+            "description": "Total customers"
           },
           "priorTotalCustomers": {
             "type": "number",
-            "description": "Total customers (prior period)"
+            "description": "Total customers (comparison period)"
           },
           "newCustomers": {
             "type": "number",
-            "description": "New customers (current period)"
+            "description": "New customers"
           },
           "priorNewCustomers": {
             "type": "number",
-            "description": "New customers (prior period)"
+            "description": "New customers (comparison period)"
           },
           "repeatCustomers": {
             "type": "number",
-            "description": "Repeat customers (current period)"
+            "description": "Repeat customers"
           },
           "priorRepeatCustomers": {
             "type": "number",
-            "description": "Repeat customers (prior period)"
+            "description": "Repeat customers (comparison period)"
           },
           "repeatCustomersPercentage": {
             "type": "number",
-            "description": "Percentage of customers who are repeat buyers (current period)"
+            "description": "Percentage of customers who are repeat buyers"
           },
           "priorRepeatCustomersPercentage": {
             "type": "number",
-            "description": "Percentage of repeat customers (prior period)"
+            "description": "Percentage of customers who are repeat buyers (comparison period)"
           },
           "salesPerCustomer": {
             "type": "number",
@@ -9495,43 +9495,43 @@
           },
           "currentSubscriberShippedRevenue": {
             "type": "number",
-            "description": "Subscriber shipped revenue (current period)"
+            "description": "Subscriber shipped revenue"
           },
           "priorSubscriberShippedRevenue": {
             "type": "number",
-            "description": "Subscriber shipped revenue (prior period)"
+            "description": "Subscriber shipped revenue (comparison period)"
           },
           "currentSubscribers": {
             "type": "number",
-            "description": "Number of active subscribers (current period)"
+            "description": "Number of active subscribers"
           },
           "priorSubscribers": {
             "type": "number",
-            "description": "Number of active subscribers (prior period)"
+            "description": "Number of active subscribers (comparison period)"
           },
           "currentRevenuePerSubscriber": {
             "type": "number",
-            "description": "Revenue per subscriber (current period)"
+            "description": "Revenue per subscriber"
           },
           "priorRevenuePerSubscriber": {
             "type": "number",
-            "description": "Revenue per subscriber (prior period)"
+            "description": "Revenue per subscriber (comparison period)"
           },
           "currentShippedSubscriptionUnits": {
             "type": "number",
-            "description": "Shipped subscription units (current period)"
+            "description": "Shipped subscription units"
           },
           "priorShippedSubscriptionUnits": {
             "type": "number",
-            "description": "Shipped subscription units (prior period)"
+            "description": "Shipped subscription units (comparison period)"
           },
           "currentRevenuePenetration": {
             "type": "number",
-            "description": "Revenue penetration rate (current period)"
+            "description": "Revenue penetration rate"
           },
           "priorRevenuePenetration": {
             "type": "number",
-            "description": "Revenue penetration rate (prior period)"
+            "description": "Revenue penetration rate (comparison period)"
           },
           "notDeliveredDueToOOSPercent": {
             "type": "number",
@@ -9593,7 +9593,7 @@
           },
           "cogs": {
             "type": "number",
-            "description": "Cost of goods sold per unit"
+            "description": "Cost of Goods Sold per unit"
           },
           "imageUrl": {
             "type": "string",
@@ -9733,15 +9733,15 @@
           },
           "cost": {
             "type": "number",
-            "description": "Total ad spend (in target currency)"
+            "description": "Total ad spend"
           },
           "attributed_sales": {
             "type": "number",
-            "description": "Total sales attributed to ads (in target currency)"
+            "description": "Total sales attributed to ads"
           },
           "attributed_sales_same_sku": {
             "type": "number",
-            "description": "Sales attributed to the same SKU (in target currency)"
+            "description": "Sales attributed to the same SKU"
           },
           "attributed_conversions": {
             "type": "number",
@@ -9761,19 +9761,19 @@
           },
           "acos": {
             "type": "number",
-            "description": "Advertising Cost of Sale (percentage)"
+            "description": "Advertising cost of sales (%)"
           },
           "click_through_rate": {
             "type": "number",
-            "description": "Click-through rate (percentage)"
+            "description": "Click-through rate (%)"
           },
           "cost_per_click": {
             "type": "number",
-            "description": "Average cost per click (in target currency)"
+            "description": "Average cost per click"
           },
           "conversion_rate": {
             "type": "number",
-            "description": "Conversion rate (percentage)"
+            "description": "Conversion rate (%)"
           },
           "roas": {
             "type": "number",
