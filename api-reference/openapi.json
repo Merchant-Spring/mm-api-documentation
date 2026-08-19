@@ -2538,10 +2538,46 @@
           {
             "name": "sortKey",
             "in": "query",
-            "description": "Response column to sort by, e.g. campaign_name, cost, impressions, clicks, acos, roas (default campaign_name).",
+            "description": "Response column to sort by.",
             "required": false,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "enum": [
+                "channel_id",
+                "campaign_id",
+                "ad_type",
+                "campaign_name",
+                "campaign_status",
+                "budget",
+                "budget_type",
+                "start_date",
+                "end_date",
+                "targeting_type",
+                "bidding_strategy",
+                "cost_type",
+                "impressions",
+                "clicks",
+                "cost",
+                "attributed_sales",
+                "attributed_sales_same_sku",
+                "attributed_conversions",
+                "attributed_conversions_same_sku",
+                "attributed_units_ordered",
+                "attributed_units_ordered_same_sku",
+                "attributed_orders_ntb",
+                "attributed_units_ordered_ntb",
+                "attributed_sales_ntb",
+                "attributed_orders_ntb_percentage",
+                "attributed_units_ordered_ntb_percentage",
+                "attributed_sales_ntb_percentage",
+                "attributed_detail_page_views_clicks",
+                "acos",
+                "click_through_rate",
+                "cost_per_click",
+                "cost_per_acquisition",
+                "conversion_rate",
+                "roas"
+              ]
             }
           },
           {
@@ -2706,10 +2742,42 @@
           {
             "name": "sortKey",
             "in": "query",
-            "description": "Response column to sort by, e.g. ad_group_name, cost, impressions, clicks, acos, roas (default ad_group_name).",
+            "description": "Response column to sort by.",
             "required": false,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "enum": [
+                "channel_id",
+                "campaign_id",
+                "ad_group_id",
+                "ad_type",
+                "campaign_name",
+                "ad_group_name",
+                "ad_group_status",
+                "default_bid",
+                "cost_type",
+                "impressions",
+                "clicks",
+                "cost",
+                "attributed_sales",
+                "attributed_sales_same_sku",
+                "attributed_conversions",
+                "attributed_conversions_same_sku",
+                "attributed_units_ordered",
+                "attributed_units_ordered_same_sku",
+                "attributed_orders_ntb",
+                "attributed_units_ordered_ntb",
+                "attributed_sales_ntb",
+                "attributed_orders_ntb_percentage",
+                "attributed_units_ordered_ntb_percentage",
+                "attributed_sales_ntb_percentage",
+                "attributed_detail_page_views_clicks",
+                "acos",
+                "click_through_rate",
+                "cost_per_click",
+                "conversion_rate",
+                "roas"
+              ]
             }
           },
           {
@@ -2886,10 +2954,46 @@
           {
             "name": "sortKey",
             "in": "query",
-            "description": "Response column to sort by, e.g. keyword_text, cost, impressions, clicks, acos, roas (default keyword_text).",
+            "description": "Response column to sort by.",
             "required": false,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "enum": [
+                "channel_id",
+                "campaign_id",
+                "ad_group_id",
+                "keyword_id",
+                "ad_type",
+                "campaign_name",
+                "ad_group_name",
+                "keyword_text",
+                "match_type",
+                "keyword_status",
+                "bid",
+                "cost_type",
+                "impressions",
+                "clicks",
+                "cost",
+                "attributed_sales",
+                "attributed_sales_same_sku",
+                "attributed_conversions",
+                "attributed_conversions_same_sku",
+                "attributed_units_ordered",
+                "attributed_units_ordered_same_sku",
+                "attributed_orders_ntb",
+                "attributed_units_ordered_ntb",
+                "attributed_sales_ntb",
+                "attributed_detail_page_views_clicks",
+                "attributed_orders_ntb_percentage",
+                "attributed_units_ordered_ntb_percentage",
+                "attributed_sales_ntb_percentage",
+                "acos",
+                "click_through_rate",
+                "cost_per_click",
+                "conversion_rate",
+                "cost_per_acquisition",
+                "roas"
+              ]
             }
           },
           {
@@ -3041,10 +3145,28 @@
           {
             "name": "sortKey",
             "in": "query",
-            "description": "Response column to sort by, e.g. product_sku, cost, impressions, clicks, acos, roas (default product_sku).",
+            "description": "Response column to sort by.",
             "required": false,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "enum": [
+                "channel_id",
+                "product_sku",
+                "impressions",
+                "clicks",
+                "cost",
+                "attributed_sales",
+                "attributed_sales_same_sku",
+                "attributed_conversions",
+                "attributed_conversions_same_sku",
+                "attributed_units_ordered",
+                "attributed_units_ordered_same_sku",
+                "acos",
+                "click_through_rate",
+                "cost_per_click",
+                "conversion_rate",
+                "roas"
+              ]
             }
           },
           {
