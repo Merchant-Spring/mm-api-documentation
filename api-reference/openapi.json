@@ -341,6 +341,7 @@
                 "orderedRevenue",
                 "orderedUnits",
                 "glanceViews",
+                "lostFeaturedOffer",
                 "shippedRevenue",
                 "shippedUnits",
                 "shippedCogs",
@@ -4596,6 +4597,9 @@
               "glanceViews": {
                 "type": "number"
               },
+              "lostFeaturedOffer": {
+                "type": "number"
+              },
               "orderedRevenue": {
                 "type": "number"
               },
@@ -4844,6 +4848,7 @@
           },
           "orderedRevenue": {
             "glanceViews": 544564,
+            "lostFeaturedOffer": 3.42,
             "orderedRevenue": 2119116.4,
             "orderedUnits": 27238,
             "conversionRate": 5,
