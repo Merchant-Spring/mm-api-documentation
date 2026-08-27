@@ -52,6 +52,10 @@
       "x-group": "Tag"
     },
     {
+      "name": "search-query-performance",
+      "x-group": "Search Query Performance"
+    },
+    {
       "name": "profitability",
       "x-group": "Profitability"
     },
@@ -283,6 +287,470 @@
                 "example": {
                   "status": "error",
                   "error": "user does not have access to specified store"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/search-query-performance/asins": {
+      "get": {
+        "tags": ["search-query-performance"],
+        "summary": "Retrieve Search Query Performance data at the ASIN level (Amazon only)",
+        "description": "Returns aggregated Search Query Performance metrics (impressions, clicks, cart adds, purchases and derived rates/shares) per ASIN, compared against a prior period. If 'asins' is omitted, the top ASINs by impression volume are resolved automatically, capped to the organisation's Search Query Performance entitlement. Monetary values are converted into the requested currency. Requires the organisation to have Search Query Performance access enabled.",
+        "operationId": "getSqpAsinTable",
+        "parameters": [
+          {
+            "name": "channelId",
+            "in": "query",
+            "description": "Channel (store) ID. Must be an Amazon seller or vendor channel.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "merchantId",
+            "in": "query",
+            "description": "Merchant ID that owns the channel. URL-encode values containing spaces or '@'.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "fromDate",
+            "in": "query",
+            "description": "Unix epoch time (seconds) representing the start of the reporting period. SQP data is only available at monthly granularity, so this is clipped to the start of its containing calendar month; the clipped date is returned as meta.dateRange.fromDate in the response.",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "toDate",
+            "in": "query",
+            "description": "Unix epoch time (seconds) representing the end of the reporting period. SQP data is only available at monthly granularity, so this is clipped to the end of its containing calendar month; the clipped date is returned as meta.dateRange.toDate in the response.",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "priorFromDate",
+            "in": "query",
+            "description": "Unix epoch time (seconds) representing the start of the comparison period. SQP data is only available at monthly granularity, so this is clipped to the start of its containing calendar month; the clipped date is returned as meta.dateRange.priorFromDate in the response.",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "priorToDate",
+            "in": "query",
+            "description": "Unix epoch time (seconds) representing the end of the comparison period. SQP data is only available at monthly granularity, so this is clipped to the end of its containing calendar month; the clipped date is returned as meta.dateRange.priorToDate in the response.",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "timezone",
+            "in": "query",
+            "description": "IANA timezone identifier used to bucket the date range, for example Australia/Sydney.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "pageIndex",
+            "in": "query",
+            "description": "Zero-based page index (default 0).",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "Number of results per page (default 25, max 50).",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 50,
+              "default": 25
+            }
+          },
+          {
+            "name": "sortKey",
+            "in": "query",
+            "description": "Field to sort by (default searchQueryVolume).",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "searchQueryVolume",
+              "enum": [
+                "asin",
+                "searchQueryVolume",
+                "totalImpressions",
+                "impressions",
+                "impressionShare",
+                "totalClicks",
+                "clicks",
+                "clickShare",
+                "totalCtr",
+                "ctr",
+                "totalCartAdds",
+                "cartAdds",
+                "atcRate",
+                "totalPurchases",
+                "purchases",
+                "purchaseShare",
+                "totalCvr",
+                "cvr",
+                "currentRevenue",
+                "opportunity"
+              ]
+            }
+          },
+          {
+            "name": "sortOrder",
+            "in": "query",
+            "description": "Sort direction (default asc).",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "asc",
+              "enum": ["asc", "desc"]
+            }
+          },
+          {
+            "name": "asins",
+            "in": "query",
+            "description": "(Optional) Restrict results to these ASINs. Repeat the parameter for multiple values, e.g. ?asins=B001&asins=B002. If omitted, the top ASINs by impression volume are resolved automatically, capped to the organisation's Search Query Performance entitlement.",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "currency",
+            "in": "query",
+            "description": "3-letter ISO currency code to convert monetary values into (default USD).",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetSqpAsinTableResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input or unsupported channel",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "invalidChannel": {
+                    "summary": "channelId / merchantId do not match a connected store",
+                    "value": {
+                      "status": "error",
+                      "error": "Invalid channelId / merchantId"
+                    }
+                  },
+                  "nonAmazonChannel": {
+                    "summary": "Channel is not an Amazon store",
+                    "value": {
+                      "status": "error",
+                      "error": "This endpoint is only supported for Amazon channels"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The organisation does not have access to Search Query Performance data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "notEntitled": {
+                    "summary": "Organisation has no Search Query Performance entitlement",
+                    "value": {
+                      "status": "error",
+                      "error": "Your account is not entitled to Search Query Performance data. Please contact sales to enquire about a subscription."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/search-query-performance/keywords": {
+      "get": {
+        "tags": ["search-query-performance"],
+        "summary": "Retrieve Search Query Performance data at the keyword level for one ASIN (Amazon only)",
+        "description": "Returns a paginated list of Search Query Performance metrics per search query (keyword) for a single ASIN, compared against a prior period. Monetary values are converted into the requested currency. Requires the organisation to have Search Query Performance access enabled.",
+        "operationId": "getSqpKeywordTable",
+        "parameters": [
+          {
+            "name": "channelId",
+            "in": "query",
+            "description": "Channel (store) ID. Must be an Amazon seller or vendor channel.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "merchantId",
+            "in": "query",
+            "description": "Merchant ID that owns the channel. URL-encode values containing spaces or '@'.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "asin",
+            "in": "query",
+            "description": "ASIN to retrieve the keyword-level breakdown for.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "fromDate",
+            "in": "query",
+            "description": "Unix epoch time (seconds) representing the start of the reporting period. SQP data is only available at monthly granularity, so this is clipped to the start of its containing calendar month; the clipped date is returned as meta.dateRange.fromDate in the response.",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "toDate",
+            "in": "query",
+            "description": "Unix epoch time (seconds) representing the end of the reporting period. SQP data is only available at monthly granularity, so this is clipped to the end of its containing calendar month; the clipped date is returned as meta.dateRange.toDate in the response.",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "priorFromDate",
+            "in": "query",
+            "description": "Unix epoch time (seconds) representing the start of the comparison period. SQP data is only available at monthly granularity, so this is clipped to the start of its containing calendar month; the clipped date is returned as meta.dateRange.priorFromDate in the response.",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "priorToDate",
+            "in": "query",
+            "description": "Unix epoch time (seconds) representing the end of the comparison period. SQP data is only available at monthly granularity, so this is clipped to the end of its containing calendar month; the clipped date is returned as meta.dateRange.priorToDate in the response.",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "timezone",
+            "in": "query",
+            "description": "IANA timezone identifier used to bucket the date range, for example Australia/Sydney.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "pageIndex",
+            "in": "query",
+            "description": "Zero-based page index (default 0).",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "Number of results per page (default 25, max 50).",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 50,
+              "default": 25
+            }
+          },
+          {
+            "name": "sortKey",
+            "in": "query",
+            "description": "Field to sort by (default searchQueryVolume).",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "searchQueryVolume",
+              "enum": [
+                "searchQuery",
+                "searchQueryVolume",
+                "totalImpressions",
+                "impressions",
+                "impressionShare",
+                "totalClicks",
+                "clicks",
+                "clickShare",
+                "totalCtr",
+                "ctr",
+                "totalCartAdds",
+                "cartAdds",
+                "atcRate",
+                "totalPurchases",
+                "purchases",
+                "purchaseShare",
+                "totalCvr",
+                "cvr",
+                "currentRevenue",
+                "opportunity"
+              ]
+            }
+          },
+          {
+            "name": "sortOrder",
+            "in": "query",
+            "description": "Sort direction (default desc).",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "desc",
+              "enum": ["asc", "desc"]
+            }
+          },
+          {
+            "name": "searchText",
+            "in": "query",
+            "description": "(Optional) Filter search queries containing this text (case-insensitive).",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "currency",
+            "in": "query",
+            "description": "3-letter ISO currency code to convert monetary values into (default USD).",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetSqpKeywordTableResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input or unsupported channel",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "invalidChannel": {
+                    "summary": "channelId / merchantId do not match a connected store",
+                    "value": {
+                      "status": "error",
+                      "error": "Invalid channelId / merchantId"
+                    }
+                  },
+                  "nonAmazonChannel": {
+                    "summary": "Channel is not an Amazon store",
+                    "value": {
+                      "status": "error",
+                      "error": "This endpoint is only supported for Amazon channels"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The organisation does not have access to Search Query Performance data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "notEntitled": {
+                    "summary": "Organisation has no Search Query Performance entitlement",
+                    "value": {
+                      "status": "error",
+                      "error": "Your account is not entitled to Search Query Performance data. Please contact sales to enquire about a subscription."
+                    }
+                  }
                 }
               }
             }
@@ -4262,6 +4730,199 @@
           },
           "value": {
             "type": "string"
+          }
+        }
+      },
+      "SqpResolvedDateRange": {
+        "type": "object",
+        "description": "The date range actually used to compute this data. SQP reports are monthly, so the requested currentRange is clipped to the start/end of its containing calendar month(s) - this may differ from what was requested.",
+        "properties": {
+          "fromDate": {
+            "type": "string",
+            "description": "Start of the current period actually used (YYYY-MM-DD)"
+          },
+          "toDate": {
+            "type": "string",
+            "description": "End of the current period actually used (YYYY-MM-DD)"
+          },
+          "priorFromDate": {
+            "type": "string",
+            "description": "Start of the comparison period actually used (YYYY-MM-DD)"
+          },
+          "priorToDate": {
+            "type": "string",
+            "description": "End of the comparison period actually used (YYYY-MM-DD)"
+          }
+        }
+      },
+      "SqpMetrics": {
+        "type": "object",
+        "properties": {
+          "searchQueryVolume": {
+            "type": "number"
+          },
+          "totalImpressions": {
+            "type": "number"
+          },
+          "impressions": {
+            "type": "number"
+          },
+          "impressionShare": {
+            "type": "number"
+          },
+          "totalClicks": {
+            "type": "number"
+          },
+          "clicks": {
+            "type": "number"
+          },
+          "clickShare": {
+            "type": "number"
+          },
+          "totalCtr": {
+            "type": "number"
+          },
+          "ctr": {
+            "type": "number"
+          },
+          "totalCartAdds": {
+            "type": "number"
+          },
+          "cartAdds": {
+            "type": "number"
+          },
+          "atcRate": {
+            "type": "number"
+          },
+          "totalPurchases": {
+            "type": "number"
+          },
+          "purchases": {
+            "type": "number"
+          },
+          "purchaseShare": {
+            "type": "number"
+          },
+          "totalCvr": {
+            "type": "number"
+          },
+          "cvr": {
+            "type": "number"
+          },
+          "currentRevenue": {
+            "type": "number"
+          },
+          "currencyCode": {
+            "type": "string",
+            "description": "Matches the top-level meta.currency - the currency currentRevenue/totalOpportunity/opportunity were converted into"
+          },
+          "totalOpportunity": {
+            "type": "number"
+          },
+          "opportunity": {
+            "type": "number"
+          }
+        }
+      },
+      "GetSqpAsinTableResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "asin": {
+                  "type": "string"
+                },
+                "current": {
+                  "$ref": "#/components/schemas/SqpMetrics"
+                },
+                "prior": {
+                  "$ref": "#/components/schemas/SqpMetrics"
+                }
+              }
+            }
+          },
+          "pagination": {
+            "type": "object",
+            "properties": {
+              "pageIndex": {
+                "type": "integer",
+                "description": "Zero-based page index"
+              },
+              "pageSize": {
+                "type": "integer",
+                "description": "Number of results per page"
+              },
+              "count": {
+                "type": "integer",
+                "description": "Total number of matching ASINs (across all pages)"
+              }
+            }
+          },
+          "meta": {
+            "type": "object",
+            "properties": {
+              "currency": {
+                "type": "string",
+                "description": "Currency all monetary values (e.g. current/prior currentRevenue) were converted into"
+              },
+              "dateRange": {
+                "$ref": "#/components/schemas/SqpResolvedDateRange"
+              }
+            }
+          }
+        }
+      },
+      "GetSqpKeywordTableResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "searchQuery": {
+                  "type": "string"
+                },
+                "current": {
+                  "$ref": "#/components/schemas/SqpMetrics"
+                },
+                "prior": {
+                  "$ref": "#/components/schemas/SqpMetrics"
+                }
+              }
+            }
+          },
+          "pagination": {
+            "type": "object",
+            "properties": {
+              "pageIndex": {
+                "type": "integer",
+                "description": "Zero-based page index"
+              },
+              "pageSize": {
+                "type": "integer",
+                "description": "Number of results per page"
+              },
+              "count": {
+                "type": "integer",
+                "description": "Total number of matching search queries (across all pages)"
+              }
+            }
+          },
+          "meta": {
+            "type": "object",
+            "properties": {
+              "currency": {
+                "type": "string",
+                "description": "Currency all monetary values (e.g. current/prior currentRevenue) were converted into"
+              },
+              "dateRange": {
+                "$ref": "#/components/schemas/SqpResolvedDateRange"
+              }
+            }
           }
         }
       },
