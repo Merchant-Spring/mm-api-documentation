@@ -52,6 +52,10 @@
       "x-group": "Tag"
     },
     {
+      "name": "search-query-performance",
+      "x-group": "Search Query Performance"
+    },
+    {
       "name": "profitability",
       "x-group": "Profitability"
     },
@@ -98,7 +102,17 @@
           },
           "400": {
             "description": "Invalid input",
-            "content": {}
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" },
+                "examples": {
+                  "malformedFilter": {
+                    "summary": "filter.marketplaces / filter.countryCodes is not an array of strings",
+                    "value": { "status": "error", "error": "Invalid filter parameters" }
+                  }
+                }
+              }
+            }
           }
         },
         "security": [
@@ -145,7 +159,25 @@
           },
           "400": {
             "description": "Invalid input",
-            "content": {}
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" },
+                "examples": {
+                  "missingParam": {
+                    "summary": "A required body field is missing",
+                    "value": { "status": "error", "error": "Missing parameter in request body: mid" }
+                  },
+                  "invalidPageSize": {
+                    "summary": "paginationParams.pageSize is not a positive integer",
+                    "value": { "status": "error", "error": "Invalid parameter: paginationParams.pageSize must be a positive integer" }
+                  },
+                  "invalidPageIndex": {
+                    "summary": "paginationParams.pageIndex is not a non-negative integer",
+                    "value": { "status": "error", "error": "Invalid parameter: paginationParams.pageIndex must be a non-negative integer" }
+                  }
+                }
+              }
+            }
           }
         },
         "security": [
@@ -267,6 +299,470 @@
         ]
       }
     },
+    "/search-query-performance/asins": {
+      "get": {
+        "tags": ["search-query-performance"],
+        "summary": "Retrieve Search Query Performance data at the ASIN level (Amazon only)",
+        "description": "Returns aggregated Search Query Performance metrics (impressions, clicks, cart adds, purchases and derived rates/shares) per ASIN, compared against a prior period. If 'asins' is omitted, the top ASINs by impression volume are resolved automatically, capped to the organisation's Search Query Performance entitlement. Monetary values are converted into the requested currency. Requires the organisation to have Search Query Performance access enabled.",
+        "operationId": "getSqpAsinTable",
+        "parameters": [
+          {
+            "name": "channelId",
+            "in": "query",
+            "description": "Channel (store) ID. Must be an Amazon seller or vendor channel.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "merchantId",
+            "in": "query",
+            "description": "Merchant ID that owns the channel. URL-encode values containing spaces or '@'.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "fromDate",
+            "in": "query",
+            "description": "Unix epoch time (seconds) representing the start of the reporting period. SQP data is only available at monthly granularity, so this is clipped to the start of its containing calendar month; the clipped date is returned as meta.dateRange.fromDate in the response.",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "toDate",
+            "in": "query",
+            "description": "Unix epoch time (seconds) representing the end of the reporting period. SQP data is only available at monthly granularity, so this is clipped to the end of its containing calendar month; the clipped date is returned as meta.dateRange.toDate in the response.",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "priorFromDate",
+            "in": "query",
+            "description": "Unix epoch time (seconds) representing the start of the comparison period. SQP data is only available at monthly granularity, so this is clipped to the start of its containing calendar month; the clipped date is returned as meta.dateRange.priorFromDate in the response.",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "priorToDate",
+            "in": "query",
+            "description": "Unix epoch time (seconds) representing the end of the comparison period. SQP data is only available at monthly granularity, so this is clipped to the end of its containing calendar month; the clipped date is returned as meta.dateRange.priorToDate in the response.",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "timezone",
+            "in": "query",
+            "description": "IANA timezone identifier used to bucket the date range, for example Australia/Sydney.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "pageIndex",
+            "in": "query",
+            "description": "Zero-based page index (default 0).",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "Number of results per page (default 25, max 50).",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 50,
+              "default": 25
+            }
+          },
+          {
+            "name": "sortKey",
+            "in": "query",
+            "description": "Field to sort by (default searchQueryVolume).",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "searchQueryVolume",
+              "enum": [
+                "asin",
+                "searchQueryVolume",
+                "totalImpressions",
+                "impressions",
+                "impressionShare",
+                "totalClicks",
+                "clicks",
+                "clickShare",
+                "totalCtr",
+                "ctr",
+                "totalCartAdds",
+                "cartAdds",
+                "atcRate",
+                "totalPurchases",
+                "purchases",
+                "purchaseShare",
+                "totalCvr",
+                "cvr",
+                "currentRevenue",
+                "opportunity"
+              ]
+            }
+          },
+          {
+            "name": "sortOrder",
+            "in": "query",
+            "description": "Sort direction (default asc).",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "asc",
+              "enum": ["asc", "desc"]
+            }
+          },
+          {
+            "name": "asins",
+            "in": "query",
+            "description": "(Optional) Restrict results to these ASINs. Repeat the parameter for multiple values, e.g. ?asins=B001&asins=B002. If omitted, the top ASINs by impression volume are resolved automatically, capped to the organisation's Search Query Performance entitlement.",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "currency",
+            "in": "query",
+            "description": "3-letter ISO currency code to convert monetary values into (default USD).",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetSqpAsinTableResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input or unsupported channel",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "invalidChannel": {
+                    "summary": "channelId / merchantId do not match a connected store",
+                    "value": {
+                      "status": "error",
+                      "error": "Invalid channelId / merchantId"
+                    }
+                  },
+                  "nonAmazonChannel": {
+                    "summary": "Channel is not an Amazon store",
+                    "value": {
+                      "status": "error",
+                      "error": "This endpoint is only supported for Amazon channels"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The organisation does not have access to Search Query Performance data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "notEntitled": {
+                    "summary": "Organisation has no Search Query Performance entitlement",
+                    "value": {
+                      "status": "error",
+                      "error": "Your account is not entitled to Search Query Performance data. Please contact sales to enquire about a subscription."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/search-query-performance/keywords": {
+      "get": {
+        "tags": ["search-query-performance"],
+        "summary": "Retrieve Search Query Performance data at the keyword level for one ASIN (Amazon only)",
+        "description": "Returns a paginated list of Search Query Performance metrics per search query (keyword) for a single ASIN, compared against a prior period. Monetary values are converted into the requested currency. Requires the organisation to have Search Query Performance access enabled.",
+        "operationId": "getSqpKeywordTable",
+        "parameters": [
+          {
+            "name": "channelId",
+            "in": "query",
+            "description": "Channel (store) ID. Must be an Amazon seller or vendor channel.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "merchantId",
+            "in": "query",
+            "description": "Merchant ID that owns the channel. URL-encode values containing spaces or '@'.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "asin",
+            "in": "query",
+            "description": "ASIN to retrieve the keyword-level breakdown for.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "fromDate",
+            "in": "query",
+            "description": "Unix epoch time (seconds) representing the start of the reporting period. SQP data is only available at monthly granularity, so this is clipped to the start of its containing calendar month; the clipped date is returned as meta.dateRange.fromDate in the response.",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "toDate",
+            "in": "query",
+            "description": "Unix epoch time (seconds) representing the end of the reporting period. SQP data is only available at monthly granularity, so this is clipped to the end of its containing calendar month; the clipped date is returned as meta.dateRange.toDate in the response.",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "priorFromDate",
+            "in": "query",
+            "description": "Unix epoch time (seconds) representing the start of the comparison period. SQP data is only available at monthly granularity, so this is clipped to the start of its containing calendar month; the clipped date is returned as meta.dateRange.priorFromDate in the response.",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "priorToDate",
+            "in": "query",
+            "description": "Unix epoch time (seconds) representing the end of the comparison period. SQP data is only available at monthly granularity, so this is clipped to the end of its containing calendar month; the clipped date is returned as meta.dateRange.priorToDate in the response.",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "timezone",
+            "in": "query",
+            "description": "IANA timezone identifier used to bucket the date range, for example Australia/Sydney.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "pageIndex",
+            "in": "query",
+            "description": "Zero-based page index (default 0).",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "Number of results per page (default 25, max 50).",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 50,
+              "default": 25
+            }
+          },
+          {
+            "name": "sortKey",
+            "in": "query",
+            "description": "Field to sort by (default searchQueryVolume).",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "searchQueryVolume",
+              "enum": [
+                "searchQuery",
+                "searchQueryVolume",
+                "totalImpressions",
+                "impressions",
+                "impressionShare",
+                "totalClicks",
+                "clicks",
+                "clickShare",
+                "totalCtr",
+                "ctr",
+                "totalCartAdds",
+                "cartAdds",
+                "atcRate",
+                "totalPurchases",
+                "purchases",
+                "purchaseShare",
+                "totalCvr",
+                "cvr",
+                "currentRevenue",
+                "opportunity"
+              ]
+            }
+          },
+          {
+            "name": "sortOrder",
+            "in": "query",
+            "description": "Sort direction (default desc).",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "desc",
+              "enum": ["asc", "desc"]
+            }
+          },
+          {
+            "name": "searchText",
+            "in": "query",
+            "description": "(Optional) Filter search queries containing this text (case-insensitive).",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "currency",
+            "in": "query",
+            "description": "3-letter ISO currency code to convert monetary values into (default USD).",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetSqpKeywordTableResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input or unsupported channel",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "invalidChannel": {
+                    "summary": "channelId / merchantId do not match a connected store",
+                    "value": {
+                      "status": "error",
+                      "error": "Invalid channelId / merchantId"
+                    }
+                  },
+                  "nonAmazonChannel": {
+                    "summary": "Channel is not an Amazon store",
+                    "value": {
+                      "status": "error",
+                      "error": "This endpoint is only supported for Amazon channels"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The organisation does not have access to Search Query Performance data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "notEntitled": {
+                    "summary": "Organisation has no Search Query Performance entitlement",
+                    "value": {
+                      "status": "error",
+                      "error": "Your account is not entitled to Search Query Performance data. Please contact sales to enquire about a subscription."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
     "/vendor/asins": {
       "get": {
         "tags": ["vendor"],
@@ -295,7 +791,7 @@
           {
             "name": "fromDate",
             "in": "query",
-            "description": "Start of the metric window as Unix epoch seconds.",
+            "description": "Start of date range as unix epoch seconds.",
             "required": true,
             "schema": {
               "type": "integer"
@@ -304,7 +800,7 @@
           {
             "name": "toDate",
             "in": "query",
-            "description": "End of the metric window as Unix epoch seconds. The range from fromDate must not exceed 30 days.",
+            "description": "End of date range as unix epoch seconds. The range must not exceed 30 days.",
             "required": true,
             "schema": {
               "type": "integer"
@@ -473,21 +969,19 @@
           {
             "name": "fromDate",
             "in": "query",
-            "description": "Start of the window as Unix epoch seconds.",
+            "description": "Start of date range as unix epoch seconds.",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "integer"
             }
           },
           {
             "name": "toDate",
             "in": "query",
-            "description": "End of the window as Unix epoch seconds.",
+            "description": "End of date range as unix epoch seconds.",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "integer"
             }
           },
           {
@@ -531,7 +1025,21 @@
           },
           "400": {
             "description": "Invalid input",
-            "content": {}
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" },
+                "examples": {
+                  "invalidChannel": {
+                    "summary": "channelId / merchantId not found or not accessible",
+                    "value": { "status": "error", "error": "Invalid channelId / merchantId" }
+                  },
+                  "invalidDateOrder": {
+                    "summary": "toDate is before fromDate",
+                    "value": { "status": "error", "error": "toDate must not be before fromDate" }
+                  }
+                }
+              }
+            }
           }
         },
         "security": [
@@ -578,7 +1086,25 @@
           },
           "400": {
             "description": "Invalid input",
-            "content": {}
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" },
+                "examples": {
+                  "missingParam": {
+                    "summary": "A required body field is missing",
+                    "value": { "status": "error", "error": "Missing parameter in request body: channelId" }
+                  },
+                  "invalidChannel": {
+                    "summary": "channelId / merchantId not found or not accessible",
+                    "value": { "status": "error", "error": "Invalid channelId / merchantId" }
+                  },
+                  "notAmazonChannel": {
+                    "summary": "Channel exists but is not an Amazon store",
+                    "value": { "status": "error", "error": "Invalid channelId / merchantId: Only amazon stores are supported for this endpoint" }
+                  }
+                }
+              }
+            }
           }
         },
         "security": [
@@ -1793,7 +2319,21 @@
           },
           "400": {
             "description": "Invalid input",
-            "content": {}
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" },
+                "examples": {
+                  "missingParam": {
+                    "summary": "A required reportOptions field is missing",
+                    "value": { "status": "error", "error": "Missing or invalid parameters: reportOptions.fromDate, reportOptions.toDate" }
+                  },
+                  "invalidChannel": {
+                    "summary": "channelId / merchantId not found or not accessible",
+                    "value": { "status": "error", "error": "Invalid channelId / merchantId" }
+                  }
+                }
+              }
+            }
           }
         },
         "security": [
@@ -1840,7 +2380,21 @@
           },
           "400": {
             "description": "Invalid input",
-            "content": {}
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" },
+                "examples": {
+                  "tooManySellerSkus": {
+                    "summary": "More than 50 sellerSkus passed in reportOptions",
+                    "value": { "status": "error", "error": "The maximum number of sellerSkus that can be passed in at a time is 50" }
+                  },
+                  "invalidChannel": {
+                    "summary": "channelId / merchantId not found or not accessible",
+                    "value": { "status": "error", "error": "Invalid channelId / merchantId" }
+                  }
+                }
+              }
+            }
           }
         },
         "security": [
@@ -1887,7 +2441,21 @@
           },
           "400": {
             "description": "Invalid input",
-            "content": {}
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" },
+                "examples": {
+                  "unsupportedMarketplace": {
+                    "summary": "Channel's marketplace does not support direct costs yet",
+                    "value": { "status": "error", "error": "The marketplace type is not supported at the moment" }
+                  },
+                  "invalidCogs": {
+                    "summary": "cogs is missing, non-numeric, or the currency code is invalid for a SKU",
+                    "value": { "status": "error", "error": "Invalid cogs for SKU: ABC-123" }
+                  }
+                }
+              }
+            }
           }
         },
         "security": [
@@ -1952,7 +2520,25 @@
           },
           "400": {
             "description": "Invalid input",
-            "content": {}
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" },
+                "examples": {
+                  "missingParam": {
+                    "summary": "A required query parameter is missing",
+                    "value": { "status": "error", "error": "Missing or invalid parameters: jobId" }
+                  },
+                  "invalidChannel": {
+                    "summary": "channelId / merchantId not found or not accessible",
+                    "value": { "status": "error", "error": "invalid channelId / merchantId" }
+                  },
+                  "unsupportedMarketplace": {
+                    "summary": "Channel's marketplace does not support direct costs yet",
+                    "value": { "status": "error", "error": "The marketplace type is not supported at the moment" }
+                  }
+                }
+              }
+            }
           },
           "404": {
             "description": "Not found",
@@ -1994,19 +2580,24 @@
           {
             "name": "pageSize",
             "in": "query",
-            "description": "Number of groups per page",
+            "description": "Number of groups per page, max 100 (default 10).",
             "required": false,
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 10
             }
           },
           {
             "name": "pageIndex",
             "in": "query",
-            "description": "Zero-based page index",
+            "description": "Zero-based page index (default 0).",
             "required": false,
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
             }
           }
         ],
@@ -2030,7 +2621,25 @@
           },
           "400": {
             "description": "Invalid input",
-            "content": {}
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" },
+                "examples": {
+                  "missingChannelId": {
+                    "summary": "channelId is missing",
+                    "value": { "status": "error", "error": "channelId is required" }
+                  },
+                  "invalidPageSize": {
+                    "summary": "pageSize is not a positive integer",
+                    "value": { "status": "error", "error": "pageSize must be a positive integer" }
+                  },
+                  "invalidChannel": {
+                    "summary": "channelId / merchantId not found or not accessible",
+                    "value": { "status": "error", "error": "Invalid channelId / merchantId" }
+                  }
+                }
+              }
+            }
           }
         },
         "security": [
@@ -2069,7 +2678,25 @@
           },
           "400": {
             "description": "Invalid input",
-            "content": {}
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" },
+                "examples": {
+                  "missingGroupName": {
+                    "summary": "groupName is missing",
+                    "value": { "status": "error", "error": "groupName is required" }
+                  },
+                  "bothProductsAndBrands": {
+                    "summary": "Both products and brands were provided",
+                    "value": { "status": "error", "error": "Only one of products or brands can be provided, not both" }
+                  },
+                  "invalidChannel": {
+                    "summary": "channelId / merchantId not found or not accessible",
+                    "value": { "status": "error", "error": "Invalid channelId / merchantId" }
+                  }
+                }
+              }
+            }
           }
         },
         "security": [
@@ -2134,7 +2761,21 @@
           },
           "400": {
             "description": "Invalid input",
-            "content": {}
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" },
+                "examples": {
+                  "invalidGroupId": {
+                    "summary": "id is not a valid numeric group id",
+                    "value": { "status": "error", "error": "groupId must be a valid numeric id" }
+                  },
+                  "invalidChannel": {
+                    "summary": "channelId / merchantId not found or not accessible",
+                    "value": { "status": "error", "error": "Invalid channelId / merchantId" }
+                  }
+                }
+              }
+            }
           }
         },
         "security": [
@@ -2183,7 +2824,25 @@
           },
           "400": {
             "description": "Invalid input",
-            "content": {}
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" },
+                "examples": {
+                  "noFieldsProvided": {
+                    "summary": "None of groupName/addProducts/removeProducts/addBrands/removeBrands provided",
+                    "value": { "status": "error", "error": "At least one of groupName, addProducts, removeProducts, addBrands, removeBrands must be provided" }
+                  },
+                  "mixedProductsAndBrands": {
+                    "summary": "Both product and brand operations provided in the same request",
+                    "value": { "status": "error", "error": "Cannot mix product and brand operations in the same request" }
+                  },
+                  "invalidChannel": {
+                    "summary": "channelId / merchantId not found or not accessible",
+                    "value": { "status": "error", "error": "Invalid channelId / merchantId" }
+                  }
+                }
+              }
+            }
           }
         },
         "security": [
@@ -2240,7 +2899,21 @@
           },
           "400": {
             "description": "Invalid input",
-            "content": {}
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" },
+                "examples": {
+                  "invalidGroupId": {
+                    "summary": "id is not a valid numeric group id",
+                    "value": { "status": "error", "error": "groupId must be a valid numeric id" }
+                  },
+                  "invalidChannel": {
+                    "summary": "channelId / merchantId not found or not accessible",
+                    "value": { "status": "error", "error": "Invalid channelId / merchantId" }
+                  }
+                }
+              }
+            }
           }
         },
         "security": [
@@ -2263,7 +2936,10 @@
             "description": "Number of channels per page (default 25, max 100)",
             "required": false,
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 25
             }
           },
           {
@@ -2272,7 +2948,9 @@
             "description": "Zero-based page index (default 0)",
             "required": false,
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
             }
           }
         ],
@@ -2296,7 +2974,21 @@
           },
           "400": {
             "description": "Invalid input",
-            "content": {}
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" },
+                "examples": {
+                  "invalidPageSize": {
+                    "summary": "pageSize is not a positive integer",
+                    "value": { "status": "error", "error": "pageSize must be a positive integer" }
+                  },
+                  "invalidPageIndex": {
+                    "summary": "pageIndex is not a non-negative integer",
+                    "value": { "status": "error", "error": "pageIndex must be a non-negative integer" }
+                  }
+                }
+              }
+            }
           }
         },
         "security": [
@@ -2352,7 +3044,21 @@
           },
           "400": {
             "description": "Invalid input",
-            "content": {}
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" },
+                "examples": {
+                  "missingChannelId": {
+                    "summary": "channelId is missing",
+                    "value": { "status": "error", "error": "channelId is required" }
+                  },
+                  "invalidChannel": {
+                    "summary": "channelId / merchantId not found or not accessible",
+                    "value": { "status": "error", "error": "invalid channelId / merchantId" }
+                  }
+                }
+              }
+            }
           }
         },
         "security": [
@@ -2408,7 +3114,21 @@
           },
           "400": {
             "description": "Invalid input",
-            "content": {}
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" },
+                "examples": {
+                  "noTagsProvided": {
+                    "summary": "Neither addTags nor removeTags was provided",
+                    "value": { "status": "error", "error": "At least one of addTags or removeTags must be provided" }
+                  },
+                  "invalidChannel": {
+                    "summary": "channelId / merchantId not found or not accessible",
+                    "value": { "status": "error", "error": "invalid channelId / merchantId" }
+                  }
+                }
+              }
+            }
           }
         },
         "security": [
@@ -2455,7 +3175,17 @@
           },
           "400": {
             "description": "Invalid input",
-            "content": {}
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" },
+                "examples": {
+                  "missingTag": {
+                    "summary": "tag is missing or empty",
+                    "value": { "status": "error", "error": "Tag must be a non-empty string" }
+                  }
+                }
+              }
+            }
           }
         },
         "security": [
@@ -2539,10 +3269,12 @@
           {
             "name": "sortKey",
             "in": "query",
-            "description": "Response column to sort by, e.g. campaign_name, cost, impressions, clicks, acos, roas (default campaign_name).",
+            "description": "Response column to sort by (default campaign_name).",
             "required": false,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "enum": ["channel_id", "campaign_id", "ad_type", "campaign_name", "campaign_status", "budget", "budget_type", "start_date", "end_date", "targeting_type", "bidding_strategy", "cost_type", "impressions", "clicks", "cost", "attributed_sales", "attributed_sales_same_sku", "attributed_conversions", "attributed_conversions_same_sku", "attributed_units_ordered", "attributed_units_ordered_same_sku", "attributed_orders_ntb", "attributed_units_ordered_ntb", "attributed_sales_ntb", "attributed_orders_ntb_percentage", "attributed_units_ordered_ntb_percentage", "attributed_sales_ntb_percentage", "attributed_detail_page_views_clicks", "acos", "click_through_rate", "cost_per_click", "cost_per_acquisition", "conversion_rate", "roas"],
+              "default": "campaign_name"
             }
           },
           {
@@ -2561,7 +3293,9 @@
             "description": "Zero-based page index (default 0).",
             "required": false,
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
             }
           },
           {
@@ -2570,7 +3304,10 @@
             "description": "Number of campaigns per page, max 100 (default 10).",
             "required": false,
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 10
             }
           }
         ],
@@ -2707,10 +3444,12 @@
           {
             "name": "sortKey",
             "in": "query",
-            "description": "Response column to sort by, e.g. ad_group_name, cost, impressions, clicks, acos, roas (default ad_group_name).",
+            "description": "Response column to sort by (default ad_group_name).",
             "required": false,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "enum": ["channel_id", "campaign_id", "ad_group_id", "ad_type", "campaign_name", "ad_group_name", "ad_group_status", "default_bid", "cost_type", "impressions", "clicks", "cost", "attributed_sales", "attributed_sales_same_sku", "attributed_conversions", "attributed_conversions_same_sku", "attributed_units_ordered", "attributed_units_ordered_same_sku", "attributed_orders_ntb", "attributed_units_ordered_ntb", "attributed_sales_ntb", "attributed_orders_ntb_percentage", "attributed_units_ordered_ntb_percentage", "attributed_sales_ntb_percentage", "attributed_detail_page_views_clicks", "acos", "click_through_rate", "cost_per_click", "conversion_rate", "roas"],
+              "default": "ad_group_name"
             }
           },
           {
@@ -2729,7 +3468,9 @@
             "description": "Zero-based page index (default 0).",
             "required": false,
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
             }
           },
           {
@@ -2738,7 +3479,10 @@
             "description": "Number of ad groups per page, max 100 (default 10).",
             "required": false,
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 10
             }
           }
         ],
@@ -2887,10 +3631,12 @@
           {
             "name": "sortKey",
             "in": "query",
-            "description": "Response column to sort by, e.g. keyword_text, cost, impressions, clicks, acos, roas (default keyword_text).",
+            "description": "Response column to sort by (default keyword_text).",
             "required": false,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "enum": ["channel_id", "campaign_id", "ad_group_id", "keyword_id", "ad_type", "campaign_name", "ad_group_name", "keyword_text", "match_type", "keyword_status", "bid", "cost_type", "impressions", "clicks", "cost", "attributed_sales", "attributed_sales_same_sku", "attributed_conversions", "attributed_conversions_same_sku", "attributed_units_ordered", "attributed_units_ordered_same_sku", "attributed_orders_ntb", "attributed_units_ordered_ntb", "attributed_sales_ntb", "attributed_detail_page_views_clicks", "attributed_orders_ntb_percentage", "attributed_units_ordered_ntb_percentage", "attributed_sales_ntb_percentage", "acos", "click_through_rate", "cost_per_click", "conversion_rate", "cost_per_acquisition", "roas"],
+              "default": "keyword_text"
             }
           },
           {
@@ -2909,7 +3655,9 @@
             "description": "Zero-based page index (default 0).",
             "required": false,
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
             }
           },
           {
@@ -2918,7 +3666,10 @@
             "description": "Number of keywords per page, max 100 (default 10).",
             "required": false,
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 10
             }
           }
         ],
@@ -3042,10 +3793,12 @@
           {
             "name": "sortKey",
             "in": "query",
-            "description": "Response column to sort by, e.g. product_sku, cost, impressions, clicks, acos, roas (default product_sku).",
+            "description": "Response column to sort by (default product_sku).",
             "required": false,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "enum": ["channel_id", "product_sku", "impressions", "clicks", "cost", "attributed_sales", "attributed_sales_same_sku", "attributed_conversions", "attributed_conversions_same_sku", "attributed_units_ordered", "attributed_units_ordered_same_sku", "acos", "click_through_rate", "cost_per_click", "conversion_rate", "roas"],
+              "default": "product_sku"
             }
           },
           {
@@ -3064,7 +3817,9 @@
             "description": "Zero-based page index (default 0).",
             "required": false,
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
             }
           },
           {
@@ -3073,7 +3828,10 @@
             "description": "Number of products per page, max 100 (default 10).",
             "required": false,
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 10
             }
           }
         ],
@@ -3972,6 +4730,199 @@
           },
           "value": {
             "type": "string"
+          }
+        }
+      },
+      "SqpResolvedDateRange": {
+        "type": "object",
+        "description": "The date range actually used to compute this data. SQP reports are monthly, so the requested currentRange is clipped to the start/end of its containing calendar month(s) - this may differ from what was requested.",
+        "properties": {
+          "fromDate": {
+            "type": "string",
+            "description": "Start of the current period actually used (YYYY-MM-DD)"
+          },
+          "toDate": {
+            "type": "string",
+            "description": "End of the current period actually used (YYYY-MM-DD)"
+          },
+          "priorFromDate": {
+            "type": "string",
+            "description": "Start of the comparison period actually used (YYYY-MM-DD)"
+          },
+          "priorToDate": {
+            "type": "string",
+            "description": "End of the comparison period actually used (YYYY-MM-DD)"
+          }
+        }
+      },
+      "SqpMetrics": {
+        "type": "object",
+        "properties": {
+          "searchQueryVolume": {
+            "type": "number"
+          },
+          "totalImpressions": {
+            "type": "number"
+          },
+          "impressions": {
+            "type": "number"
+          },
+          "impressionShare": {
+            "type": "number"
+          },
+          "totalClicks": {
+            "type": "number"
+          },
+          "clicks": {
+            "type": "number"
+          },
+          "clickShare": {
+            "type": "number"
+          },
+          "totalCtr": {
+            "type": "number"
+          },
+          "ctr": {
+            "type": "number"
+          },
+          "totalCartAdds": {
+            "type": "number"
+          },
+          "cartAdds": {
+            "type": "number"
+          },
+          "atcRate": {
+            "type": "number"
+          },
+          "totalPurchases": {
+            "type": "number"
+          },
+          "purchases": {
+            "type": "number"
+          },
+          "purchaseShare": {
+            "type": "number"
+          },
+          "totalCvr": {
+            "type": "number"
+          },
+          "cvr": {
+            "type": "number"
+          },
+          "currentRevenue": {
+            "type": "number"
+          },
+          "currencyCode": {
+            "type": "string",
+            "description": "Matches the top-level meta.currency - the currency currentRevenue/totalOpportunity/opportunity were converted into"
+          },
+          "totalOpportunity": {
+            "type": "number"
+          },
+          "opportunity": {
+            "type": "number"
+          }
+        }
+      },
+      "GetSqpAsinTableResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "asin": {
+                  "type": "string"
+                },
+                "current": {
+                  "$ref": "#/components/schemas/SqpMetrics"
+                },
+                "prior": {
+                  "$ref": "#/components/schemas/SqpMetrics"
+                }
+              }
+            }
+          },
+          "pagination": {
+            "type": "object",
+            "properties": {
+              "pageIndex": {
+                "type": "integer",
+                "description": "Zero-based page index"
+              },
+              "pageSize": {
+                "type": "integer",
+                "description": "Number of results per page"
+              },
+              "count": {
+                "type": "integer",
+                "description": "Total number of matching ASINs (across all pages)"
+              }
+            }
+          },
+          "meta": {
+            "type": "object",
+            "properties": {
+              "currency": {
+                "type": "string",
+                "description": "Currency all monetary values (e.g. current/prior currentRevenue) were converted into"
+              },
+              "dateRange": {
+                "$ref": "#/components/schemas/SqpResolvedDateRange"
+              }
+            }
+          }
+        }
+      },
+      "GetSqpKeywordTableResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "searchQuery": {
+                  "type": "string"
+                },
+                "current": {
+                  "$ref": "#/components/schemas/SqpMetrics"
+                },
+                "prior": {
+                  "$ref": "#/components/schemas/SqpMetrics"
+                }
+              }
+            }
+          },
+          "pagination": {
+            "type": "object",
+            "properties": {
+              "pageIndex": {
+                "type": "integer",
+                "description": "Zero-based page index"
+              },
+              "pageSize": {
+                "type": "integer",
+                "description": "Number of results per page"
+              },
+              "count": {
+                "type": "integer",
+                "description": "Total number of matching search queries (across all pages)"
+              }
+            }
+          },
+          "meta": {
+            "type": "object",
+            "properties": {
+              "currency": {
+                "type": "string",
+                "description": "Currency all monetary values (e.g. current/prior currentRevenue) were converted into"
+              },
+              "dateRange": {
+                "$ref": "#/components/schemas/SqpResolvedDateRange"
+              }
+            }
           }
         }
       },
@@ -5539,6 +6490,7 @@
       },
       "GetOrdersRequest": {
         "type": "object",
+        "required": ["channelId", "merchantId"],
         "properties": {
           "channelId": {
             "type": "string"
@@ -5549,30 +6501,30 @@
           "dateField": {
             "type": "string",
             "enum": ["createdAt", "updatedAt"],
-            "description": "(Optional) The field to which fromDate and toDate filter are applied - either 'createdAt' or 'updatedAt'"
+            "description": "The field to which fromDate and toDate filter are applied - either 'createdAt' or 'updatedAt'"
           },
           "fromDate": {
-            "type": "number",
-            "example": "1609459200",
-            "description": "(Optional) Unix epoch time (seconds) representing the start of the reporting period"
+            "type": "integer",
+            "example": 1609459200,
+            "description": "Start of date range as unix epoch seconds."
           },
           "toDate": {
-            "type": "number",
-            "example": "1612137600",
-            "description": "(Optional) Unix epoch time (seconds) representing the end of the reporting period"
+            "type": "integer",
+            "example": 1612137600,
+            "description": "End of date range as unix epoch seconds."
           },
           "orderId": {
             "type": "string",
-            "description": "(Optional) The order ID to filter by"
+            "description": "The order ID to filter by"
           },
           "key": {
             "type": "string",
-            "description": "(Optional) The key used for pagination"
+            "description": "The key used for pagination"
           },
           "pageSize": {
-            "type": "number",
-            "example": "50",
-            "description": "(Optional) The number of results to return per page (Max 100)"
+            "type": "integer",
+            "example": 50,
+            "description": "The number of results to return per page (Max 100)"
           }
         }
       },
@@ -6263,8 +7215,8 @@
             "type": "string"
           },
           "fromDate": {
-            "type": "number",
-            "example": "1609459200",
+            "type": "integer",
+            "example": 1609459200,
             "description": "Unix epoch time (seconds) representing the effective from date"
           },
           "directCosts": {
