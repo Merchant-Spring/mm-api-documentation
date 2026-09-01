@@ -6630,6 +6630,11 @@
                 "type": "string",
                 "enum": ["settled", "accrual"],
                 "description": "Accounting basis for the P&L. 'settled' (default) is cash-basis; 'accrual' recognises revenue and costs when earned or incurred, before settlement. Defaults to 'settled' when omitted."
+              },
+              "includeCogsRefunds": {
+                "type": "boolean",
+                "default": false,
+                "description": "If true, the cost of goods for refunded items (RefundCOGS) is deducted from the Cancellations & Refunds expense total in the P&L. Amazon sellers only - ignored for other marketplaces. Defaults to false."
               }
             }
           }
@@ -6670,6 +6675,11 @@
             "type": "string",
             "enum": ["settled", "accrual"],
             "description": "Accounting basis for the P&L. 'settled' (default) is cash-basis; 'accrual' recognises revenue and costs when earned or incurred, before settlement. Defaults to 'settled' when omitted."
+          },
+          "includeCogsRefunds": {
+            "type": "boolean",
+            "default": false,
+            "description": "If true, the cost of goods for refunded items (RefundCOGS) is deducted from the Cancellations & Refunds expense total in the P&L. Amazon sellers only - ignored for other marketplaces. Defaults to false."
           }
         },
         "required": ["fromDate", "toDate", "includeTax", "timezone"]
@@ -6717,6 +6727,11 @@
             "type": "string",
             "enum": ["settled", "accrual"],
             "description": "Accounting basis for the P&L. 'settled' (default) is cash-basis; 'accrual' recognises revenue and costs when earned or incurred, before settlement. Defaults to 'settled' when omitted."
+          },
+          "includeCogsRefunds": {
+            "type": "boolean",
+            "default": false,
+            "description": "If true, the cost of goods for refunded items (RefundCOGS) is deducted from the Cancellations & Refunds expense total in the P&L. Amazon sellers only - ignored for other marketplaces. Defaults to false."
           }
         },
         "required": ["fromDate", "toDate", "includeTax"]
