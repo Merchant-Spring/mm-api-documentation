@@ -419,8 +419,7 @@
                 "purchaseShare",
                 "totalCvr",
                 "cvr",
-                "currentRevenue",
-                "opportunity"
+                "currentRevenue"
               ]
             }
           },
@@ -657,8 +656,7 @@
                 "purchaseShare",
                 "totalCvr",
                 "cvr",
-                "currentRevenue",
-                "opportunity"
+                "currentRevenue"
               ]
             }
           },
@@ -4814,13 +4812,7 @@
           },
           "currencyCode": {
             "type": "string",
-            "description": "Matches the top-level meta.currency - the currency currentRevenue/totalOpportunity/opportunity were converted into"
-          },
-          "totalOpportunity": {
-            "type": "number"
-          },
-          "opportunity": {
-            "type": "number"
+            "description": "Matches the top-level meta.currency - the currency currentRevenue was converted into"
           }
         }
       },
