@@ -2672,7 +2672,13 @@
                 }
               }
             },
-            "content": {}
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateCustomGroupResponse"
+                }
+              }
+            }
           },
           "400": {
             "description": "Invalid input",
@@ -7352,6 +7358,15 @@
           "groupId": {
             "type": "string",
             "description": "Optional. The ID of an existing custom group, as returned by the GET custom groups endpoint. Providing this value will completely overwrite the existing group. To add or remove individual items instead, use the PATCH endpoint."
+          }
+        }
+      },
+      "CreateCustomGroupResponse": {
+        "type": "object",
+        "description": "Response containing the ID of the created custom group",
+        "properties": {
+          "groupId": {
+            "type": "integer"
           }
         }
       },
