@@ -1164,6 +1164,53 @@
         ]
       }
     },
+    "/reports/create/clientReportPdf": {
+      "post": {
+        "tags": ["report"],
+        "summary": "Generate a PDF of a saved Client Report",
+        "description": "Renders an existing, saved Client Report (identified by `reportId`) to a PDF server-side and uploads it for download. Unlike the other report types, this does not generate new analytics data from filters - it exports a point-in-time snapshot of an already-configured report exactly as it appears when viewed. Use the /reports/clientReportPdf/status/{jobId} endpoint to check status and obtain the download URL.",
+        "operationId": "createClientReportPdf",
+        "requestBody": {
+          "description": "Client Report identifier",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateClientReportPdfRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientReportPdfCreateResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input",
+            "content": {}
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
     "/reports/create/trafficAndConversion": {
       "post": {
         "tags": ["report"],
@@ -1993,6 +2040,57 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ReportStatus"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input",
+            "content": {}
+          },
+          "404": {
+            "description": "Not found",
+            "content": {}
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/reports/clientReportPdf/status/{jobId}": {
+      "get": {
+        "tags": ["report"],
+        "summary": "Get the status of a Client Report PDF generation request",
+        "description": "Get the status of a Client Report PDF generation request. Unlike /reports/status/{reportId}, this does not require channelId/merchantId - a Client Report is not scoped to a single connected channel.",
+        "operationId": "getClientReportPdfStatus",
+        "parameters": [
+          {
+            "name": "jobId",
+            "in": "path",
+            "description": "The job ID returned by /reports/create/clientReportPdf",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientReportPdfStatus"
                 }
               }
             }
@@ -6649,6 +6747,56 @@
           },
           "reportOptions": {
             "$ref": "#/components/schemas/CreateSalesByProductReportOptions"
+          }
+        }
+      },
+      "CreateClientReportPdfRequest": {
+        "type": "object",
+        "properties": {
+          "reportId": {
+            "type": "string",
+            "description": "The ID of an existing, saved Client Report to render as a PDF"
+          },
+          "reportName": {
+            "type": "string",
+            "description": "(Optional) The Client Report's display name, used to build the downloaded PDF's filename"
+          }
+        },
+        "required": ["reportId"]
+      },
+      "ClientReportPdfCreateResponse": {
+        "type": "object",
+        "properties": {
+          "reportId": {
+            "type": "string",
+            "description": "The Client Report's own ID, echoed back from the request"
+          },
+          "jobId": {
+            "type": "string",
+            "description": "The PDF generation job's ID - use this with /reports/clientReportPdf/status/{jobId} to poll for completion"
+          },
+          "reportType": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          }
+        }
+      },
+      "ClientReportPdfStatus": {
+        "type": "object",
+        "properties": {
+          "jobId": {
+            "type": "string"
+          },
+          "reportType": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "downloadUrl": {
+            "type": "string"
           }
         }
       },
