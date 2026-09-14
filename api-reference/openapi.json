@@ -6754,6 +6754,10 @@
           "reportName": {
             "type": "string",
             "description": "(Optional) The Client Report's display name, used to build the downloaded PDF's filename"
+          },
+          "force": {
+            "type": "boolean",
+            "description": "(Optional) If a PDF for this report was already generated within the last 60 minutes, that existing PDF is returned instead of generating a duplicate (status will be \"done\" with a downloadUrl already present). Set force to true to always generate a new PDF."
           }
         },
         "required": ["reportId"]
@@ -6773,7 +6777,16 @@
             "type": "string"
           },
           "status": {
-            "type": "string"
+            "type": "string",
+            "description": "\"started\" for a newly-created job, or \"done\" if an existing PDF generated within the last 60 minutes was reused instead (see downloadUrl/generatedAt) - see the force parameter to always generate a new PDF"
+          },
+          "downloadUrl": {
+            "type": "string",
+            "description": "Only present when status is \"done\" (an existing PDF was reused)"
+          },
+          "generatedAt": {
+            "type": "string",
+            "description": "Only present when status is \"done\" (an existing PDF was reused) - when that PDF was originally generated"
           }
         }
       },
