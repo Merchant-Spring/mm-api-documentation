@@ -7363,7 +7363,7 @@
       },
       "CreateCustomGroupResponse": {
         "type": "object",
-        "description": "Response containing the ID of the created or updated custom group",
+        "description": "Response containing the ID of the created custom group",
         "properties": {
           "groupId": {
             "type": "integer"
