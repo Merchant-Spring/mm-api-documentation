@@ -8046,6 +8046,16 @@
             "format": "int32",
             "description": "Advertising impressions served during the comparison period."
           },
+          "clicks": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Advertising clicks recorded during the current period."
+          },
+          "priorClicks": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Advertising clicks recorded during the comparison period."
+          },
           "clickThroughRate": {
             "type": "string",
             "description": "Current-period ad click-through rate."
