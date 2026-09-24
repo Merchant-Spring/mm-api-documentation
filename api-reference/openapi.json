@@ -6343,7 +6343,12 @@
             "type": "object",
             "properties": {
               "BuyerEmail": {
-                "type": "string"
+                "type": "string",
+                "description": "Amazon BuyerEmail value. Hashed when isBuyerEmailHashed is true."
+              },
+              "isBuyerEmailHashed": {
+                "type": "boolean",
+                "description": "Whether BuyerEmail is a hashed value."
               }
             }
           },
