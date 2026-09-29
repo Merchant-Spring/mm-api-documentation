@@ -3897,6 +3897,208 @@
           }
         ]
       }
+    },
+    "/advertising/searchTerms": {
+      "get": {
+        "tags": ["advertising"],
+        "summary": "Retrieve advertising search term performance",
+        "description": "Returns paginated advertising search term performance for a single channel for the selected date range, optionally filtered to specific campaigns, ad groups, keywords, match types or a search term. Metrics are aggregated across every keyword sharing the same search term (within the same ad type), so campaignId/adGroupId/keywordId/matchType act only as filters - the response does not include keyword/campaign-level fields. Values are currency-adjusted based on the store's country and the requested currency. Supports sorting by any response column and zero-based page indexing.",
+        "operationId": "getAdvertisingSearchTerms",
+        "parameters": [
+          {
+            "name": "channelId",
+            "in": "query",
+            "description": "Channel ID. Only a single channel is supported for this endpoint.",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "campaignId",
+            "in": "query",
+            "description": "Filter to search terms belonging to the given campaign(s). Repeatable (max 10), numeric.",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "adGroupId",
+            "in": "query",
+            "description": "Filter to search terms belonging to the given ad group(s). Repeatable (max 10), numeric.",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "keywordId",
+            "in": "query",
+            "description": "Filter to search terms belonging to the given keyword(s). Repeatable (max 10), numeric.",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "matchType",
+            "in": "query",
+            "description": "Filter to search terms matched via the given keyword match type(s). Repeatable, case-insensitive.",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": ["BROAD", "EXACT", "PHRASE", "TARGETING_EXPRESSION", "TARGETING_EXPRESSION_PREDEFINED"]
+              }
+            }
+          },
+          {
+            "name": "searchTerm",
+            "in": "query",
+            "description": "Case-insensitive substring filter on the customer search term.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "fromDate",
+            "in": "query",
+            "description": "Start of date range as unix epoch seconds. Defaults to 30 days ago.",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "toDate",
+            "in": "query",
+            "description": "End of date range as unix epoch seconds. Defaults to now. The range must not exceed 6 months.",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "currency",
+            "in": "query",
+            "description": "3-letter ISO currency code (default USD).",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortKey",
+            "in": "query",
+            "description": "Response column to sort by (default cost). Note: attributed_sales_same_sku, attributed_conversions_same_sku and attributed_units_ordered_same_sku are always 0 for ad_type SB, so sorting by one of them won't distinguish between SB rows.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": ["ad_type", "search_term", "impressions", "clicks", "cost", "attributed_sales", "attributed_sales_same_sku", "attributed_conversions", "attributed_conversions_same_sku", "attributed_units_ordered", "attributed_units_ordered_same_sku", "acos", "click_through_rate", "cost_per_click", "conversion_rate", "cost_per_acquisition", "roas"]
+            }
+          },
+          {
+            "name": "sortOrder",
+            "in": "query",
+            "description": "Sort direction (default desc).",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": ["asc", "desc"]
+            }
+          },
+          {
+            "name": "pageIndex",
+            "in": "query",
+            "description": "Zero-based page index (default 0).",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "Number of (aggregated) search term rows per page, max 100 (default 10).",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAdvertisingSearchTermsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "tooManyKeywordIds": {
+                    "summary": "More than 10 keywordId values supplied",
+                    "value": {
+                      "status": "error",
+                      "error": "a maximum of 10 keywordId values is allowed"
+                    }
+                  },
+                  "invalidMatchType": {
+                    "summary": "matchType outside the supported values",
+                    "value": {
+                      "status": "error",
+                      "error": "matchType must be one of: BROAD, EXACT, PHRASE, TARGETING_EXPRESSION, TARGETING_EXPRESSION_PREDEFINED"
+                    }
+                  },
+                  "dateRangeTooLarge": {
+                    "summary": "Date range wider than 6 months",
+                    "value": {
+                      "status": "error",
+                      "error": "Date range must not exceed 6 months"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
     }
   },
   "components": {
@@ -5388,6 +5590,98 @@
                 },
                 "attributed_sales_ntb_percentage": {
                   "type": "number"
+                },
+                "acos": {
+                  "type": "number"
+                },
+                "click_through_rate": {
+                  "type": "number"
+                },
+                "cost_per_click": {
+                  "type": "number"
+                },
+                "conversion_rate": {
+                  "type": "number"
+                },
+                "cost_per_acquisition": {
+                  "type": "number"
+                },
+                "roas": {
+                  "type": "number"
+                }
+              }
+            }
+          },
+          "pagination": {
+            "type": "object",
+            "properties": {
+              "pageIndex": {
+                "type": "integer"
+              },
+              "pageSize": {
+                "type": "integer"
+              },
+              "count": {
+                "type": "integer"
+              }
+            }
+          },
+          "meta": {
+            "type": "object",
+            "properties": {
+              "currency": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "GetAdvertisingSearchTermsResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "channel_id": {
+                  "type": "string"
+                },
+                "ad_type": {
+                  "type": "string"
+                },
+                "search_term": {
+                  "type": "string"
+                },
+                "impressions": {
+                  "type": "number"
+                },
+                "clicks": {
+                  "type": "number"
+                },
+                "cost": {
+                  "type": "number"
+                },
+                "attributed_sales": {
+                  "type": "number"
+                },
+                "attributed_sales_same_sku": {
+                  "type": "number",
+                  "description": "Always 0 for ad_type SB - Sponsored Brands reports have no same-SKU breakdown."
+                },
+                "attributed_conversions": {
+                  "type": "number"
+                },
+                "attributed_conversions_same_sku": {
+                  "type": "number",
+                  "description": "Always 0 for ad_type SB - Sponsored Brands reports have no same-SKU breakdown."
+                },
+                "attributed_units_ordered": {
+                  "type": "number"
+                },
+                "attributed_units_ordered_same_sku": {
+                  "type": "number",
+                  "description": "Always 0 for ad_type SB - Sponsored Brands reports have no same-SKU breakdown."
                 },
                 "acos": {
                   "type": "number"
