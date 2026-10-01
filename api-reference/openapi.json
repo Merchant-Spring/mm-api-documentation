@@ -6343,7 +6343,8 @@
             "type": "object",
             "properties": {
               "BuyerEmail": {
-                "type": "string"
+                "type": "string",
+                "description": "Hashed buyer identifier."
               }
             }
           },
