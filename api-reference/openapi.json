@@ -3911,10 +3911,7 @@
             "description": "Channel ID. Only a single channel is supported for this endpoint.",
             "required": true,
             "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
+              "type": "string"
             }
           },
           {
@@ -4009,7 +4006,8 @@
             "required": false,
             "schema": {
               "type": "string",
-              "enum": ["ad_type", "search_term", "impressions", "clicks", "cost", "attributed_sales", "attributed_sales_same_sku", "attributed_conversions", "attributed_conversions_same_sku", "attributed_units_ordered", "attributed_units_ordered_same_sku", "acos", "click_through_rate", "cost_per_click", "conversion_rate", "cost_per_acquisition", "roas"]
+              "enum": ["ad_type", "search_term", "impressions", "clicks", "cost", "attributed_sales", "attributed_sales_same_sku", "attributed_conversions", "attributed_conversions_same_sku", "attributed_units_ordered", "attributed_units_ordered_same_sku", "acos", "click_through_rate", "cost_per_click", "conversion_rate", "cost_per_acquisition", "roas"],
+              "default": "cost"
             }
           },
           {
@@ -4028,7 +4026,9 @@
             "description": "Zero-based page index (default 0).",
             "required": false,
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
             }
           },
           {
@@ -4037,7 +4037,10 @@
             "description": "Number of (aggregated) search term rows per page, max 100 (default 10).",
             "required": false,
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 10
             }
           }
         ],
