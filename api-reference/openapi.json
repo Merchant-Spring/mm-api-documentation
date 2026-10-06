@@ -5687,7 +5687,9 @@
                   "description": "Always 0 for ad_type SB - Sponsored Brands reports have no same-SKU breakdown."
                 },
                 "acos": {
-                  "type": "number"
+                  "type": "number",
+                  "nullable": true,
+                  "description": "null when attributed_sales is 0 - there are no sales to measure spend against."
                 },
                 "click_through_rate": {
                   "type": "number"
@@ -5702,7 +5704,9 @@
                   "type": "number"
                 },
                 "roas": {
-                  "type": "number"
+                  "type": "number",
+                  "nullable": true,
+                  "description": "null when cost is 0."
                 }
               }
             }
