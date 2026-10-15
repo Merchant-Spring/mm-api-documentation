@@ -4406,7 +4406,7 @@
           "recipients": {
             "type": "array",
             "items": { "type": "string" },
-            "description": "Who receives this report. For a scheduled report, the people currently on the schedule. Otherwise, everyone it has been sent to."
+            "description": "Who receives this report. For a scheduled report, the people currently on the schedule. Otherwise, everyone it has been sent to. Included intentionally as this only ever reflects recipients for a report the caller is already allowed to see, which is always scoped to the caller's own organisation."
           },
           "selectedTags": {
             "type": "array",
@@ -4426,7 +4426,7 @@
           },
           "reportUrl": {
             "type": "string",
-            "description": "Deep link to view the report (requires a browser session)"
+            "description": "Deep link to view the report (requires a browser session). Included intentionally as this is the same shareable link a user would get from the product itself, meant to be passed around and opened by anyone with access."
           },
           "createdAt": { "type": "string", "format": "date-time" },
           "updatedAt": {
