@@ -6640,15 +6640,6 @@
           "MarketplaceId": {
             "type": "string"
           },
-          "BuyerInfo": {
-            "type": "object",
-            "properties": {
-              "BuyerEmail": {
-                "type": "string",
-                "description": "Hashed buyer identifier."
-              }
-            }
-          },
           "AmazonOrderId": {
             "type": "string"
           },
