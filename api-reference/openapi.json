@@ -130,13 +130,13 @@
       "get": {
         "tags": ["client-report"],
         "summary": "List all sent and scheduled client reports",
-        "description": "Retrieve a paginated list of client-deliverable reports that have been sent and/or are currently scheduled, each annotated with its sent/scheduled status and a link to view it. Saved report configurations that have never been sent or scheduled are excluded. Visibility is scoped by the caller's role: administrators and owners see every user's reports in the organisation, other roles see only their own. Uses zero-based page indexing (pageIndex starts at 0); page size is capped at 100 items per request. Requires the reportsOn entitlement on the API key's associated account.",
+        "description": "Retrieve a paginated list of client-deliverable reports that have been sent and/or are currently scheduled, each annotated with its sent/scheduled status and a link to view it. Saved report configurations that have never been sent or scheduled are excluded. Visibility is scoped by the caller's role: administrators and owners see every user's reports in the organisation, other roles see only their own. Sorted by createdAt descending unless sortKey/sortOrder are given. Requires the reportsOn entitlement on the API key's associated account.",
         "operationId": "listReports",
         "parameters": [
           {
             "name": "pageIndex",
             "in": "query",
-            "description": "Zero-based page index (default 0).",
+            "description": "Zero-based page index (default 0). A page beyond the last one returns 200 with an empty data array, not an error.",
             "schema": { "type": "integer", "minimum": 0, "default": 0 }
           },
           {
@@ -197,26 +197,26 @@
           {
             "name": "isSent",
             "in": "query",
-            "description": "Filter to reports that have (or have not) ever been sent",
+            "description": "Filter to reports that have (or have not) ever been sent. Can be combined with isScheduled: isSent=true&isScheduled=true - sent and still scheduled; isSent=true&isScheduled=false - sent but no longer scheduled; isSent=false&isScheduled=true - scheduled but never sent; isSent=false&isScheduled=false - always empty.",
             "schema": { "type": "boolean" }
           },
           {
             "name": "isScheduled",
             "in": "query",
-            "description": "Filter to reports that are (or are not) currently scheduled",
+            "description": "Filter to reports that are (or are not) currently scheduled. Can be combined with isSent: isSent=true&isScheduled=true - sent and still scheduled; isSent=true&isScheduled=false - sent but no longer scheduled; isSent=false&isScheduled=true - scheduled but never sent; isSent=false&isScheduled=false - always empty.",
             "schema": { "type": "boolean" }
           },
           {
             "name": "fromDate",
             "in": "query",
-            "description": "Start of date range as unix epoch seconds, filtering by when the report was created. Defaults to 30 days ago.",
+            "description": "Start of date range, as Unix epoch seconds (not milliseconds). Filters on when the report record was created , not the date range the report's own data covers (see reportingPeriod in the response). Defaults to 30 days ago.",
             "required": false,
             "schema": { "type": "integer" }
           },
           {
             "name": "toDate",
             "in": "query",
-            "description": "End of date range as unix epoch seconds, filtering by when the report was created. Defaults to now. The range must not exceed 6 months.",
+            "description": "End of date range, as Unix epoch seconds (not milliseconds). Filters on when the report record was created , not the date range the report's own data covers (see reportingPeriod in the response). Defaults to now. The range must not exceed 6 months; passing milliseconds instead of seconds is a common cause of an unexpected \"Date range must not exceed 6 months\" error.",
             "required": false,
             "schema": { "type": "integer" }
           }
@@ -279,10 +279,15 @@
             }
           },
           "403": {
-            "description": "The organisation does not have access to Client Reports",
+            "description": "Either a missing/invalid x-api-key, or an authenticated account that lacks the Client Reports entitlement. The two cases have different response shapes - see examples.",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/ErrorResponse" },
+                "schema": {
+                  "oneOf": [
+                    { "$ref": "#/components/schemas/ErrorResponse" },
+                    { "$ref": "#/components/schemas/ApiGatewayForbiddenResponse" }
+                  ]
+                },
                 "examples": {
                   "notEntitled": {
                     "summary": "Account has no Client Reports (reportsOn) entitlement",
@@ -290,6 +295,10 @@
                       "status": "error",
                       "error": "Unauthorized: account does not have permission to access this endpoint"
                     }
+                  },
+                  "invalidApiKey": {
+                    "summary": "Missing or invalid x-api-key",
+                    "value": { "message": "Forbidden" }
                   }
                 }
               }
@@ -4299,6 +4308,12 @@
           "status": "error",
           "error": "Invalid request parameters"
         }
+      },
+      "ApiGatewayForbiddenResponse": {
+        "type": "object",
+        "description": "Returned for a missing or invalid x-api-key.",
+        "properties": { "message": { "type": "string", "enum": ["Forbidden"] } },
+        "example": { "message": "Forbidden" }
       },
       "ListReportsResponse": {
         "type": "object",
