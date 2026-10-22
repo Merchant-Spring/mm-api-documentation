@@ -62,6 +62,10 @@
     {
       "name": "targets",
       "x-group": "Targets"
+    },
+    {
+      "name": "client-report",
+      "x-group": "Client Report"
     }
   ],
   "paths": {
@@ -1164,24 +1168,97 @@
         ]
       }
     },
-    "/reports/create/clientReportPdf": {
+    "/clientReports/generatePDF": {
       "post": {
-        "tags": ["report"],
+        "tags": ["client-report"],
         "summary": "Generate a PDF of a saved Client Report",
-        "description": "Renders an existing, saved Client Report (identified by `reportId`) to a PDF server-side and uploads it for download. Unlike the other report types, this does not generate new analytics data from filters - it exports a point-in-time snapshot of an already-configured report exactly as it appears when viewed. Use the /reports/clientReportPdf/status/{jobId} endpoint to check status and obtain the download URL.",
-        "operationId": "createClientReportPdf",
+        "description": "Creates a PDF of a saved Client Report, exactly as the report currently appears. This returns a `jobId` straight away - poll GET /clientReports/generatePDF?jobId={jobId} until `status` is \"done\" to get the download link. PDFs are created in turn, so allow up to 5 minutes for one to be ready. If it isn't ready yet, wait a little longer before checking again. The download link is valid for 4 hours.\n\nA new PDF of the same report can be created once an hour: if you already created one in the last 60 minutes, that PDF is returned immediately (`status` \"done\") instead of creating a new one.\n\nOwners and Administrators can create a PDF of any report in their organisation; other roles only of reports they created.",
+        "operationId": "createClientReport",
+        "parameters": [
+          {
+            "name": "x-api-key",
+            "in": "header",
+            "description": "API Key (from developer portal)",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "requestBody": {
           "description": "Client Report identifier",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateClientReportPdfRequest"
+                "$ref": "#/components/schemas/CreateClientReportRequest"
               }
             }
           },
           "required": true
         },
         "responses": {
+          "400": {
+            "description": "Invalid input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "missingReportId": {
+                    "summary": "reportId is missing from the request body",
+                    "value": { "status": "error", "error": "reportId is required" }
+                  },
+                  "invalidReportId": {
+                    "summary": "reportId is not a valid report id",
+                    "value": { "status": "error", "error": "reportId must be a valid report id" }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "A missing/invalid x-api-key, an account without the Client Reports entitlement, or a report the caller can't access. The x-api-key case has a different response shape - see examples.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    { "$ref": "#/components/schemas/ErrorResponse" },
+                    { "$ref": "#/components/schemas/ApiGatewayForbiddenResponse" }
+                  ]
+                },
+                "examples": {
+                  "accessDenied": {
+                    "summary": "The report isn't one the caller may access",
+                    "value": { "status": "error", "error": "Access denied to this reportId" }
+                  },
+                  "noReportsEntitlement": {
+                    "summary": "The account doesn't have access to reports",
+                    "value": { "status": "error", "error": "Unauthorized: account does not have permission to access this endpoint" }
+                  },
+                  "invalidApiKey": {
+                    "summary": "Missing or invalid x-api-key",
+                    "value": { "message": "Forbidden" }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Report not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "reportNotFound": {
+                    "summary": "No report with this reportId",
+                    "value": { "status": "error", "error": "Report not found" }
+                  }
+                }
+              }
+            }
+          },
           "200": {
             "description": "Successful operation",
             "headers": {
@@ -1194,14 +1271,111 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ClientReportPdfCreateResponse"
+                  "$ref": "#/components/schemas/ClientReportCreateResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      },
+      "get": {
+        "tags": ["client-report"],
+        "summary": "Get the status of a Client Report PDF generation request",
+        "description": "Get the status of a PDF requested with POST /clientReports/generatePDF. Keep polling while `status` is \"started\" or \"inProgress\"; once it is \"done\" the response includes the download link.",
+        "operationId": "getClientReportStatus",
+        "parameters": [
+          {
+            "name": "jobId",
+            "in": "query",
+            "description": "The job ID returned by /clientReports/generatePDF",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-api-key",
+            "in": "header",
+            "description": "API Key (from developer portal)",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Invalid input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "missingJobId": {
+                    "summary": "jobId query parameter is missing or empty",
+                    "value": { "status": "error", "error": "jobId is required" }
+                  },
+                  "invalidJobId": {
+                    "summary": "jobId is not a valid job id",
+                    "value": { "status": "error", "error": "jobId must be a valid job id" }
+                  }
                 }
               }
             }
           },
-          "400": {
-            "description": "Invalid input",
-            "content": {}
+          "403": {
+            "description": "Missing or invalid x-api-key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiGatewayForbiddenResponse"
+                },
+                "examples": {
+                  "invalidApiKey": {
+                    "summary": "Missing or invalid x-api-key",
+                    "value": { "message": "Forbidden" }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "jobNotFound": {
+                    "summary": "No job exists with the given jobId",
+                    "value": { "status": "error", "error": "No report download job with jobId 6a7f0c1e2b3d4e5f88819999" }
+                  }
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Successful operation",
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientReportStatus"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -2040,57 +2214,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ReportStatus"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid input",
-            "content": {}
-          },
-          "404": {
-            "description": "Not found",
-            "content": {}
-          }
-        },
-        "security": [
-          {
-            "api_key": []
-          }
-        ]
-      }
-    },
-    "/reports/clientReportPdf/status/{jobId}": {
-      "get": {
-        "tags": ["report"],
-        "summary": "Get the status of a Client Report PDF generation request",
-        "description": "Get the status of a Client Report PDF generation request. Unlike /reports/status/{reportId}, this does not require channelId/merchantId - a Client Report is not scoped to a single connected channel.",
-        "operationId": "getClientReportPdfStatus",
-        "parameters": [
-          {
-            "name": "jobId",
-            "in": "path",
-            "description": "The job ID returned by /reports/create/clientReportPdf",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful operation",
-            "headers": {
-              "Access-Control-Allow-Origin": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ClientReportPdfStatus"
                 }
               }
             }
@@ -6744,25 +6867,17 @@
           }
         }
       },
-      "CreateClientReportPdfRequest": {
+      "CreateClientReportRequest": {
         "type": "object",
         "properties": {
           "reportId": {
             "type": "string",
-            "description": "The ID of an existing, saved Client Report to render as a PDF"
-          },
-          "reportName": {
-            "type": "string",
-            "description": "(Optional) The Client Report's display name, used to build the downloaded PDF's filename"
-          },
-          "force": {
-            "type": "boolean",
-            "description": "(Optional) If a PDF for this report was already generated within the last 60 minutes, that existing PDF is returned instead of generating a duplicate (status will be \"done\" with a downloadUrl already present). Set force to true to always generate a new PDF."
+            "description": "The reportId of the Client Report, as returned by the GET /clientReports listing endpoint"
           }
         },
         "required": ["reportId"]
       },
-      "ClientReportPdfCreateResponse": {
+      "ClientReportCreateResponse": {
         "type": "object",
         "properties": {
           "reportId": {
@@ -6771,18 +6886,20 @@
           },
           "jobId": {
             "type": "string",
-            "description": "The PDF generation job's ID - use this with /reports/clientReportPdf/status/{jobId} to poll for completion"
-          },
-          "reportType": {
-            "type": "string"
+            "description": "The PDF generation job's ID - use this with GET /clientReports/generatePDF?jobId={jobId} to poll for completion"
           },
           "status": {
             "type": "string",
-            "description": "\"started\" for a newly-created job, or \"done\" if an existing PDF generated within the last 60 minutes was reused instead (see downloadUrl/generatedAt) - see the force parameter to always generate a new PDF"
+            "enum": ["started", "done"],
+            "description": "\"started\" for a newly-created job, or \"done\" if you already created a PDF of this report within the last 60 minutes and it was returned instead (see downloadUrl/generatedAt)"
           },
           "downloadUrl": {
             "type": "string",
             "description": "Only present when status is \"done\" (an existing PDF was reused)"
+          },
+          "downloadUrlExpiresAt": {
+            "type": "string",
+            "description": "Only present when status is \"done\" - when downloadUrl stops working"
           },
           "generatedAt": {
             "type": "string",
@@ -6790,21 +6907,45 @@
           }
         }
       },
-      "ClientReportPdfStatus": {
+      "ClientReportStatus": {
         "type": "object",
         "properties": {
+          "reportId": {
+            "type": "string"
+          },
           "jobId": {
             "type": "string"
           },
-          "reportType": {
-            "type": "string"
-          },
           "status": {
-            "type": "string"
+            "type": "string",
+            "enum": ["started", "inProgress", "done", "errored"],
+            "description": "\"started\" / \"inProgress\" while the PDF is being generated - keep polling. \"done\" when downloadUrl is ready. \"errored\" if generation failed - request a new PDF to try again"
           },
           "downloadUrl": {
-            "type": "string"
+            "type": "string",
+            "description": "Only present when status is \"done\""
+          },
+          "downloadUrlExpiresAt": {
+            "type": "string",
+            "description": "Only present when status is \"done\" - when downloadUrl stops working"
+          },
+          "generatedAt": {
+            "type": "string",
+            "description": "Only present when status is \"done\" - when the PDF was generated"
           }
+        }
+      },
+      "ApiGatewayForbiddenResponse": {
+        "type": "object",
+        "description": "Returned for a missing or invalid x-api-key.",
+        "properties": {
+          "message": {
+            "type": "string",
+            "enum": ["Forbidden"]
+          }
+        },
+        "example": {
+          "message": "Forbidden"
         }
       },
       "GetStoreProfitLossReportOptions": {
