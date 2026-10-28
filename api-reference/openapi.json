@@ -4299,7 +4299,7 @@
           "seller-health"
         ],
         "summary": "Retrieve seller account health data for a channel",
-        "description": "Returns the channel's account health metrics. Only applicable for Amazon, eBay, Mirakl, Bol, Mercado Libre, Iconic marketplaces; other marketplaces return 404. The `metrics` groups and keys differ based on different marketplaces.",
+        "description": "Returns the channel's account health metrics. Only applicable for Amazon, eBay, Mirakl, Bol, Mercado Libre, Iconic marketplaces; other marketplaces return 400. The `metrics` groups and keys differ based on different marketplaces.",
         "operationId": "getSellerHealth",
         "parameters": [
           {
@@ -5092,19 +5092,7 @@
                       "status": "error",
                       "error": "Invalid channelId / merchantId"
                     }
-                  }
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Seller health is not available for the channel's marketplace. Some marketplaces also return 404 when no seller health data has been synced for the channel; others return 200 with empty values.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                },
-                "examples": {
+                  },
                   "unsupportedMarketplace": {
                     "summary": "Marketplace has no seller health support",
                     "value": {
