@@ -56,6 +56,10 @@
       "x-group": "Search Query Performance"
     },
     {
+      "name": "client-report",
+      "x-group": "Client Report"
+    },
+    {
       "name": "profitability",
       "x-group": "Profitability"
     },
@@ -124,6 +128,188 @@
             "api_key": []
           }
         ]
+      }
+    },
+    "/clientReports": {
+      "get": {
+        "tags": ["client-report"],
+        "summary": "List all sent and scheduled client reports",
+        "description": "Retrieve a paginated list of client-deliverable reports that have been sent and/or are currently scheduled, each annotated with its sent/scheduled status and a link to view it. Saved report configurations that have never been sent or scheduled are excluded. Visibility is scoped by the caller's role: administrators and owners see every user's reports in the organisation, other roles see only their own. Sorted by createdAt descending unless sortKey/sortOrder are given. Requires the reportsOn entitlement on the API key's associated account.",
+        "operationId": "listReports",
+        "parameters": [
+          {
+            "name": "pageIndex",
+            "in": "query",
+            "description": "Zero-based page index (default 0). A page beyond the last one returns 200 with an empty data array, not an error.",
+            "schema": { "type": "integer", "minimum": 0, "default": 0 }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "Number of results per page, max 100 (default 10).",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 10
+            }
+          },
+          {
+            "name": "sortKey",
+            "in": "query",
+            "description": "Response column to sort by (default createdAt).",
+            "schema": {
+              "type": "string",
+              "enum": ["createdAt", "reportName"],
+              "default": "createdAt"
+            }
+          },
+          {
+            "name": "sortOrder",
+            "in": "query",
+            "description": "Sort direction (default desc).",
+            "schema": {
+              "type": "string",
+              "enum": ["asc", "desc"],
+              "default": "desc"
+            }
+          },
+          {
+            "name": "reportName",
+            "in": "query",
+            "description": "Filter by report name (partial match)",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "channelId",
+            "in": "query",
+            "description": "Filter to reports configured for this store/channel. Not applicable for multi-channel reports, which are grouped by tag rather than a fixed set of channels.",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "merchantId",
+            "in": "query",
+            "description": "Filter to reports configured for this merchant ID",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "recipientEmail",
+            "in": "query",
+            "description": "Only show reports that are scheduled to, or have been sent to, this email address.",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "isSent",
+            "in": "query",
+            "description": "Filter to reports that have (or have not) ever been sent. Can be combined with isScheduled: isSent=true&isScheduled=true - sent and still scheduled; isSent=true&isScheduled=false - sent but no longer scheduled; isSent=false&isScheduled=true - scheduled but never sent; isSent=false&isScheduled=false - always empty.",
+            "schema": { "type": "boolean" }
+          },
+          {
+            "name": "isScheduled",
+            "in": "query",
+            "description": "Filter to reports that are (or are not) currently scheduled. Can be combined with isSent: isSent=true&isScheduled=true - sent and still scheduled; isSent=true&isScheduled=false - sent but no longer scheduled; isSent=false&isScheduled=true - scheduled but never sent; isSent=false&isScheduled=false - always empty.",
+            "schema": { "type": "boolean" }
+          },
+          {
+            "name": "fromDate",
+            "in": "query",
+            "description": "Start of date range, as Unix epoch seconds (not milliseconds). Filters on when the report record was created , not the date range the report's own data covers (see reportingPeriod in the response). Defaults to 30 days ago.",
+            "required": false,
+            "schema": { "type": "integer" }
+          },
+          {
+            "name": "toDate",
+            "in": "query",
+            "description": "End of date range, as Unix epoch seconds (not milliseconds). Filters on when the report record was created , not the date range the report's own data covers (see reportingPeriod in the response). Defaults to now. The range must not exceed 6 months; passing milliseconds instead of seconds is a common cause of an unexpected \"Date range must not exceed 6 months\" error.",
+            "required": false,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "headers": {
+              "Access-Control-Allow-Origin": { "schema": { "type": "string" } }
+            },
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ListReportsResponse" }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" },
+                "examples": {
+                  "invalidSortKey": {
+                    "summary": "sortKey is not one of the supported values",
+                    "value": {
+                      "status": "error",
+                      "error": "sortKey must be one of: createdAt, reportName"
+                    }
+                  },
+                  "invalidRecipientEmail": {
+                    "summary": "recipientEmail is not a valid email address",
+                    "value": {
+                      "status": "error",
+                      "error": "recipientEmail must be a valid email"
+                    }
+                  },
+                  "invalidPageSize": {
+                    "summary": "pageSize is not a positive integer",
+                    "value": {
+                      "status": "error",
+                      "error": "pageSize must be a positive integer"
+                    }
+                  },
+                  "invalidDateRange": {
+                    "summary": "toDate is before fromDate",
+                    "value": {
+                      "status": "error",
+                      "error": "toDate must not be before fromDate"
+                    }
+                  },
+                  "dateRangeTooWide": {
+                    "summary": "fromDate/toDate range exceeds 6 months",
+                    "value": {
+                      "status": "error",
+                      "error": "Date range must not exceed 6 months"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Either a missing/invalid x-api-key, or an authenticated account that lacks the Client Reports entitlement. The two cases have different response shapes - see examples.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    { "$ref": "#/components/schemas/ErrorResponse" },
+                    { "$ref": "#/components/schemas/ApiGatewayForbiddenResponse" }
+                  ]
+                },
+                "examples": {
+                  "notEntitled": {
+                    "summary": "Account has no Client Reports (reportsOn) entitlement",
+                    "value": {
+                      "status": "error",
+                      "error": "Unauthorized: account does not have permission to access this endpoint"
+                    }
+                  },
+                  "invalidApiKey": {
+                    "summary": "Missing or invalid x-api-key",
+                    "value": { "message": "Forbidden" }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [{ "api_key": [] }]
       }
     },
     "/content-changes": {
@@ -2893,7 +3079,13 @@
                 }
               }
             },
-            "content": {}
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateCustomGroupResponse"
+                }
+              }
+            }
           },
           "400": {
             "description": "Invalid input",
@@ -4112,6 +4304,211 @@
           }
         ]
       }
+    },
+    "/advertising/searchTerms": {
+      "get": {
+        "tags": ["advertising"],
+        "summary": "Retrieve advertising search term performance",
+        "description": "Returns paginated advertising search term performance for a single channel for the selected date range, optionally filtered to specific campaigns, ad groups, keywords, match types or a search term. Metrics are aggregated across every keyword sharing the same search term (within the same ad type), so campaignId/adGroupId/keywordId/matchType act only as filters - the response does not include keyword/campaign-level fields. Values are currency-adjusted based on the store's country and the requested currency. Supports sorting by any response column and zero-based page indexing.",
+        "operationId": "getAdvertisingSearchTerms",
+        "parameters": [
+          {
+            "name": "channelId",
+            "in": "query",
+            "description": "Channel ID. Only a single channel is supported for this endpoint.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "campaignId",
+            "in": "query",
+            "description": "Filter to search terms belonging to the given campaign(s). Repeatable (max 10), numeric.",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "adGroupId",
+            "in": "query",
+            "description": "Filter to search terms belonging to the given ad group(s). Repeatable (max 10), numeric.",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "keywordId",
+            "in": "query",
+            "description": "Filter to search terms belonging to the given keyword(s). Repeatable (max 10), numeric.",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "matchType",
+            "in": "query",
+            "description": "Filter to search terms matched via the given keyword match type(s). Repeatable, case-insensitive.",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": ["BROAD", "EXACT", "PHRASE", "TARGETING_EXPRESSION", "TARGETING_EXPRESSION_PREDEFINED"]
+              }
+            }
+          },
+          {
+            "name": "searchTerm",
+            "in": "query",
+            "description": "Case-insensitive substring filter on the customer search term.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "fromDate",
+            "in": "query",
+            "description": "Start of date range as unix epoch seconds. Defaults to 30 days ago.",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "toDate",
+            "in": "query",
+            "description": "End of date range as unix epoch seconds. Defaults to now. The range must not exceed 6 months.",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "currency",
+            "in": "query",
+            "description": "3-letter ISO currency code (default USD).",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortKey",
+            "in": "query",
+            "description": "Response column to sort by (default cost). Note: attributed_sales_same_sku, attributed_conversions_same_sku and attributed_units_ordered_same_sku are always 0 for ad_type SB, so sorting by one of them won't distinguish between SB rows.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": ["ad_type", "search_term", "impressions", "clicks", "cost", "attributed_sales", "attributed_sales_same_sku", "attributed_conversions", "attributed_conversions_same_sku", "attributed_units_ordered", "attributed_units_ordered_same_sku", "acos", "click_through_rate", "cost_per_click", "conversion_rate", "cost_per_acquisition", "roas"],
+              "default": "cost"
+            }
+          },
+          {
+            "name": "sortOrder",
+            "in": "query",
+            "description": "Sort direction (default desc).",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": ["asc", "desc"]
+            }
+          },
+          {
+            "name": "pageIndex",
+            "in": "query",
+            "description": "Zero-based page index (default 0).",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "Number of (aggregated) search term rows per page, max 100 (default 10).",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 10
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAdvertisingSearchTermsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "tooManyKeywordIds": {
+                    "summary": "More than 10 keywordId values supplied",
+                    "value": {
+                      "status": "error",
+                      "error": "a maximum of 10 keywordId values is allowed"
+                    }
+                  },
+                  "invalidMatchType": {
+                    "summary": "matchType outside the supported values",
+                    "value": {
+                      "status": "error",
+                      "error": "matchType must be one of: BROAD, EXACT, PHRASE, TARGETING_EXPRESSION, TARGETING_EXPRESSION_PREDEFINED"
+                    }
+                  },
+                  "dateRangeTooLarge": {
+                    "summary": "Date range wider than 6 months",
+                    "value": {
+                      "status": "error",
+                      "error": "Date range must not exceed 6 months"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
     }
   },
   "components": {
@@ -4131,6 +4528,242 @@
         "example": {
           "status": "error",
           "error": "Invalid request parameters"
+        }
+      },
+      "ApiGatewayForbiddenResponse": {
+        "type": "object",
+        "description": "Returned for a missing or invalid x-api-key.",
+        "properties": { "message": { "type": "string", "enum": ["Forbidden"] } },
+        "example": { "message": "Forbidden" }
+      },
+      "ListReportsResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/ReportItem" }
+          },
+          "pagination": {
+            "type": "object",
+            "properties": {
+              "pageIndex": {
+                "type": "integer",
+                "description": "Zero-based page index"
+              },
+              "pageSize": {
+                "type": "integer",
+                "description": "Number of results per page"
+              },
+              "count": {
+                "type": "integer",
+                "description": "Total number of matching reports"
+              }
+            }
+          }
+        },
+        "example": {
+          "pagination": { "pageIndex": 0, "pageSize": 10, "count": 1 },
+          "data": [
+            {
+              "reportId": "6a72ba589131de9029111111",
+              "reportName": "Report Demo",
+              "reportType": "SINGLE",
+              "channels": [
+                {
+                  "channelId": "1",
+                  "channelName": "Seller Demo (USA)",
+                  "merchantId": "XXXUS @ ATVPDKIKX0DER",
+                  "marketplaceType": "amazon",
+                  "marketplaceSubtype": "amazon",
+                  "marketplaceCountry": "USA"
+                }
+              ],
+              "recipients": ["demo@merchantspring.com.au"],
+              "selectedTags": null,
+              "reportingPeriod": {
+                "period": "LAST12",
+                "fromDate": "2025-08-01T07:00:00.000Z",
+                "toDate": "2026-08-01T06:59:59.000Z",
+                "comparisonPeriod": "THISYEAR",
+                "priorFromDate": "2024-08-01T07:00:00.000Z",
+                "priorToDate": "2025-08-01T06:59:59.000Z",
+                "timezone": "Australia/Sydney",
+                "interval": "MONTH"
+              },
+              "schedule": {
+                "frequency": "m",
+                "reportingDelay": 4,
+                "reportDay": "5th",
+                "reportHour": 6
+              },
+              "isSent": true,
+              "isScheduled": true,
+              "reportUrl": "https://merchantspring.io/report?id=6a72ba589131de9029111111",
+              "createdAt": "2026-08-05T04:21:44.503Z",
+              "updatedAt": null
+            }
+          ]
+        }
+      },
+      "ReportItem": {
+        "type": "object",
+        "properties": {
+          "reportId": {
+            "type": "string",
+            "description": "Unique ID of this saved report configuration"
+          },
+          "reportName": { "type": "string", "description": "Name of the report" },
+          "reportType": {
+            "type": "string",
+            "enum": ["SINGLE", "MULTI"],
+            "description": "Whether the report covers a single store or multiple stores"
+          },
+          "channels": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/ReportChannel" },
+            "nullable": true,
+            "description": "The report's fixed list of channels - only set for reportType SINGLE. Null for reportType MULTI, where channels are resolved from selectedTags when the report is viewed rather than from a fixed list."
+          },
+          "recipients": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Who receives this report. For a scheduled report, the people currently on the schedule. Otherwise, everyone it has been sent to. Included intentionally as this only ever reflects recipients for a report the caller is already allowed to see, which is always scoped to the caller's own organisation."
+          },
+          "selectedTags": {
+            "type": "array",
+            "items": { "type": "string" },
+            "nullable": true,
+            "description": "Tags this report's channels are selected by - only set for reportType MULTI. Null for reportType SINGLE."
+          },
+          "reportingPeriod": { "$ref": "#/components/schemas/ReportingPeriod" },
+          "schedule": { "$ref": "#/components/schemas/ReportSchedule" },
+          "isSent": {
+            "type": "boolean",
+            "description": "Whether this report has ever been sent (ad-hoc or via a schedule)"
+          },
+          "isScheduled": {
+            "type": "boolean",
+            "description": "Whether this report is currently scheduled"
+          },
+          "reportUrl": {
+            "type": "string",
+            "description": "Deep link to view the report (requires a browser session). Included intentionally as this is the same shareable link a user would get from the product itself, meant to be passed around and opened by anyone with access."
+          },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true,
+            "description": "When the report config was last updated - null if never updated since creation"
+          }
+        }
+      },
+      "ReportSchedule": {
+        "type": "object",
+        "properties": {
+          "frequency": {
+            "type": "string",
+            "nullable": true,
+            "enum": ["d", "w", "m", null],
+            "description": "How often the report is sent: daily, weekly, or monthly. Null when isScheduled is false."
+          },
+          "reportingDelay": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Number of days between the scheduled reporting date and when the report is sent. For example, on a monthly schedule, a reportingDelay of 4 sends the report on the 5th of each month.",
+            "example": 4
+          },
+          "reportDay": {
+            "type": "string",
+            "nullable": true,
+            "description": "Day the report is sent on. For weekly schedules, a weekday like 'Mon'. For monthly schedules, a day of month like '5th'. Not used for daily schedules. Null when isScheduled is false."
+          },
+          "reportHour": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Hour of day (0-23, local to timezone) the schedule sends at - only set when isScheduled is true"
+          }
+        }
+      },
+      "ReportingPeriod": {
+        "type": "object",
+        "properties": {
+          "period": {
+            "type": "string",
+            "enum": [
+              "TODAY",
+              "YESTERDAY",
+              "WTD",
+              "WTDMTS",
+              "LAST30",
+              "MTD",
+              "CURRENTMONTH",
+              "LASTMONTH",
+              "CURRENTQ",
+              "LASTQ",
+              "LAST12",
+              "YTD",
+              "CURRENTYEAR",
+              "CUSTOM"
+            ],
+            "description": "The report's date range, e.g. LAST12 for the trailing 12 months."
+          },
+          "fromDate": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Start of the report's date range."
+          },
+          "toDate": {
+            "type": "string",
+            "format": "date-time",
+            "description": "End of the report's date range."
+          },
+          "comparisonPeriod": {
+            "type": "string",
+            "enum": ["THISYEAR", "LASTYEAR", "PREVIOUSFISCALPERIOD"],
+            "description": "The period the report is compared against, e.g. LASTYEAR."
+          },
+          "priorFromDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true,
+            "description": "Start of the comparison date range. Null when the report has no comparison range stored."
+          },
+          "priorToDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true,
+            "description": "End of the comparison date range. Null when the report has no comparison range stored."
+          },
+          "timezone": {
+            "type": "string",
+            "description": "Timezone used for the report's dates, e.g. 'Australia/Sydney'."
+          },
+          "interval": {
+            "type": "string",
+            "nullable": true,
+            "description": "How the data is grouped in charts, e.g. by day, week, or month. Null if not applicable."
+          }
+        }
+      },
+      "ReportChannel": {
+        "type": "object",
+        "properties": {
+          "channelId": { "type": "string", "description": "Store/channel ID" },
+          "channelName": { "type": "string", "description": "Store display name" },
+          "merchantId": { "type": "string", "description": "Merchant ID" },
+          "marketplaceType": {
+            "type": "string",
+            "description": "Marketplace type (e.g. amazon, walmart)"
+          },
+          "marketplaceSubtype": {
+            "type": "string",
+            "description": "Marketplace subtype (e.g. amazon, amazon_vendor)"
+          },
+          "marketplaceCountry": {
+            "type": "string",
+            "description": "Marketplace country code"
+          }
         }
       },
       "StartEndTimeRange": {
@@ -5649,6 +6282,102 @@
           }
         }
       },
+      "GetAdvertisingSearchTermsResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "channel_id": {
+                  "type": "string"
+                },
+                "ad_type": {
+                  "type": "string"
+                },
+                "search_term": {
+                  "type": "string"
+                },
+                "impressions": {
+                  "type": "number"
+                },
+                "clicks": {
+                  "type": "number"
+                },
+                "cost": {
+                  "type": "number"
+                },
+                "attributed_sales": {
+                  "type": "number"
+                },
+                "attributed_sales_same_sku": {
+                  "type": "number",
+                  "description": "Always 0 for ad_type SB - Sponsored Brands reports have no same-SKU breakdown."
+                },
+                "attributed_conversions": {
+                  "type": "number"
+                },
+                "attributed_conversions_same_sku": {
+                  "type": "number",
+                  "description": "Always 0 for ad_type SB - Sponsored Brands reports have no same-SKU breakdown."
+                },
+                "attributed_units_ordered": {
+                  "type": "number"
+                },
+                "attributed_units_ordered_same_sku": {
+                  "type": "number",
+                  "description": "Always 0 for ad_type SB - Sponsored Brands reports have no same-SKU breakdown."
+                },
+                "acos": {
+                  "type": "number",
+                  "nullable": true,
+                  "description": "null when attributed_sales is 0 - there are no sales to measure spend against."
+                },
+                "click_through_rate": {
+                  "type": "number"
+                },
+                "cost_per_click": {
+                  "type": "number"
+                },
+                "conversion_rate": {
+                  "type": "number"
+                },
+                "cost_per_acquisition": {
+                  "type": "number"
+                },
+                "roas": {
+                  "type": "number",
+                  "nullable": true,
+                  "description": "null when cost is 0."
+                }
+              }
+            }
+          },
+          "pagination": {
+            "type": "object",
+            "properties": {
+              "pageIndex": {
+                "type": "integer"
+              },
+              "pageSize": {
+                "type": "integer"
+              },
+              "count": {
+                "type": "integer"
+              }
+            }
+          },
+          "meta": {
+            "type": "object",
+            "properties": {
+              "currency": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
       "GetAsinDetailsResponse": {
         "type": "object",
         "properties": {
@@ -6553,14 +7282,6 @@
           },
           "MarketplaceId": {
             "type": "string"
-          },
-          "BuyerInfo": {
-            "type": "object",
-            "properties": {
-              "BuyerEmail": {
-                "type": "string"
-              }
-            }
           },
           "AmazonOrderId": {
             "type": "string"
@@ -7657,6 +8378,15 @@
           }
         }
       },
+      "CreateCustomGroupResponse": {
+        "type": "object",
+        "description": "Response containing the ID of the created custom group",
+        "properties": {
+          "groupId": {
+            "type": "integer"
+          }
+        }
+      },
       "GetCustomGroupResponse": {
         "type": "object",
         "description": "A single custom group with its associated products and brands",
@@ -8332,6 +9062,16 @@
             "type": "integer",
             "format": "int32",
             "description": "Advertising impressions served during the comparison period."
+          },
+          "clicks": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Advertising clicks recorded during the current period."
+          },
+          "priorClicks": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Advertising clicks recorded during the comparison period."
           },
           "clickThroughRate": {
             "type": "string",
