@@ -66,6 +66,10 @@
     {
       "name": "targets",
       "x-group": "Targets"
+    },
+    {
+      "name": "seller-health",
+      "x-group": "Seller Health"
     }
   ],
   "paths": {
@@ -4275,6 +4279,825 @@
                     "value": {
                       "status": "error",
                       "error": "Date range must not exceed 6 months"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/sellerHealth": {
+      "get": {
+        "tags": [
+          "seller-health"
+        ],
+        "summary": "Retrieve seller account health data for a channel",
+        "description": "Returns the channel's account health metrics. Only applicable for Amazon, eBay, Mirakl, Bol, Mercado Libre, Iconic marketplaces; other marketplaces return 400. The `metrics` groups and keys differ based on different marketplaces.",
+        "operationId": "getSellerHealth",
+        "parameters": [
+          {
+            "name": "channelId",
+            "in": "query",
+            "description": "Channel (store) ID.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "merchantId",
+            "in": "query",
+            "description": "Merchant ID that owns the channel. URL-encode values containing spaces or '@'.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SellerHealthResponse"
+                },
+                "examples": {
+                  "amazon": {
+                    "summary": "Amazon",
+                    "value": {
+                      "channelId": "1",
+                      "merchantId": "A1B2C3D4E5F6G7 @ ATVPDKIKX0DER",
+                      "marketplace": "amazon",
+                      "marketplaceSubtype": "amazon",
+                      "countryCode": "USA",
+                      "metrics": {
+                        "accountHealth": {
+                          "accountHealthRating": {
+                            "value": 250,
+                            "status": "GOOD",
+                            "target": null,
+                            "window": {
+                              "start": "2026-04-22T07:00:00Z",
+                              "end": "2026-10-19T06:59:59Z"
+                            }
+                          },
+                          "inactiveListingsCount": {
+                            "value": 0,
+                            "status": null,
+                            "target": null,
+                            "window": null
+                          },
+                          "listingIssuesCount": {
+                            "value": 0,
+                            "status": null,
+                            "target": null,
+                            "window": null
+                          },
+                          "returnRequestsCount": {
+                            "value": 0,
+                            "status": "GOOD",
+                            "target": null,
+                            "window": null
+                          },
+                          "suppressedListingsCount": {
+                            "value": 0,
+                            "status": "GOOD",
+                            "target": null,
+                            "window": null
+                          }
+                        },
+                        "shippingPerformance": {
+                          "lateShipmentRate": {
+                            "value": 0.012,
+                            "status": "GOOD",
+                            "target": {
+                              "value": 0.04,
+                              "condition": "LESS_THAN"
+                            },
+                            "window": {
+                              "start": "2026-09-19T07:00:00Z",
+                              "end": "2026-10-19T06:59:59Z"
+                            },
+                            "numerator": 3,
+                            "denominator": 250
+                          },
+                          "invoiceDefectRate": {
+                            "value": 0,
+                            "status": "GOOD",
+                            "target": {
+                              "value": 0.05,
+                              "condition": "LESS_THAN"
+                            },
+                            "window": {
+                              "start": "2026-10-12T07:00:00Z",
+                              "end": "2026-10-19T06:59:59Z"
+                            },
+                            "numerator": 0,
+                            "denominator": 120
+                          },
+                          "onTimeDeliveryRate": {
+                            "value": 0.952,
+                            "status": "GOOD",
+                            "target": {
+                              "value": 0.9,
+                              "condition": "GREATER_THAN"
+                            },
+                            "window": {
+                              "start": "2026-09-19T07:00:00Z",
+                              "end": "2026-10-19T06:59:59Z"
+                            },
+                            "numerator": 238,
+                            "denominator": 250
+                          },
+                          "validTrackingRate": {
+                            "value": 0.996,
+                            "status": "GOOD",
+                            "target": {
+                              "value": 0.95,
+                              "condition": "GREATER_THAN"
+                            },
+                            "window": {
+                              "start": "2026-09-19T07:00:00Z",
+                              "end": "2026-10-19T06:59:59Z"
+                            },
+                            "numerator": 249,
+                            "denominator": 250
+                          },
+                          "cancellationRate": {
+                            "value": 0.015,
+                            "status": "GOOD",
+                            "target": {
+                              "value": 0.025,
+                              "condition": "LESS_THAN"
+                            },
+                            "window": {
+                              "start": "2026-10-12T07:00:00Z",
+                              "end": "2026-10-19T06:59:59Z"
+                            },
+                            "numerator": 3,
+                            "denominator": 200
+                          }
+                        },
+                        "customerServiceFbm": {
+                          "orderDefectRate": {
+                            "value": 0,
+                            "status": "GOOD",
+                            "target": {
+                              "value": 0.01,
+                              "condition": "LESS_THAN"
+                            },
+                            "window": {
+                              "start": "2026-08-20T07:00:00Z",
+                              "end": "2026-10-19T06:59:59Z"
+                            },
+                            "numerator": 0,
+                            "denominator": 400
+                          },
+                          "negativeFeedbackCount": {
+                            "value": 0,
+                            "status": "GOOD",
+                            "target": null,
+                            "window": null
+                          },
+                          "chargebacksCount": {
+                            "value": 0,
+                            "status": "GOOD",
+                            "target": null,
+                            "window": null
+                          },
+                          "azClaimsCount": {
+                            "value": 0,
+                            "status": "GOOD",
+                            "target": null,
+                            "window": null
+                          }
+                        },
+                        "customerServiceFba": {
+                          "orderDefectRate": {
+                            "value": 0.0025,
+                            "status": "GOOD",
+                            "target": {
+                              "value": 0.01,
+                              "condition": "LESS_THAN"
+                            },
+                            "window": {
+                              "start": "2026-08-20T07:00:00Z",
+                              "end": "2026-10-19T06:59:59Z"
+                            },
+                            "numerator": 1,
+                            "denominator": 400
+                          },
+                          "negativeFeedbackCount": {
+                            "value": 1,
+                            "status": "GOOD",
+                            "target": null,
+                            "window": null
+                          },
+                          "chargebacksCount": {
+                            "value": 0,
+                            "status": "GOOD",
+                            "target": null,
+                            "window": null
+                          },
+                          "azClaimsCount": {
+                            "value": 0,
+                            "status": "GOOD",
+                            "target": null,
+                            "window": null
+                          }
+                        },
+                        "policyCompliance": {
+                          "ipComplaints": {
+                            "value": 0,
+                            "status": "GOOD",
+                            "target": {
+                              "value": 0,
+                              "condition": "EQUALS"
+                            },
+                            "window": {
+                              "start": "2026-04-22T07:00:00Z",
+                              "end": "2026-10-19T06:59:59Z"
+                            }
+                          },
+                          "suspectedIpViolations": {
+                            "value": 0,
+                            "status": "GOOD",
+                            "target": {
+                              "value": 0,
+                              "condition": "EQUALS"
+                            },
+                            "window": {
+                              "start": "2026-04-22T07:00:00Z",
+                              "end": "2026-10-19T06:59:59Z"
+                            }
+                          },
+                          "listingPolicyViolations": {
+                            "value": 1,
+                            "status": "POOR",
+                            "target": {
+                              "value": 0,
+                              "condition": "EQUALS"
+                            },
+                            "window": {
+                              "start": "2026-04-22T07:00:00Z",
+                              "end": "2026-10-19T06:59:59Z"
+                            }
+                          },
+                          "productAuthenticityComplaints": {
+                            "value": 0,
+                            "status": "GOOD",
+                            "target": {
+                              "value": 0,
+                              "condition": "EQUALS"
+                            },
+                            "window": {
+                              "start": "2026-04-22T07:00:00Z",
+                              "end": "2026-10-19T06:59:59Z"
+                            }
+                          },
+                          "productSafetyComplaints": {
+                            "value": 0,
+                            "status": "GOOD",
+                            "target": {
+                              "value": 0,
+                              "condition": "EQUALS"
+                            },
+                            "window": {
+                              "start": "2026-04-22T07:00:00Z",
+                              "end": "2026-10-19T06:59:59Z"
+                            }
+                          },
+                          "foodAndProductSafetyIssues": {
+                            "value": 0,
+                            "status": "GOOD",
+                            "target": {
+                              "value": 0,
+                              "condition": "EQUALS"
+                            },
+                            "window": {
+                              "start": "2026-04-22T07:00:00Z",
+                              "end": "2026-10-19T06:59:59Z"
+                            }
+                          },
+                          "restrictedProductPolicyViolations": {
+                            "value": 0,
+                            "status": "GOOD",
+                            "target": {
+                              "value": 0,
+                              "condition": "EQUALS"
+                            },
+                            "window": {
+                              "start": "2026-04-22T07:00:00Z",
+                              "end": "2026-10-19T06:59:59Z"
+                            }
+                          },
+                          "otherPolicyViolations": {
+                            "value": 0,
+                            "status": "GOOD",
+                            "target": {
+                              "value": 0,
+                              "condition": "EQUALS"
+                            },
+                            "window": {
+                              "start": "2026-04-22T07:00:00Z",
+                              "end": "2026-10-19T06:59:59Z"
+                            }
+                          },
+                          "productConditionCustomerComplaints": {
+                            "value": 2,
+                            "status": "POOR",
+                            "target": {
+                              "value": 0,
+                              "condition": "EQUALS"
+                            },
+                            "window": {
+                              "start": "2026-04-22T07:00:00Z",
+                              "end": "2026-10-19T06:59:59Z"
+                            }
+                          },
+                          "productReviewPolicyViolations": {
+                            "value": 0,
+                            "status": "GOOD",
+                            "target": {
+                              "value": 0,
+                              "condition": "EQUALS"
+                            },
+                            "window": {
+                              "start": "2026-04-22T07:00:00Z",
+                              "end": "2026-10-19T06:59:59Z"
+                            }
+                          },
+                          "policyWarningsCount": {
+                            "value": 3,
+                            "status": null,
+                            "target": null,
+                            "window": {
+                              "start": "2026-04-22T07:00:00Z",
+                              "end": "2026-10-19T06:59:59Z"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "ebay": {
+                    "summary": "eBay",
+                    "value": {
+                      "channelId": "2",
+                      "merchantId": "examplestore",
+                      "marketplace": "ebay",
+                      "marketplaceSubtype": "ebay",
+                      "countryCode": "USA",
+                      "metrics": {
+                        "accountHealth": {
+                          "sellerLevel": {
+                            "value": "TOP_RATED",
+                            "status": "GOOD",
+                            "target": null,
+                            "window": null
+                          },
+                          "projectedSellerLevel": {
+                            "value": "ABOVE_STANDARD",
+                            "status": "GOOD",
+                            "target": null,
+                            "window": null
+                          }
+                        },
+                        "shippingPerformance": {
+                          "orderDefectRate": {
+                            "value": 0.0042,
+                            "status": "GOOD",
+                            "target": null,
+                            "window": {
+                              "start": "2026-04-01T00:00:00.000Z",
+                              "end": "2026-09-30T23:59:59.000Z"
+                            },
+                            "numerator": 3,
+                            "denominator": 710
+                          },
+                          "lateShipmentRate": {
+                            "value": 0.012,
+                            "status": "GOOD",
+                            "target": null,
+                            "window": {
+                              "start": "2026-04-01T00:00:00.000Z",
+                              "end": "2026-09-30T23:59:59.000Z"
+                            },
+                            "numerator": 8,
+                            "denominator": 660
+                          },
+                          "returnRequestsCount": {
+                            "value": 1,
+                            "status": "POOR",
+                            "target": null,
+                            "window": null
+                          }
+                        },
+                        "resolutionCentre": {
+                          "casesClosedWithoutResolutionRate": {
+                            "value": 0.0014,
+                            "status": "GOOD",
+                            "target": null,
+                            "window": {
+                              "start": "2026-04-01T00:00:00.000Z",
+                              "end": "2026-09-30T23:59:59.000Z"
+                            },
+                            "numerator": 1,
+                            "denominator": 710
+                          },
+                          "casesCount": {
+                            "value": 1,
+                            "status": "POOR",
+                            "target": null,
+                            "window": null
+                          },
+                          "negativeFeedbackCount": {
+                            "value": 2,
+                            "status": "POOR",
+                            "target": null,
+                            "window": null
+                          },
+                          "newMessagesCount": {
+                            "value": 5,
+                            "status": null,
+                            "target": null,
+                            "window": null
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "mirakl": {
+                    "summary": "Mirakl",
+                    "value": {
+                      "channelId": "3",
+                      "merchantId": "2001",
+                      "marketplace": "mirakl",
+                      "marketplaceSubtype": "bunnings",
+                      "countryCode": "AUS",
+                      "metrics": {
+                        "accountHealth": {
+                          "accountStatus": {
+                            "value": "SUSPENDED",
+                            "status": "AT_RISK",
+                            "target": null,
+                            "window": null
+                          },
+                          "accountGrade": {
+                            "value": 3.8,
+                            "status": null,
+                            "target": null,
+                            "window": null
+                          },
+                          "approvalRate": {
+                            "value": 0.85,
+                            "status": null,
+                            "target": null,
+                            "window": null
+                          },
+                          "messageThreadsCount": {
+                            "value": 12,
+                            "status": null,
+                            "target": null,
+                            "window": null
+                          },
+                          "avgResponseTimeDays": {
+                            "value": 0.08,
+                            "status": "GOOD",
+                            "target": null,
+                            "window": null
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "bol": {
+                    "summary": "Bol",
+                    "value": {
+                      "channelId": "4",
+                      "merchantId": "1234567",
+                      "marketplace": "bol",
+                      "marketplaceSubtype": "bol",
+                      "countryCode": "NLD",
+                      "metrics": {
+                        "shippingPerformance": {
+                          "onTimeDeliveryRate": {
+                            "value": 0.985,
+                            "status": "GOOD",
+                            "target": {
+                              "value": 0.97,
+                              "condition": "GREATER_THAN_OR_EQUAL"
+                            },
+                            "window": {
+                              "start": "2026-10-05T00:00:00.000Z",
+                              "end": "2026-10-11T00:00:00.000Z"
+                            },
+                            "numerator": 197,
+                            "denominator": 200
+                          },
+                          "validTrackingRate": {
+                            "value": 0.9,
+                            "status": "AT_RISK",
+                            "target": {
+                              "value": 1,
+                              "condition": "GREATER_THAN_OR_EQUAL"
+                            },
+                            "window": {
+                              "start": "2026-10-05T00:00:00.000Z",
+                              "end": "2026-10-11T00:00:00.000Z"
+                            },
+                            "numerator": 180,
+                            "denominator": 200
+                          },
+                          "cancellationRate": {
+                            "value": 0.015,
+                            "status": "GOOD",
+                            "target": {
+                              "value": 0.02,
+                              "condition": "LESS_THAN_OR_EQUAL"
+                            },
+                            "window": {
+                              "start": "2026-10-05T00:00:00.000Z",
+                              "end": "2026-10-11T00:00:00.000Z"
+                            },
+                            "numerator": 3,
+                            "denominator": 200
+                          },
+                          "returnRate": {
+                            "value": 0.03,
+                            "status": "GOOD",
+                            "target": {
+                              "value": 0.05,
+                              "condition": "LESS_THAN_OR_EQUAL"
+                            },
+                            "window": {
+                              "start": "2026-10-05T00:00:00.000Z",
+                              "end": "2026-10-11T00:00:00.000Z"
+                            },
+                            "numerator": 6,
+                            "denominator": 200
+                          }
+                        },
+                        "customerService": {
+                          "reviewScore": {
+                            "value": 9.1,
+                            "status": "GOOD",
+                            "target": {
+                              "value": 8,
+                              "condition": "GREATER_THAN_OR_EQUAL"
+                            },
+                            "window": {
+                              "start": "2026-10-05T00:00:00.000Z",
+                              "end": "2026-10-11T00:00:00.000Z"
+                            }
+                          },
+                          "phoneAvailabilityRate": {
+                            "value": 0.95,
+                            "status": "GOOD",
+                            "target": {
+                              "value": 0.9,
+                              "condition": "GREATER_THAN_OR_EQUAL"
+                            },
+                            "window": {
+                              "start": "2026-10-05T00:00:00.000Z",
+                              "end": "2026-10-11T00:00:00.000Z"
+                            },
+                            "numerator": 19,
+                            "denominator": 20
+                          },
+                          "supportCaseRate": {
+                            "value": 0.02,
+                            "status": "GOOD",
+                            "target": {
+                              "value": 0.05,
+                              "condition": "LESS_THAN_OR_EQUAL"
+                            },
+                            "window": {
+                              "start": "2026-10-05T00:00:00.000Z",
+                              "end": "2026-10-11T00:00:00.000Z"
+                            },
+                            "numerator": 4,
+                            "denominator": 200
+                          },
+                          "onTimeResponseRate": {
+                            "value": 0.92,
+                            "status": "GOOD",
+                            "target": {
+                              "value": 0.9,
+                              "condition": "GREATER_THAN_OR_EQUAL"
+                            },
+                            "window": {
+                              "start": "2026-10-05T00:00:00.000Z",
+                              "end": "2026-10-11T00:00:00.000Z"
+                            },
+                            "numerator": 46,
+                            "denominator": 50
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "mercadolibre": {
+                    "summary": "Mercado Libre",
+                    "value": {
+                      "channelId": "5",
+                      "merchantId": "400000001",
+                      "marketplace": "mercadolibre",
+                      "marketplaceSubtype": "mercadolibre",
+                      "countryCode": "MEX",
+                      "metrics": {
+                        "accountHealth": {
+                          "powerSellerStatus": {
+                            "value": "platinum",
+                            "status": null,
+                            "target": null,
+                            "window": null
+                          },
+                          "realReputationLevel": {
+                            "value": "red",
+                            "status": null,
+                            "target": null,
+                            "window": null
+                          },
+                          "protectionEndDate": {
+                            "value": "2026-11-01",
+                            "status": null,
+                            "target": null,
+                            "window": null
+                          },
+                          "salesCount": {
+                            "value": 242,
+                            "status": null,
+                            "target": null,
+                            "window": {
+                              "start": "2026-08-21T06:10:15.312Z",
+                              "end": "2026-10-20T06:10:15.313Z"
+                            }
+                          }
+                        },
+                        "reputation": {
+                          "claimsRate": {
+                            "value": 0,
+                            "status": "GOOD",
+                            "target": {
+                              "value": 0.015,
+                              "condition": "LESS_THAN"
+                            },
+                            "window": {
+                              "start": "2026-08-21T06:10:15.313Z",
+                              "end": "2026-10-20T06:10:15.313Z"
+                            },
+                            "numerator": 0,
+                            "denominator": 242
+                          },
+                          "cancellationRate": {
+                            "value": 0,
+                            "status": "GOOD",
+                            "target": {
+                              "value": 0.01,
+                              "condition": "LESS_THAN"
+                            },
+                            "window": {
+                              "start": "2026-08-21T06:10:15.313Z",
+                              "end": "2026-10-20T06:10:15.313Z"
+                            },
+                            "numerator": 0,
+                            "denominator": 242
+                          },
+                          "delayedHandlingRate": {
+                            "value": 0,
+                            "status": "GOOD",
+                            "target": {
+                              "value": 0.1,
+                              "condition": "LESS_THAN"
+                            },
+                            "window": {
+                              "start": "2026-08-21T06:10:15.313Z",
+                              "end": "2026-10-20T06:10:15.313Z"
+                            },
+                            "numerator": 0,
+                            "denominator": 242
+                          }
+                        },
+                        "ratings": {
+                          "negativeRate": {
+                            "value": 0.02,
+                            "status": null,
+                            "target": null,
+                            "window": null
+                          },
+                          "neutralRate": {
+                            "value": 0,
+                            "status": null,
+                            "target": null,
+                            "window": null
+                          },
+                          "positiveRate": {
+                            "value": 0.98,
+                            "status": null,
+                            "target": null,
+                            "window": null
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "iconic": {
+                    "summary": "Iconic",
+                    "value": {
+                      "channelId": "6",
+                      "merchantId": "3001",
+                      "marketplace": "iconic",
+                      "marketplaceSubtype": "iconic",
+                      "countryCode": "AUS",
+                      "metrics": {
+                        "accountHealth": {
+                          "returnRate": {
+                            "value": 0.125,
+                            "status": null,
+                            "target": null,
+                            "window": null
+                          },
+                          "cancellationRate": {
+                            "value": 0.008,
+                            "status": null,
+                            "target": null,
+                            "window": null
+                          },
+                          "shippedWithin48hRate": {
+                            "value": 0.935,
+                            "status": null,
+                            "target": null,
+                            "window": null
+                          },
+                          "soldOutProductsCount": {
+                            "value": 7,
+                            "status": null,
+                            "target": null,
+                            "window": null
+                          },
+                          "missingImageProductsCount": {
+                            "value": 2,
+                            "status": null,
+                            "target": null,
+                            "window": null
+                          },
+                          "poorQualityProductsCount": {
+                            "value": 1,
+                            "status": null,
+                            "target": null,
+                            "window": null
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "missingParam": {
+                    "summary": "channelId or merchantId missing",
+                    "value": {
+                      "status": "error",
+                      "error": "channelId / merchantId is required"
+                    }
+                  },
+                  "invalidChannel": {
+                    "summary": "channelId / merchantId not found or not accessible",
+                    "value": {
+                      "status": "error",
+                      "error": "Invalid channelId / merchantId"
+                    }
+                  },
+                  "unsupportedMarketplace": {
+                    "summary": "Marketplace has no seller health support",
+                    "value": {
+                      "status": "error",
+                      "error": "Seller health is not available for this channel"
                     }
                   }
                 }
@@ -11482,6 +12305,859 @@
           "roas": {
             "type": "number",
             "description": "Return on Ad Spend"
+          }
+        }
+      },
+      "SellerHealthResponse": {
+        "type": "object",
+        "properties": {
+          "channelId": {
+            "type": "string",
+            "example": "1"
+          },
+          "merchantId": {
+            "type": "string",
+            "example": "A1B2C3D4E5F6G7 @ ATVPDKIKX0DER"
+          },
+          "marketplace": {
+            "type": "string",
+            "description": "Marketplace type",
+            "enum": [
+              "amazon",
+              "amazon_filtered",
+              "ebay",
+              "mirakl",
+              "bol",
+              "mercadolibre",
+              "iconic"
+            ]
+          },
+          "marketplaceSubtype": {
+            "type": "string",
+            "description": "Specific marketplace, same value as `marketplace` in POST /channels (for example `catch` or `bunnings` for Mirakl).",
+            "example": "amazon"
+          },
+          "countryCode": {
+            "type": "string",
+            "description": "3-letter ISO country code.",
+            "example": "USA"
+          },
+          "metrics": {
+            "description": "Metric groups and keys differ by marketplace.",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/AmazonSellerHealthMetrics"
+              },
+              {
+                "$ref": "#/components/schemas/EbaySellerHealthMetrics"
+              },
+              {
+                "$ref": "#/components/schemas/MiraklSellerHealthMetrics"
+              },
+              {
+                "$ref": "#/components/schemas/BolSellerHealthMetrics"
+              },
+              {
+                "$ref": "#/components/schemas/MercadoLibreSellerHealthMetrics"
+              },
+              {
+                "$ref": "#/components/schemas/IconicSellerHealthMetrics"
+              }
+            ]
+          }
+        }
+      },
+      "AmazonSellerHealthMetrics": {
+        "title": "Amazon",
+        "type": "object",
+        "properties": {
+          "accountHealth": {
+            "type": "object",
+            "properties": {
+              "accountHealthRating": {
+                "description": "Amazon Account Health Rating score. `value` is null when no score is provided. `status` is GOOD, AT_RISK, CRITICAL, NOT_ELIGIBLE, or null when not reported.",
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/SellerHealthNumberMetric"
+                  }
+                ]
+              },
+              "inactiveListingsCount": {
+                "description": "Inactive listings.",
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/SellerHealthNumberMetric"
+                  }
+                ]
+              },
+              "listingIssuesCount": {
+                "description": "Listings with issues.",
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/SellerHealthNumberMetric"
+                  }
+                ]
+              },
+              "returnRequestsCount": {
+                "description": "Return requests in the last 60 days, excluding approved returns.",
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/SellerHealthNumberMetric"
+                  }
+                ]
+              },
+              "suppressedListingsCount": {
+                "description": "Suppressed listings.",
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/SellerHealthNumberMetric"
+                  }
+                ]
+              }
+            }
+          },
+          "shippingPerformance": {
+            "type": "object",
+            "properties": {
+              "lateShipmentRate": {
+                "description": "Late shipment rate.",
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/SellerHealthRateMetric"
+                  }
+                ]
+              },
+              "invoiceDefectRate": {
+                "description": "Invoice defect rate.",
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/SellerHealthRateMetric"
+                  }
+                ]
+              },
+              "onTimeDeliveryRate": {
+                "description": "On-time delivery rate.",
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/SellerHealthRateMetric"
+                  }
+                ]
+              },
+              "validTrackingRate": {
+                "description": "Valid tracking rate.",
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/SellerHealthRateMetric"
+                  }
+                ]
+              },
+              "cancellationRate": {
+                "description": "Pre-fulfillment cancellation rate.",
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/SellerHealthRateMetric"
+                  }
+                ]
+              }
+            }
+          },
+          "customerServiceFbm": {
+            "type": "object",
+            "properties": {
+              "orderDefectRate": {
+                "description": "Order defect rate, seller-fulfilled orders.",
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/SellerHealthRateMetric"
+                  }
+                ]
+              },
+              "negativeFeedbackCount": {
+                "description": "Orders with negative feedback.",
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/SellerHealthNumberMetric"
+                  }
+                ]
+              },
+              "chargebacksCount": {
+                "description": "Credit card chargebacks.",
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/SellerHealthNumberMetric"
+                  }
+                ]
+              },
+              "azClaimsCount": {
+                "description": "A-to-z Guarantee claims.",
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/SellerHealthNumberMetric"
+                  }
+                ]
+              }
+            }
+          },
+          "customerServiceFba": {
+            "type": "object",
+            "properties": {
+              "orderDefectRate": {
+                "description": "Order defect rate, Amazon-fulfilled orders.",
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/SellerHealthRateMetric"
+                  }
+                ]
+              },
+              "negativeFeedbackCount": {
+                "description": "Orders with negative feedback.",
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/SellerHealthNumberMetric"
+                  }
+                ]
+              },
+              "chargebacksCount": {
+                "description": "Credit card chargebacks.",
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/SellerHealthNumberMetric"
+                  }
+                ]
+              },
+              "azClaimsCount": {
+                "description": "A-to-z Guarantee claims.",
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/SellerHealthNumberMetric"
+                  }
+                ]
+              }
+            }
+          },
+          "policyCompliance": {
+            "type": "object",
+            "properties": {
+              "ipComplaints": {
+                "description": "Received intellectual property complaints.",
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/SellerHealthNumberMetric"
+                  }
+                ]
+              },
+              "suspectedIpViolations": {
+                "description": "Suspected intellectual property violations.",
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/SellerHealthNumberMetric"
+                  }
+                ]
+              },
+              "listingPolicyViolations": {
+                "description": "Listing policy violations.",
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/SellerHealthNumberMetric"
+                  }
+                ]
+              },
+              "productAuthenticityComplaints": {
+                "description": "Product authenticity customer complaints.",
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/SellerHealthNumberMetric"
+                  }
+                ]
+              },
+              "productSafetyComplaints": {
+                "description": "Product safety customer complaints.",
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/SellerHealthNumberMetric"
+                  }
+                ]
+              },
+              "foodAndProductSafetyIssues": {
+                "description": "Food and product safety issues.",
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/SellerHealthNumberMetric"
+                  }
+                ]
+              },
+              "restrictedProductPolicyViolations": {
+                "description": "Restricted product policy violations.",
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/SellerHealthNumberMetric"
+                  }
+                ]
+              },
+              "otherPolicyViolations": {
+                "description": "Other policy violations.",
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/SellerHealthNumberMetric"
+                  }
+                ]
+              },
+              "productConditionCustomerComplaints": {
+                "description": "Product condition customer complaints.",
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/SellerHealthNumberMetric"
+                  }
+                ]
+              },
+              "productReviewPolicyViolations": {
+                "description": "Customer product reviews policy violations.",
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/SellerHealthNumberMetric"
+                  }
+                ]
+              },
+              "policyWarningsCount": {
+                "description": "Policy violation warnings.",
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/SellerHealthNumberMetric"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "SellerHealthNumberMetric": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/SellerHealthMetricBase"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "value": {
+                "type": "number",
+                "nullable": true,
+                "description": "Count or score. null or 0 when there is no data, depending on the marketplace.",
+                "example": 2
+              }
+            }
+          }
+        ]
+      },
+      "SellerHealthMetricBase": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "$ref": "#/components/schemas/SellerHealthStatus"
+          },
+          "target": {
+            "$ref": "#/components/schemas/SellerHealthTarget"
+          },
+          "window": {
+            "$ref": "#/components/schemas/SellerHealthWindow"
+          }
+        }
+      },
+      "SellerHealthStatus": {
+        "type": "string",
+        "nullable": true,
+        "description": "Indicative health of the metric, derived by MerchantSpring from the marketplace's data and, where available, its thresholds; it may differ from the marketplace's own dashboard. `CRITICAL` and `NOT_ELIGIBLE` only apply to Amazon `accountHealthRating`. null when the metric is not assessed. Missing data may show as a null `value` or as 0 with a `status`, depending on the marketplace.",
+        "enum": [
+          "GOOD",
+          "AT_RISK",
+          "POOR",
+          "CLOSED",
+          "CRITICAL",
+          "NOT_ELIGIBLE",
+          null
+        ]
+      },
+      "SellerHealthTarget": {
+        "type": "object",
+        "nullable": true,
+        "description": "Threshold the status is assessed against, when available. 'Rate' targets are ratios, like `value`.",
+        "properties": {
+          "value": {
+            "type": "number",
+            "example": 0.04
+          },
+          "condition": {
+            "type": "string",
+            "enum": [
+              "LESS_THAN",
+              "GREATER_THAN",
+              "EQUALS",
+              "LESS_THAN_OR_EQUAL",
+              "GREATER_THAN_OR_EQUAL"
+            ]
+          }
+        }
+      },
+      "SellerHealthWindow": {
+        "type": "object",
+        "nullable": true,
+        "description": "Period the metric covers, when available.",
+        "properties": {
+          "start": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-09-19T07:00:00Z"
+          },
+          "end": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-10-19T06:59:59Z"
+          }
+        }
+      },
+      "SellerHealthRateMetric": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/SellerHealthMetricBase"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "value": {
+                "type": "number",
+                "nullable": true,
+                "description": "Ratio between 0 and 1 (0.012 = 1.2%).",
+                "example": 0.012
+              },
+              "numerator": {
+                "type": "integer",
+                "example": 3
+              },
+              "denominator": {
+                "type": "integer",
+                "example": 250
+              }
+            }
+          }
+        ]
+      },
+      "EbaySellerHealthMetrics": {
+        "title": "eBay",
+        "type": "object",
+        "properties": {
+          "accountHealth": {
+            "type": "object",
+            "properties": {
+              "sellerLevel": {
+                "description": "Current eBay seller level, for example TOP_RATED, ABOVE_STANDARD or BELOW_STANDARD.",
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/SellerHealthLevelMetric"
+                  }
+                ]
+              },
+              "projectedSellerLevel": {
+                "description": "Projected seller level at the next evaluation.",
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/SellerHealthLevelMetric"
+                  }
+                ]
+              }
+            }
+          },
+          "shippingPerformance": {
+            "type": "object",
+            "properties": {
+              "orderDefectRate": {
+                "description": "Transaction defect rate.",
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/SellerHealthRateMetric"
+                  }
+                ]
+              },
+              "lateShipmentRate": {
+                "description": "Late shipment rate.",
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/SellerHealthRateMetric"
+                  }
+                ]
+              },
+              "returnRequestsCount": {
+                "description": "Return requests.",
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/SellerHealthNumberMetric"
+                  }
+                ]
+              }
+            }
+          },
+          "resolutionCentre": {
+            "type": "object",
+            "properties": {
+              "casesClosedWithoutResolutionRate": {
+                "description": "Cases closed without seller resolution.",
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/SellerHealthRateMetric"
+                  }
+                ]
+              },
+              "casesCount": {
+                "description": "Resolution centre cases.",
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/SellerHealthNumberMetric"
+                  }
+                ]
+              },
+              "negativeFeedbackCount": {
+                "description": "Negative feedback.",
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/SellerHealthNumberMetric"
+                  }
+                ]
+              },
+              "newMessagesCount": {
+                "description": "New messages.",
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/SellerHealthNumberMetric"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "SellerHealthLevelMetric": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/SellerHealthMetricBase"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "value": {
+                "type": "string",
+                "nullable": true,
+                "description": "Health level as the marketplace names it. null when there is no data.",
+                "example": "TOP_RATED"
+              }
+            }
+          }
+        ]
+      },
+      "MiraklSellerHealthMetrics": {
+        "title": "Mirakl",
+        "type": "object",
+        "properties": {
+          "accountHealth": {
+            "type": "object",
+            "properties": {
+              "accountStatus": {
+                "description": "Shop state, for example OPEN, SUSPENDED or CLOSE.",
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/SellerHealthLevelMetric"
+                  }
+                ]
+              },
+              "accountGrade": {
+                "description": "Shop grade.",
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/SellerHealthNumberMetric"
+                  }
+                ]
+              },
+              "approvalRate": {
+                "description": "Order approval rate.",
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/SellerHealthRateMetric"
+                  }
+                ]
+              },
+              "messageThreadsCount": {
+                "description": "Recent message threads.",
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/SellerHealthNumberMetric"
+                  }
+                ]
+              },
+              "avgResponseTimeDays": {
+                "description": "Average response time to customer messages, in days.",
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/SellerHealthNumberMetric"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "BolSellerHealthMetrics": {
+        "title": "Bol",
+        "type": "object",
+        "properties": {
+          "shippingPerformance": {
+            "type": "object",
+            "properties": {
+              "onTimeDeliveryRate": {
+                "description": "Items delivered on time.",
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/SellerHealthRateMetric"
+                  }
+                ]
+              },
+              "validTrackingRate": {
+                "description": "Items with valid track and trace.",
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/SellerHealthRateMetric"
+                  }
+                ]
+              },
+              "cancellationRate": {
+                "description": "Seller-initiated cancellation rate.",
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/SellerHealthRateMetric"
+                  }
+                ]
+              },
+              "returnRate": {
+                "description": "Return rate.",
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/SellerHealthRateMetric"
+                  }
+                ]
+              }
+            }
+          },
+          "customerService": {
+            "type": "object",
+            "properties": {
+              "reviewScore": {
+                "description": "Average review score.",
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/SellerHealthNumberMetric"
+                  }
+                ]
+              },
+              "phoneAvailabilityRate": {
+                "description": "Phone availability.",
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/SellerHealthRateMetric"
+                  }
+                ]
+              },
+              "supportCaseRate": {
+                "description": "Customer service cases per order item.",
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/SellerHealthRateMetric"
+                  }
+                ]
+              },
+              "onTimeResponseRate": {
+                "description": "Share of customer cases responded to within 24 working hours.",
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/SellerHealthRateMetric"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "MercadoLibreSellerHealthMetrics": {
+        "title": "Mercado Libre",
+        "type": "object",
+        "properties": {
+          "accountHealth": {
+            "type": "object",
+            "properties": {
+              "powerSellerStatus": {
+                "description": "MercadoLíder status, for example platinum, gold or silver.",
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/SellerHealthLevelMetric"
+                  }
+                ]
+              },
+              "realReputationLevel": {
+                "description": "Reputation colour level.",
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/SellerHealthLevelMetric"
+                  }
+                ]
+              },
+              "protectionEndDate": {
+                "description": "End of the reputation protection period.",
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/SellerHealthDateMetric"
+                  }
+                ]
+              },
+              "salesCount": {
+                "description": "Completed sales in the window.",
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/SellerHealthNumberMetric"
+                  }
+                ]
+              }
+            }
+          },
+          "reputation": {
+            "type": "object",
+            "properties": {
+              "claimsRate": {
+                "description": "Claims rate.",
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/SellerHealthRateMetric"
+                  }
+                ]
+              },
+              "cancellationRate": {
+                "description": "Cancellation rate.",
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/SellerHealthRateMetric"
+                  }
+                ]
+              },
+              "delayedHandlingRate": {
+                "description": "Delayed handling rate.",
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/SellerHealthRateMetric"
+                  }
+                ]
+              }
+            }
+          },
+          "ratings": {
+            "type": "object",
+            "properties": {
+              "negativeRate": {
+                "description": "Share of negative ratings.",
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/SellerHealthRateMetric"
+                  }
+                ]
+              },
+              "neutralRate": {
+                "description": "Share of neutral ratings.",
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/SellerHealthRateMetric"
+                  }
+                ]
+              },
+              "positiveRate": {
+                "description": "Share of positive ratings.",
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/SellerHealthRateMetric"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "SellerHealthDateMetric": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/SellerHealthMetricBase"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "value": {
+                "type": "string",
+                "format": "date",
+                "nullable": true,
+                "description": "ISO date. null when there is no data.",
+                "example": "2026-11-01"
+              }
+            }
+          }
+        ]
+      },
+      "IconicSellerHealthMetrics": {
+        "title": "Iconic",
+        "type": "object",
+        "properties": {
+          "accountHealth": {
+            "type": "object",
+            "properties": {
+              "returnRate": {
+                "description": "Return rate.",
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/SellerHealthRateMetric"
+                  }
+                ]
+              },
+              "cancellationRate": {
+                "description": "Cancellation rate.",
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/SellerHealthRateMetric"
+                  }
+                ]
+              },
+              "shippedWithin48hRate": {
+                "description": "Orders shipped within 2 days.",
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/SellerHealthRateMetric"
+                  }
+                ]
+              },
+              "soldOutProductsCount": {
+                "description": "Products currently in Sold Out status.",
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/SellerHealthNumberMetric"
+                  }
+                ]
+              },
+              "missingImageProductsCount": {
+                "description": "Products currently in Image Missing status.",
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/SellerHealthNumberMetric"
+                  }
+                ]
+              },
+              "poorQualityProductsCount": {
+                "description": "Products currently in Poor Quality status.",
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/SellerHealthNumberMetric"
+                  }
+                ]
+              }
+            }
           }
         }
       }
