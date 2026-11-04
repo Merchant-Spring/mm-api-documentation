@@ -8213,14 +8213,6 @@
             "example": "2026-01-01",
             "description": "The Amazon Orders API version of the order. Always \"2026-01-01\"."
           },
-          "BuyerInfo": {
-            "type": "object",
-            "properties": {
-              "BuyerEmail": {
-                "type": "string"
-              }
-            }
-          },
           "orderId": {
             "type": "string"
           },
