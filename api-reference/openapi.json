@@ -8186,7 +8186,9 @@
             "type": "object",
             "properties": {
               "key": {
-                "type": "string"
+                "type": "string",
+                "nullable": true,
+                "description": "Pass as key to get the next page. null when there are no more orders."
               }
             }
           },
@@ -8200,149 +8202,403 @@
       },
       "Order": {
         "type": "object",
+        "description": "An Amazon order in the Amazon Orders API 2026-01-01 format. Line items are not included.",
         "properties": {
-          "SellerId": {
+          "_id": {
+            "type": "string",
+            "description": "Unique ID of the order record."
+          },
+          "ApiVersion": {
+            "type": "string",
+            "example": "2026-01-01",
+            "description": "The Amazon Orders API version of the order. Always \"2026-01-01\"."
+          },
+          "orderId": {
             "type": "string"
           },
-          "MarketplaceId": {
-            "type": "string"
+          "orderAliases": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "aliasId": {
+                  "type": "string"
+                },
+                "aliasType": {
+                  "type": "string",
+                  "enum": ["SELLER_ORDER_ID"]
+                }
+              }
+            }
           },
-          "AmazonOrderId": {
-            "type": "string"
+          "createdTime": {
+            "type": "string",
+            "format": "date-time"
           },
-          "FulfillmentChannel": {
-            "type": "string"
+          "lastUpdatedTime": {
+            "type": "string",
+            "format": "date-time"
           },
-          "EarliestDeliveryDate": {
-            "type": "string"
-          },
-          "EarliestShipDate": {
-            "type": "string"
-          },
-          "SalesChannel": {
-            "type": "string"
-          },
-          "AutomatedShippingSettings": {
+          "salesChannel": {
             "type": "object",
             "properties": {
-              "HasAutomatedShippingSettings": {
+              "channelName": {
+                "type": "string",
+                "enum": ["AMAZON"]
+              },
+              "marketplaceId": {
                 "type": "string"
               },
-              "AutomatedShipMethodName": {
-                "type": "string"
-              },
-              "AutomatedCarrierName": {
+              "marketplaceName": {
                 "type": "string"
               }
             }
           },
-          "OrderStatus": {
-            "type": "string"
-          },
-          "NumberOfItemsShipped": {
-            "type": "number"
-          },
-          "NumberOfItemsUnshipped": {
-            "type": "number"
-          },
-          "OrderType": {
-            "type": "string"
-          },
-          "IsPremiumOrder": {
-            "type": "boolean"
-          },
-          "IsPrime": {
-            "type": "boolean"
-          },
-          "HasRegulatedItems": {
-            "type": "boolean"
-          },
-          "IsReplacementOrder": {
-            "type": "boolean"
-          },
-          "IsSoldByAB": {
-            "type": "boolean"
-          },
-          "LatestShipDate": {
-            "type": "string"
-          },
-          "ShipServiceLevel": {
-            "type": "string"
-          },
-          "DefaultShipFromLocationAddress": {
+          "proceeds": {
             "type": "object",
             "properties": {
-              "StateOrRegion": {
-                "type": "string"
+              "grandTotal": {
+                "type": "object",
+                "properties": {
+                  "amount": {
+                    "type": "string",
+                    "example": "36.0",
+                    "description": "Decimal amount as a string."
+                  },
+                  "currencyCode": {
+                    "type": "string"
+                  }
+                }
               },
-              "PostalCode": {
-                "type": "string"
-              },
-              "City": {
-                "type": "string"
-              },
-              "CountryCode": {
-                "type": "string"
+              "breakdowns": {
+                "type": "array",
+                "description": "How grandTotal is made up.",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "subtotal": {
+                      "$ref": "#/components/schemas/OrderMoney"
+                    }
+                  }
+                }
               }
             }
           },
-          "IsISPU": {
-            "type": "boolean"
-          },
-          "LatestDeliveryDate": {
-            "type": "string"
-          },
-          "PurchaseDate": {
-            "type": "string"
-          },
-          "ShippingAddress": {
+          "recipient": {
             "type": "object",
+            "description": "PII is not included.",
             "properties": {
-              "StateOrRegion": {
-                "type": "string"
+              "deliveryAddress": {
+                "type": "object",
+                "properties": {
+                  "city": {
+                    "type": "string"
+                  },
+                  "districtOrCounty": {
+                    "type": "string"
+                  },
+                  "stateOrRegion": {
+                    "type": "string"
+                  },
+                  "municipality": {
+                    "type": "string"
+                  },
+                  "postalCode": {
+                    "type": "string"
+                  },
+                  "countryCode": {
+                    "type": "string"
+                  },
+                  "addressType": {
+                    "type": "string",
+                    "enum": ["RESIDENTIAL", "COMMERCIAL", "PICKUP_POINT"]
+                  }
+                }
               },
-              "PostalCode": {
-                "type": "string"
-              },
-              "City": {
-                "type": "string"
-              },
-              "CountryCode": {
-                "type": "string"
+              "deliveryPreference": {
+                "type": "object",
+                "properties": {
+                  "dropOffLocation": {
+                    "type": "string"
+                  },
+                  "addressInstruction": {
+                    "type": "string"
+                  },
+                  "deliveryTime": {
+                    "type": "object",
+                    "properties": {
+                      "businessHours": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "dayOfWeek": {
+                              "type": "string",
+                              "enum": ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"]
+                            },
+                            "timeWindows": {
+                              "$ref": "#/components/schemas/OrderTimeWindows"
+                            }
+                          }
+                        }
+                      },
+                      "exceptionDates": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "exceptionDate": {
+                              "type": "string",
+                              "format": "date"
+                            },
+                            "exceptionDateType": {
+                              "type": "string",
+                              "enum": ["CLOSED", "OPEN"]
+                            },
+                            "timeWindows": {
+                              "$ref": "#/components/schemas/OrderTimeWindows"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "deliveryCapabilities": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": ["HAS_ACCESS_POINT", "PALLET_ENABLED", "PALLET_DISABLED"]
+                    }
+                  }
+                }
               }
             }
           },
-          "IsAccessPointOrder": {
-            "type": "boolean"
-          },
-          "PaymentMethod": {
-            "type": "string"
-          },
-          "IsBusinessOrder": {
-            "type": "boolean"
-          },
-          "OrderTotal": {
+          "fulfillment": {
             "type": "object",
             "properties": {
-              "Amount": {
-                "type": "number"
+              "fulfillmentStatus": {
+                "type": "string",
+                "enum": ["PENDING_AVAILABILITY", "PENDING", "UNSHIPPED", "PARTIALLY_SHIPPED", "SHIPPED", "CANCELLED", "UNFULFILLABLE"]
               },
-              "CurrencyCode": {
-                "type": "string"
+              "fulfilledBy": {
+                "type": "string",
+                "enum": ["AMAZON", "MERCHANT"]
+              },
+              "fulfillmentServiceLevel": {
+                "type": "string",
+                "enum": ["EXPEDITED", "FREE_ECONOMY", "NEXT_DAY", "PRIORITY", "SAME_DAY", "SECOND_DAY", "SCHEDULED", "STANDARD"]
+              },
+              "shipByWindow": {
+                "$ref": "#/components/schemas/OrderDateTimeRange"
+              },
+              "deliverByWindow": {
+                "$ref": "#/components/schemas/OrderDateTimeRange"
+              },
+              "labelPrintingWindow": {
+                "$ref": "#/components/schemas/OrderDateTimeRange"
+              },
+              "promiseCalculationInputs": {
+                "type": "object",
+                "properties": {
+                  "transitTime": {
+                    "type": "object",
+                    "properties": {
+                      "details": {
+                        "type": "object",
+                        "properties": {
+                          "carrier": {
+                            "type": "string"
+                          },
+                          "shippingService": {
+                            "type": "string"
+                          }
+                        }
+                      },
+                      "dataSource": {
+                        "type": "string",
+                        "enum": ["AMAZON_AUTOMATED", "SELLER_SET", "THIRD_PARTY_INTEGRATOR"]
+                      }
+                    }
+                  }
+                }
               }
             }
           },
-          "PaymentMethodDetails": {
-            "type": "string"
+          "programs": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": ["PREORDER", "PRIME", "PREMIUM", "IN_STORE_PICK_UP", "AMAZON_BUSINESS", "AMAZON_HAUL", "AMAZON_BAZAAR"]
+            }
           },
-          "IsGlobalExpressEnabled": {
-            "type": "boolean"
+          "associatedOrders": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "orderId": {
+                  "type": "string"
+                },
+                "associationType": {
+                  "type": "string",
+                  "enum": ["REPLACEMENT_ORIGINAL_ID", "EXCHANGE_ORIGINAL_ID"]
+                }
+              }
+            }
           },
-          "LastUpdateDate": {
-            "type": "string"
+          "packages": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "packageReferenceId": {
+                  "type": "string"
+                },
+                "createdTime": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "packageStatus": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": ["PENDING", "IN_TRANSIT", "SHIPPED", "DELIVERED", "CANCELLED", "UNDELIVERABLE"]
+                    },
+                    "detailedStatus": {
+                      "type": "string",
+                      "enum": ["PENDING_SCHEDULE", "PENDING_PICK_UP", "PENDING_DROP_OFF", "LABEL_CANCELLED", "PICKED_UP", "DROPPED_OFF", "AT_ORIGIN_FC", "AT_DESTINATION_FC", "DELIVERED", "REJECTED_BY_BUYER", "UNDELIVERABLE", "RETURNING_TO_SELLER", "RETURNED_TO_SELLER", "LOST", "OUT_FOR_DELIVERY", "DAMAGED"]
+                    }
+                  }
+                },
+                "carrier": {
+                  "type": "string"
+                },
+                "shipTime": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "shippingService": {
+                  "type": "string"
+                },
+                "trackingNumber": {
+                  "type": "string"
+                },
+                "shipFromAddress": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "addressLine1": {
+                      "type": "string"
+                    },
+                    "addressLine2": {
+                      "type": "string"
+                    },
+                    "addressLine3": {
+                      "type": "string"
+                    },
+                    "city": {
+                      "type": "string"
+                    },
+                    "districtOrCounty": {
+                      "type": "string"
+                    },
+                    "stateOrRegion": {
+                      "type": "string"
+                    },
+                    "municipality": {
+                      "type": "string"
+                    },
+                    "postalCode": {
+                      "type": "string"
+                    },
+                    "countryCode": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "packageItems": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "orderItemId": {
+                        "type": "string"
+                      },
+                      "quantity": {
+                        "type": "integer"
+                      },
+                      "transparencyCodes": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "OrderMoney": {
+        "type": "object",
+        "properties": {
+          "amount": {
+            "type": "string",
+            "example": "36.0",
+            "description": "Decimal amount as a string."
           },
-          "ShipmentServiceLevelCategory": {
+          "currencyCode": {
             "type": "string"
+          }
+        }
+      },
+      "OrderDateTimeRange": {
+        "type": "object",
+        "properties": {
+          "earliestDateTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "latestDateTime": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "OrderTimeWindows": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "startTime": {
+              "$ref": "#/components/schemas/OrderHourMinute"
+            },
+            "endTime": {
+              "$ref": "#/components/schemas/OrderHourMinute"
+            }
+          }
+        }
+      },
+      "OrderHourMinute": {
+        "type": "object",
+        "properties": {
+          "hour": {
+            "type": "integer"
+          },
+          "minute": {
+            "type": "integer"
           }
         }
       },
@@ -8351,15 +8607,17 @@
         "required": ["channelId", "merchantId"],
         "properties": {
           "channelId": {
-            "type": "string"
+            "type": "string",
+            "description": "The channel ID, as returned by the channels endpoint"
           },
           "merchantId": {
-            "type": "string"
+            "type": "string",
+            "description": "The channel's merchant ID, as returned by the channels endpoint"
           },
           "dateField": {
             "type": "string",
             "enum": ["createdAt", "updatedAt"],
-            "description": "The field to which fromDate and toDate filter are applied - either 'createdAt' or 'updatedAt'"
+            "description": "The field to which fromDate and toDate filter are applied - either 'createdAt' (the order's createdTime) or 'updatedAt' (the order's lastUpdatedTime)"
           },
           "fromDate": {
             "type": "integer",
@@ -8377,12 +8635,12 @@
           },
           "key": {
             "type": "string",
-            "description": "The key used for pagination"
+            "description": "The key used for pagination - pass meta.key from the previous response to get the next page"
           },
           "pageSize": {
             "type": "integer",
             "example": 50,
-            "description": "The number of results to return per page (Max 100)"
+            "description": "The number of results to return per page (Default 10, Max 100)"
           }
         }
       },
