@@ -14706,12 +14706,12 @@
                   "snsUnitsFromDate": {
                     "type": "string",
                     "example": "2026-04-12",
-                    "description": "SELL_OUT only, without groupBy. First day (YYYY-MM-DD) of the Subscribe & Save periods counted in snsUnits. Can be before fromDate, because Amazon reports these units by whole week or month. Omitted when there is no Subscribe & Save data for the period."
+                    "description": "SELL_OUT only, without groupBy. First day (YYYY-MM-DD) of the Subscribe & Save periods counted in snsUnits. Can be before fromDate, because Amazon reports these units by whole week or month."
                   },
                   "snsUnitsToDate": {
                     "type": "string",
                     "example": "2026-05-16",
-                    "description": "SELL_OUT only, without groupBy. Last day (YYYY-MM-DD) of the Subscribe & Save periods counted in snsUnits. Can be after toDate. Omitted when there is no Subscribe & Save data for the period."
+                    "description": "SELL_OUT only, without groupBy. Last day (YYYY-MM-DD) of the Subscribe & Save periods counted in snsUnits. Can be after toDate."
                   },
                   "months": {
                     "type": "array",
