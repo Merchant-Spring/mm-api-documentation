@@ -2914,6 +2914,671 @@
         ]
       }
     },
+    "/profitability/vendorProfitAndLoss": {
+      "get": {
+        "tags": [
+          "profitability"
+        ],
+        "summary": "Retrieve a vendor channel's profit and loss",
+        "description": "Vendor only. Returns the channel's profit and loss for a sell type.",
+        "operationId": "getVendorProfitAndLoss",
+        "parameters": [
+          {
+            "name": "channelId",
+            "in": "query",
+            "description": "Channel (store) ID. Must be an Amazon Vendor channel.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "merchantId",
+            "in": "query",
+            "description": "Merchant ID that owns the channel. URL-encode values containing spaces or '@'.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "fromDate",
+            "in": "query",
+            "description": "Start of the range as Unix epoch seconds. Defaults to 30 days before now.",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "toDate",
+            "in": "query",
+            "description": "End of the range as Unix epoch seconds. Defaults to now. Must not be before fromDate or more than 3 months after it.",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "timezone",
+            "in": "query",
+            "description": "IANA timezone string, for example Australia/Sydney.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sellType",
+            "in": "query",
+            "description": "SELL_OUT reports Amazon's sales of your products to its customers. SELL_IN reports your sales to Amazon through purchase orders.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "SELL_IN",
+                "SELL_OUT"
+              ]
+            }
+          },
+          {
+            "name": "groupBy",
+            "in": "query",
+            "description": "month (SELL_IN or SELL_OUT) adds a months array with one entry per calendar month the range touches. vendorCode (SELL_IN only) adds a vendorCodes array with one entry per vendor code.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "month",
+                "vendorCode"
+              ]
+            }
+          },
+          {
+            "name": "includeBreakdown",
+            "in": "query",
+            "description": "When true, adds deductionBreakdown and chargebackBreakdown (amounts by type) to the totals and to each months or vendorCodes entry.",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          },
+          {
+            "name": "snsUnitsInterval",
+            "in": "query",
+            "description": "Reporting period for snsUnits. Amazon reports Subscribe & Save units by whole week or whole month. Only affects snsUnits, so it is ignored for SELL_IN.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "week",
+              "enum": [
+                "week",
+                "month"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetVendorProfitAndLossResponse"
+                },
+                "examples": {
+                  "sellOut": {
+                    "summary": "SELL_OUT",
+                    "value": {
+                      "data": {
+                        "totalExpenses": 71710.25,
+                        "totalProfit": 46290.5,
+                        "shippedCogs": 118000.75,
+                        "shippedUnits": 4720,
+                        "snsUnits": 610,
+                        "snsUnitsFromDate": "2026-04-12",
+                        "snsUnitsToDate": "2026-05-16",
+                        "advertisingSpend": 8500.25,
+                        "cogs": 59000,
+                        "deductions": 3900,
+                        "chargebacks": 310
+                      },
+                      "meta": {
+                        "currency": "USD",
+                        "sellType": "SELL_OUT"
+                      }
+                    }
+                  },
+                  "sellIn": {
+                    "summary": "SELL_IN",
+                    "value": {
+                      "data": {
+                        "totalExpenses": 91700,
+                        "totalProfit": 66300,
+                        "netReceipts": 158000,
+                        "receivedUnits": 6120,
+                        "requestedUnits": 6970,
+                        "acceptedUnits": 6280,
+                        "requestedValue": 180000,
+                        "acceptedValue": 162000,
+                        "cancelledValue": -6000,
+                        "rejectedValue": -12000,
+                        "shortageValue": -4000,
+                        "advertisingSpend": 9000,
+                        "cogs": 77000,
+                        "deductions": 5300,
+                        "chargebacks": 400
+                      },
+                      "meta": {
+                        "currency": "USD",
+                        "sellType": "SELL_IN"
+                      }
+                    }
+                  },
+                  "withBreakdown": {
+                    "summary": "SELL_OUT with breakdown",
+                    "value": {
+                      "data": {
+                        "totalExpenses": 71710.25,
+                        "totalProfit": 46290.5,
+                        "shippedCogs": 118000.75,
+                        "shippedUnits": 4720,
+                        "snsUnits": 610,
+                        "advertisingSpend": 8500.25,
+                        "cogs": 59000,
+                        "deductions": 3900,
+                        "chargebacks": 310,
+                        "deductionBreakdown": [
+                          {
+                            "type": "CO_OP",
+                            "amount": 3000
+                          },
+                          {
+                            "type": "DAMAGE_ALLOWANCE",
+                            "amount": 900
+                          }
+                        ],
+                        "chargebackBreakdown": [
+                          {
+                            "type": "asn accuracy",
+                            "amount": 200
+                          },
+                          {
+                            "type": "carton content accuracy",
+                            "amount": 110
+                          }
+                        ]
+                      },
+                      "meta": {
+                        "currency": "USD",
+                        "sellType": "SELL_OUT"
+                      }
+                    }
+                  },
+                  "byMonth": {
+                    "summary": "SELL_OUT by month",
+                    "value": {
+                      "data": {
+                        "totalExpenses": 71710.25,
+                        "totalProfit": 46290.5,
+                        "shippedCogs": 118000.75,
+                        "shippedUnits": 4720,
+                        "snsUnits": 610,
+                        "advertisingSpend": 8500.25,
+                        "cogs": 59000,
+                        "deductions": 3900,
+                        "chargebacks": 310,
+                        "months": [
+                          {
+                            "month": "2026-09",
+                            "totalExpenses": 35100,
+                            "totalProfit": 22900,
+                            "shippedCogs": 58000,
+                            "shippedUnits": 2310,
+                            "snsUnits": 300,
+                            "advertisingSpend": 4200,
+                            "cogs": 29000,
+                            "deductions": 1750,
+                            "chargebacks": 150
+                          },
+                          {
+                            "month": "2026-10",
+                            "totalExpenses": 36610.25,
+                            "totalProfit": 23390.5,
+                            "shippedCogs": 60000.75,
+                            "shippedUnits": 2410,
+                            "snsUnits": 310,
+                            "advertisingSpend": 4300.25,
+                            "cogs": 30000,
+                            "deductions": 2150,
+                            "chargebacks": 160
+                          }
+                        ]
+                      },
+                      "meta": {
+                        "currency": "USD",
+                        "sellType": "SELL_OUT"
+                      }
+                    }
+                  },
+                  "byVendorCode": {
+                    "summary": "SELL_IN by vendor code",
+                    "value": {
+                      "data": {
+                        "totalExpenses": 91700,
+                        "totalProfit": 66300,
+                        "netReceipts": 158000,
+                        "receivedUnits": 6120,
+                        "requestedUnits": 6970,
+                        "acceptedUnits": 6280,
+                        "requestedValue": 180000,
+                        "acceptedValue": 162000,
+                        "cancelledValue": -6000,
+                        "rejectedValue": -12000,
+                        "shortageValue": -4000,
+                        "advertisingSpend": 9000,
+                        "cogs": 77000,
+                        "deductions": 5300,
+                        "chargebacks": 400,
+                        "vendorCodes": [
+                          {
+                            "vendorCode": "ABCDE",
+                            "totalExpenses": 58000,
+                            "totalProfit": 42000,
+                            "netReceipts": 100000,
+                            "receivedUnits": 3900,
+                            "requestedUnits": 4410,
+                            "acceptedUnits": 3970,
+                            "requestedValue": 114000,
+                            "acceptedValue": 102500,
+                            "cancelledValue": -3800,
+                            "rejectedValue": -7700,
+                            "shortageValue": -2500,
+                            "advertisingSpend": 5696.2,
+                            "cogs": 48700,
+                            "deductions": 3350,
+                            "chargebacks": 253.8
+                          },
+                          {
+                            "vendorCode": "FGHIJ",
+                            "totalExpenses": 33700,
+                            "totalProfit": 24300,
+                            "netReceipts": 58000,
+                            "receivedUnits": 2220,
+                            "requestedUnits": 2560,
+                            "acceptedUnits": 2310,
+                            "requestedValue": 66000,
+                            "acceptedValue": 59500,
+                            "cancelledValue": -2200,
+                            "rejectedValue": -4300,
+                            "shortageValue": -1500,
+                            "advertisingSpend": 3303.8,
+                            "cogs": 28300,
+                            "deductions": 1950,
+                            "chargebacks": 146.2
+                          }
+                        ]
+                      },
+                      "meta": {
+                        "currency": "USD",
+                        "sellType": "SELL_IN"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "invalidChannel": {
+                    "summary": "channelId / merchantId not found or not accessible",
+                    "value": {
+                      "status": "error",
+                      "error": "Invalid channelId / merchantId"
+                    }
+                  },
+                  "notVendorChannel": {
+                    "summary": "Channel exists but is not an Amazon Vendor channel",
+                    "value": {
+                      "status": "error",
+                      "error": "This endpoint is only supported for vendor channels"
+                    }
+                  },
+                  "dateRangeTooLong": {
+                    "summary": "Range exceeds the 3-month maximum",
+                    "value": {
+                      "status": "error",
+                      "error": "Date range must not exceed 3 months"
+                    }
+                  },
+                  "vendorCodeSellOut": {
+                    "summary": "groupBy=vendorCode with sellType=SELL_OUT",
+                    "value": {
+                      "status": "error",
+                      "error": "groupBy vendorCode is only available for sellType SELL_IN"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/profitability/vendorProductProfitAndLoss": {
+      "get": {
+        "tags": [
+          "profitability"
+        ],
+        "summary": "Retrieve profit and loss per ASIN for a vendor channel",
+        "description": "Vendor only. Returns the profit and loss per ASIN for a sell type.",
+        "operationId": "getVendorProductProfitAndLoss",
+        "parameters": [
+          {
+            "name": "channelId",
+            "in": "query",
+            "description": "Channel (store) ID. Must be an Amazon Vendor channel.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "merchantId",
+            "in": "query",
+            "description": "Merchant ID that owns the channel. URL-encode values containing spaces or '@'.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "fromDate",
+            "in": "query",
+            "description": "Start of the range as Unix epoch seconds. Defaults to 30 days before now.",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "toDate",
+            "in": "query",
+            "description": "End of the range as Unix epoch seconds. Defaults to now. Must not be before fromDate, and the range must not exceed 31 calendar days in the request timezone.",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "timezone",
+            "in": "query",
+            "description": "IANA timezone string, for example Australia/Sydney.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sellType",
+            "in": "query",
+            "description": "SELL_OUT reports Amazon's sales of your products to its customers. SELL_IN reports your sales to Amazon through purchase orders.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "SELL_IN",
+                "SELL_OUT"
+              ]
+            }
+          },
+          {
+            "name": "snsUnitsInterval",
+            "in": "query",
+            "description": "Reporting period for snsUnits. Amazon reports Subscribe & Save units by whole week or whole month. Only affects snsUnits, so it is ignored for SELL_IN.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "week",
+              "enum": [
+                "week",
+                "month"
+              ]
+            }
+          },
+          {
+            "name": "searchText",
+            "in": "query",
+            "description": "Optional text to match product titles or ASINs.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortKey",
+            "in": "query",
+            "description": "Field to sort by (default shippedCogs for SELL_OUT, netReceipts for SELL_IN). shippedCogs and shippedUnits are SELL_OUT only; netReceipts, receivedUnits, cancelledUnits, rejectedUnits, cancelledValue and rejectedValue are SELL_IN only. A key for the other sell type returns 400.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "shippedCogs",
+                "shippedUnits",
+                "netReceipts",
+                "receivedUnits",
+                "cancelledUnits",
+                "rejectedUnits",
+                "cancelledValue",
+                "rejectedValue",
+                "advertisingSpend",
+                "inventoryQuantity",
+                "chargebacks",
+                "cogs",
+                "deductions",
+                "totalExpenses",
+                "totalProfit"
+              ]
+            }
+          },
+          {
+            "name": "sortOrder",
+            "in": "query",
+            "description": "Sort direction (default desc).",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "desc",
+              "enum": [
+                "asc",
+                "desc"
+              ]
+            }
+          },
+          {
+            "name": "pageIndex",
+            "in": "query",
+            "description": "Zero-based page index (default 0).",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "Number of ASINs per page (default 20, max 50).",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 50,
+              "default": 20
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetVendorProductProfitAndLossResponse"
+                },
+                "examples": {
+                  "sellOut": {
+                    "summary": "SELL_OUT",
+                    "value": {
+                      "data": [
+                        {
+                          "asin": "B0XXXXXXXX",
+                          "title": "Classic Eau de Toilette for Men",
+                          "linkUrl": "https://amazon.com/dp/B0XXXXXXXX",
+                          "imageUrl": "https://m.media-amazon.com/images/I/XXXX.jpg",
+                          "shippedCogs": 12400,
+                          "shippedUnits": 480,
+                          "snsUnits": 35,
+                          "advertisingSpend": 900,
+                          "cogs": 6100,
+                          "deductions": 420,
+                          "chargebacks": 15,
+                          "totalExpenses": 7435,
+                          "totalProfit": 4965,
+                          "inventoryQuantity": 1200
+                        }
+                      ],
+                      "pagination": {
+                        "pageIndex": 0,
+                        "pageSize": 20,
+                        "count": 123
+                      },
+                      "meta": {
+                        "currency": "USD",
+                        "sellType": "SELL_OUT"
+                      }
+                    }
+                  },
+                  "sellIn": {
+                    "summary": "SELL_IN",
+                    "value": {
+                      "data": [
+                        {
+                          "asin": "B0XXXXXXXX",
+                          "title": "Classic Eau de Toilette for Men",
+                          "linkUrl": "https://amazon.com/dp/B0XXXXXXXX",
+                          "imageUrl": "https://m.media-amazon.com/images/I/XXXX.jpg",
+                          "netReceipts": 15800,
+                          "requestedValue": 18000,
+                          "acceptedValue": 16200,
+                          "cancelledValue": -1200,
+                          "rejectedValue": -600,
+                          "shortageValue": -400,
+                          "receivedUnits": 610,
+                          "requestedUnits": 700,
+                          "acceptedUnits": 630,
+                          "cancelledUnits": 45,
+                          "rejectedUnits": 25,
+                          "advertisingSpend": 900,
+                          "cogs": 7700,
+                          "deductions": 530,
+                          "chargebacks": 15,
+                          "totalExpenses": 9145,
+                          "totalProfit": 6655,
+                          "inventoryQuantity": 1200
+                        }
+                      ],
+                      "pagination": {
+                        "pageIndex": 0,
+                        "pageSize": 20,
+                        "count": 123
+                      },
+                      "meta": {
+                        "currency": "USD",
+                        "sellType": "SELL_IN"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "invalidChannel": {
+                    "summary": "channelId / merchantId not found or not accessible",
+                    "value": {
+                      "status": "error",
+                      "error": "Invalid channelId / merchantId"
+                    }
+                  },
+                  "notVendorChannel": {
+                    "summary": "Channel exists but is not an Amazon Vendor channel",
+                    "value": {
+                      "status": "error",
+                      "error": "This endpoint is only supported for vendor channels"
+                    }
+                  },
+                  "dateRangeTooLong": {
+                    "summary": "Range exceeds the 31-day maximum",
+                    "value": {
+                      "status": "error",
+                      "error": "toDate and fromDate must be no greater than 31 days apart"
+                    }
+                  },
+                  "sortKeyWrongSellType": {
+                    "summary": "sortKey belongs to the other sell type",
+                    "value": {
+                      "status": "error",
+                      "error": "sortKey netReceipts is not available for sellType SELL_OUT"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
     "/profitability/directCosts": {
       "post": {
         "tags": ["profitability"],
@@ -13822,6 +14487,411 @@
             }
           }
         }
+      },
+      "VendorProfitAndLossMeta": {
+        "type": "object",
+        "properties": {
+          "currency": {
+            "type": "string",
+            "description": "Currency of all monetary values (native marketplace currency)"
+          },
+          "sellType": {
+            "type": "string",
+            "enum": [
+              "SELL_IN",
+              "SELL_OUT"
+            ]
+          }
+        },
+        "required": [
+          "currency",
+          "sellType"
+        ]
+      },
+      "VendorDeductionBreakdownItem": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "DAMAGE_ALLOWANCE",
+              "CO_OP",
+              "FREIGHT_ALLOWANCE",
+              "SAS",
+              "PRICE_PROTECTION",
+              "PROMOTIONAL_ALLOWANCE",
+              "STRAIGHT_PAYMENTS",
+              "OTHER_REBATE",
+              "A_PLUS_PREMIUM",
+              "DAMAGE_RETURNS_HANDLING",
+              "INSTALLMENTS",
+              "STRAIGHT_PAYMENTS_MARGIN_COMPENSATION"
+            ]
+          },
+          "amount": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "type",
+          "amount"
+        ]
+      },
+      "VendorChargebackBreakdownItem": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "Amazon's issue type, as written in the uploaded chargeback file. Not normalised: the same issue type can appear under different casing."
+          },
+          "amount": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "type",
+          "amount"
+        ]
+      },
+      "VendorProfitAndLossFigures": {
+        "type": "object",
+        "description": "Profit and loss figures for one sell type. Fields marked SELL_OUT only or SELL_IN only are omitted for the other sell type.",
+        "properties": {
+          "totalExpenses": {
+            "type": "number",
+            "description": "advertisingSpend + cogs + deductions + chargebacks."
+          },
+          "totalProfit": {
+            "type": "number",
+            "description": "Revenue minus totalExpenses, where revenue is shippedCogs (SELL_OUT) or netReceipts (SELL_IN). Can be negative."
+          },
+          "shippedCogs": {
+            "type": "number",
+            "description": "SELL_OUT only. Value of the units Amazon shipped to its customers from your vendor inventory, at Amazon's cost of goods, that is, what Amazon pays you for them. The sell-out revenue figure."
+          },
+          "shippedUnits": {
+            "type": "integer",
+            "description": "SELL_OUT only. Units Amazon shipped to its customers."
+          },
+          "snsUnits": {
+            "type": "integer",
+            "description": "SELL_OUT only. Units shipped on Subscribe & Save subscription orders."
+          },
+          "netReceipts": {
+            "type": "number",
+            "description": "SELL_IN only. Value of the purchase-order units Amazon received in its warehouses, at the purchase-order net cost. The sell-in revenue figure."
+          },
+          "receivedUnits": {
+            "type": "integer",
+            "description": "SELL_IN only. Purchase-order units Amazon received in its warehouses."
+          },
+          "requestedUnits": {
+            "type": "integer",
+            "description": "SELL_IN only. Units Amazon ordered on the purchase orders, including units it later cancelled."
+          },
+          "acceptedUnits": {
+            "type": "integer",
+            "description": "SELL_IN only. Units you confirmed for delivery when acknowledging the purchase orders."
+          },
+          "requestedValue": {
+            "type": "number",
+            "description": "SELL_IN only. Value of requestedUnits at the net cost per accepted unit: Amazon's demand for your products. Lines with no accepted units count as 0."
+          },
+          "acceptedValue": {
+            "type": "number",
+            "description": "SELL_IN only. Value of acceptedUnits at the purchase-order net cost: the orders you committed to deliver."
+          },
+          "cancelledValue": {
+            "type": "number",
+            "description": "SELL_IN only. Value of units Amazon cancelled from the purchase orders. Cancellations can come after you accepted the order. Negative."
+          },
+          "rejectedValue": {
+            "type": "number",
+            "description": "SELL_IN only. Value of units you rejected when acknowledging the purchase orders, for example because stock was unavailable or the delivery window could not be met. Negative."
+          },
+          "shortageValue": {
+            "type": "number",
+            "description": "SELL_IN only. netReceipts minus acceptedValue. Negative for a shortage (Amazon received less than you accepted), positive for a surplus."
+          },
+          "advertisingSpend": {
+            "type": "number",
+            "description": "Amazon Ads spend for the channel, from campaign reports."
+          },
+          "cogs": {
+            "type": "number",
+            "description": "Your landed cost of the units, as entered in MerchantSpring. Not Amazon's cost of goods (see shippedCogs). 0 if no costs are entered."
+          },
+          "deductions": {
+            "type": "number",
+            "description": "Trade terms agreed with Amazon in your vendor agreement, such as co-op or damage allowance, as entered in MerchantSpring."
+          },
+          "chargebacks": {
+            "type": "number",
+            "description": "Fees Amazon charged for not meeting its vendor requirements, from the chargeback file uploaded to MerchantSpring. Only charged chargebacks count; disputed or waived ones are excluded."
+          },
+          "deductionBreakdown": {
+            "type": "array",
+            "description": "Only with includeBreakdown=true. deductions by type, largest first; the amounts sum to deductions.",
+            "items": {
+              "$ref": "#/components/schemas/VendorDeductionBreakdownItem"
+            }
+          },
+          "chargebackBreakdown": {
+            "type": "array",
+            "description": "Only with includeBreakdown=true. chargebacks by issue type, largest first; the amounts sum to chargebacks.",
+            "items": {
+              "$ref": "#/components/schemas/VendorChargebackBreakdownItem"
+            }
+          }
+        },
+        "required": [
+          "totalExpenses",
+          "totalProfit",
+          "advertisingSpend",
+          "cogs",
+          "deductions",
+          "chargebacks"
+        ]
+      },
+      "VendorProfitAndLossMonth": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "month": {
+                "type": "string",
+                "example": "2026-09"
+              }
+            },
+            "required": [
+              "month"
+            ]
+          },
+          {
+            "$ref": "#/components/schemas/VendorProfitAndLossFigures"
+          }
+        ]
+      },
+      "VendorProfitAndLossVendorCode": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "vendorCode": {
+                "type": "string",
+                "nullable": true
+              }
+            },
+            "required": [
+              "vendorCode"
+            ]
+          },
+          {
+            "$ref": "#/components/schemas/VendorProfitAndLossFigures"
+          }
+        ],
+        "description": "advertisingSpend is estimated per vendor code: Amazon Ads spend has no vendor code, so the channel's spend is split by each code's share of netReceipts."
+      },
+      "GetVendorProfitAndLossResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/VendorProfitAndLossFigures"
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "snsUnitsFromDate": {
+                    "type": "string",
+                    "example": "2026-04-12",
+                    "description": "SELL_OUT only, without groupBy. First day (YYYY-MM-DD) of the Subscribe & Save periods counted in snsUnits. Can be before fromDate, because Amazon reports these units by whole week or month."
+                  },
+                  "snsUnitsToDate": {
+                    "type": "string",
+                    "example": "2026-05-16",
+                    "description": "SELL_OUT only, without groupBy. Last day (YYYY-MM-DD) of the Subscribe & Save periods counted in snsUnits. Can be after toDate."
+                  },
+                  "months": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/VendorProfitAndLossMonth"
+                    }
+                  },
+                  "vendorCodes": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/VendorProfitAndLossVendorCode"
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          "meta": {
+            "$ref": "#/components/schemas/VendorProfitAndLossMeta"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
+      "VendorProductProfitAndLossRow": {
+        "type": "object",
+        "description": "One ASIN. Same field meanings as VendorProfitAndLossFigures, for this ASIN only. Fields marked SELL_OUT only or SELL_IN only are omitted for the other sell type.",
+        "properties": {
+          "asin": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "linkUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "imageUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "shippedCogs": {
+            "type": "number",
+            "description": "SELL_OUT only."
+          },
+          "shippedUnits": {
+            "type": "integer",
+            "description": "SELL_OUT only."
+          },
+          "snsUnits": {
+            "type": "integer",
+            "description": "SELL_OUT only."
+          },
+          "netReceipts": {
+            "type": "number",
+            "description": "SELL_IN only."
+          },
+          "requestedValue": {
+            "type": "number",
+            "description": "SELL_IN only."
+          },
+          "acceptedValue": {
+            "type": "number",
+            "description": "SELL_IN only."
+          },
+          "cancelledValue": {
+            "type": "number",
+            "description": "SELL_IN only."
+          },
+          "rejectedValue": {
+            "type": "number",
+            "description": "SELL_IN only."
+          },
+          "shortageValue": {
+            "type": "number",
+            "description": "SELL_IN only."
+          },
+          "receivedUnits": {
+            "type": "integer",
+            "description": "SELL_IN only."
+          },
+          "requestedUnits": {
+            "type": "integer",
+            "description": "SELL_IN only."
+          },
+          "acceptedUnits": {
+            "type": "integer",
+            "description": "SELL_IN only."
+          },
+          "cancelledUnits": {
+            "type": "integer",
+            "description": "SELL_IN only. Units Amazon cancelled. Cancellations can come after you accepted the order."
+          },
+          "rejectedUnits": {
+            "type": "integer",
+            "description": "SELL_IN only. Units you rejected when acknowledging the purchase orders."
+          },
+          "advertisingSpend": {
+            "type": "number",
+            "description": "Amazon Ads spend on this ASIN's product ads."
+          },
+          "cogs": {
+            "type": "number"
+          },
+          "deductions": {
+            "type": "number",
+            "description": "Trade-term deductions allocated to this ASIN."
+          },
+          "chargebacks": {
+            "type": "number"
+          },
+          "totalExpenses": {
+            "type": "number"
+          },
+          "totalProfit": {
+            "type": "number"
+          },
+          "inventoryQuantity": {
+            "type": "integer",
+            "description": "Sellable units in Amazon's inventory on the latest inventory report date inside the range. 0 if there is no report in the range."
+          }
+        },
+        "required": [
+          "asin",
+          "title",
+          "linkUrl",
+          "imageUrl",
+          "advertisingSpend",
+          "cogs",
+          "deductions",
+          "chargebacks",
+          "totalExpenses",
+          "totalProfit",
+          "inventoryQuantity"
+        ]
+      },
+      "GetVendorProductProfitAndLossResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VendorProductProfitAndLossRow"
+            }
+          },
+          "pagination": {
+            "type": "object",
+            "properties": {
+              "pageIndex": {
+                "type": "integer",
+                "description": "Zero-based page index"
+              },
+              "pageSize": {
+                "type": "integer",
+                "description": "Number of ASINs per page"
+              },
+              "count": {
+                "type": "integer",
+                "description": "Total ASINs matching the request across all pages. 0 when pageIndex is past the last page."
+              }
+            },
+            "required": [
+              "pageIndex",
+              "pageSize",
+              "count"
+            ]
+          },
+          "meta": {
+            "$ref": "#/components/schemas/VendorProfitAndLossMeta"
+          }
+        },
+        "required": [
+          "data",
+          "pagination",
+          "meta"
+        ]
       }
     },
     "securitySchemes": {
