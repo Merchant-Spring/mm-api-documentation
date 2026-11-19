@@ -2962,7 +2962,7 @@
                     "summary": "A required reportOptions field is missing",
                     "value": {
                       "status": "error",
-                      "error": "Missing or invalid parameters: reportOptions.fromDate, reportOptions.toDate"
+                      "error": "fromDate must be a Unix epoch timestamp in seconds, toDate must be a Unix epoch timestamp in seconds"
                     }
                   },
                   "invalidChannel": {
