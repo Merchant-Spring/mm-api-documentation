@@ -10735,7 +10735,7 @@
           },
           "salesTax": {
             "type": "number",
-            "description": "Sales tax included in sales, as a negative amount. 0 when includeTax=false."
+            "description": "Sales tax included in sales, as a negative amount. 0 when includeTax=false. Its line items in breakdown.salesTax have the opposite sign."
           },
           "breakdown": {
             "$ref": "#/components/schemas/StoreProfitAndLossBreakdown"
@@ -10768,7 +10768,7 @@
           },
           "salesTax": {
             "type": "array",
-            "description": "Sales tax line items. Empty when includeTax=false.",
+            "description": "Sales tax line items, signed as on the dashboard: collected tax is positive, refunded tax negative. This is the opposite sign to the top-level salesTax. Empty when includeTax=false.",
             "items": {
               "$ref": "#/components/schemas/StoreProfitAndLossLineItem"
             }
