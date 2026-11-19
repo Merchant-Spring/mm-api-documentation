@@ -17,6 +17,49 @@ Product P&L:
 
 See each endpoint's reference page for the exact request body and response schema.
 
+### Fee-level line items
+
+Set `reportOptions.includeBreakdown` to `true` on the store P&L to also get the line items behind each figure — the same rows as the dashboard's Detailed P&L. They come back in a `breakdown` object, keyed by the figure each list explains:
+
+```bash
+curl -X POST "https://mm-api.merchantspring.io/profitability/storeProfitAndLoss" \
+  -H "x-api-key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "channelId": "YOUR_CHANNEL_ID",
+  "merchantId": "YOUR_MERCHANT_ID",
+  "reportOptions": {
+    "fromDate": 1788246000,
+    "toDate": 1790837999,
+    "timezone": "America/Los_Angeles",
+    "includeTax": true,
+    "includeBreakdown": true
+  }
+}'
+```
+
+```json
+{
+  "status": "success",
+  "data": {
+    "sellingFees": 2721.92,
+    "breakdown": {
+      "sellingFees": [
+        { "type": "Commission", "amount": 2745.76 },
+        { "type": "Commission_REFUNDED", "amount": -23.84 }
+      ]
+    }
+  }
+}
+```
+
+Response trimmed; every figure has a list, empty when there was no activity.
+
+- `type` is the marketplace's event type, as used in the Detailed P&L CSV export.
+- Each list is sorted by amount, highest first.
+- The date range can be up to 31 days, so request one month at a time for monthly reporting.
+
+
 ## Managing unit COGS
 
 Runs as an **asynchronous job** — submit the update, then poll for completion.
