@@ -2823,6 +2823,129 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/GetStoreProfitAndLossResponse"
+                },
+                "examples": {
+                  "withoutBreakdown": {
+                    "summary": "Without breakdown",
+                    "value": {
+                      "status": "success",
+                      "data": {
+                        "totalRevenue": 16656.96,
+                        "totalExpenses": 5396.56,
+                        "sales": 18640.82,
+                        "advertisingSpend": 1325.4,
+                        "sellingFees": 2721.92,
+                        "shippingFees": 1331.46,
+                        "refunds": -144.48,
+                        "reimbursements": 116.4,
+                        "otherIncome": 332.62,
+                        "promotions": -290.97,
+                        "refundsAndReturnsOverheads": 4.77,
+                        "cogs": 0,
+                        "otherExpenses": 13.01,
+                        "salesTax": -1997.43
+                      }
+                    }
+                  },
+                  "withBreakdown": {
+                    "summary": "With breakdown (includeBreakdown=true)",
+                    "value": {
+                      "status": "success",
+                      "data": {
+                        "totalRevenue": 16656.96,
+                        "totalExpenses": 5396.56,
+                        "sales": 18640.82,
+                        "advertisingSpend": 1325.4,
+                        "sellingFees": 2721.92,
+                        "shippingFees": 1331.46,
+                        "refunds": -144.48,
+                        "reimbursements": 116.4,
+                        "otherIncome": 332.62,
+                        "promotions": -290.97,
+                        "refundsAndReturnsOverheads": 4.77,
+                        "cogs": 0,
+                        "otherExpenses": 13.01,
+                        "salesTax": -1997.43,
+                        "breakdown": {
+                          "sales": [
+                            {
+                              "type": "Principal",
+                              "amount": 16643.39
+                            },
+                            {
+                              "type": "Tax",
+                              "amount": 1997.43
+                            }
+                          ],
+                          "salesTax": [
+                            {
+                              "type": "Tax",
+                              "amount": 1997.43
+                            }
+                          ],
+                          "refunds": [
+                            {
+                              "type": "Principal_REFUNDED",
+                              "amount": -144.48
+                            }
+                          ],
+                          "reimbursements": [
+                            {
+                              "type": "REVERSAL_REIMBURSEMENT",
+                              "amount": 116.4
+                            }
+                          ],
+                          "promotions": [
+                            {
+                              "type": "PromotionMetaDataDefinitionValue",
+                              "amount": -290.97
+                            }
+                          ],
+                          "otherIncome": [
+                            {
+                              "type": "ShippingCharge",
+                              "amount": 332.62
+                            }
+                          ],
+                          "advertisingSpend": [
+                            {
+                              "type": "ProductAdsInvoicePaymentChargeBase",
+                              "amount": 1325.4
+                            }
+                          ],
+                          "sellingFees": [
+                            {
+                              "type": "Commission",
+                              "amount": 2745.76
+                            },
+                            {
+                              "type": "Commission_REFUNDED",
+                              "amount": -23.84
+                            }
+                          ],
+                          "shippingFees": [
+                            {
+                              "type": "FBAPerUnitFulfillmentFee",
+                              "amount": 1331.46
+                            }
+                          ],
+                          "refundsAndReturnsOverheads": [
+                            {
+                              "type": "RefundCommission",
+                              "amount": 4.77
+                            }
+                          ],
+                          "cogs": [],
+                          "otherExpenses": [
+                            {
+                              "type": "COMPENSATED_CLAWBACK",
+                              "amount": 13.01
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  }
                 }
               }
             }
@@ -2831,15 +2954,37 @@
             "description": "Invalid input",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/ErrorResponse" },
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
                 "examples": {
                   "missingParam": {
                     "summary": "A required reportOptions field is missing",
-                    "value": { "status": "error", "error": "Missing or invalid parameters: reportOptions.fromDate, reportOptions.toDate" }
+                    "value": {
+                      "status": "error",
+                      "error": "fromDate must be a Unix epoch timestamp in seconds, toDate must be a Unix epoch timestamp in seconds"
+                    }
                   },
                   "invalidChannel": {
                     "summary": "channelId / merchantId not found or not accessible",
-                    "value": { "status": "error", "error": "Invalid channelId / merchantId" }
+                    "value": {
+                      "status": "error",
+                      "error": "Invalid channelId / merchantId"
+                    }
+                  },
+                  "dateRangeTooLong": {
+                    "summary": "Range exceeds the 31-day maximum",
+                    "value": {
+                      "status": "error",
+                      "error": "toDate and fromDate must be no greater than 31 days apart"
+                    }
+                  },
+                  "invalidIncludeBreakdown": {
+                    "summary": "includeBreakdown is not a boolean",
+                    "value": {
+                      "status": "error",
+                      "error": "Invalid includeBreakdown: expected a boolean"
+                    }
                   }
                 }
               }
@@ -9543,6 +9688,11 @@
             "type": "boolean",
             "default": false,
             "description": "If true, the cost of goods for refunded items (RefundCOGS) is deducted from the Cancellations & Refunds expense total in the P&L. Amazon sellers only - ignored for other marketplaces. Defaults to false."
+          },
+          "includeBreakdown": {
+            "type": "boolean",
+            "default": false,
+            "description": "If true, also returns the fee-level line items behind each figure in breakdown. Defaults to false."
           }
         },
         "required": ["fromDate", "toDate", "includeTax", "timezone"]
@@ -10582,9 +10732,108 @@
           },
           "otherExpenses": {
             "type": "number"
+          },
+          "salesTax": {
+            "type": "number",
+            "description": "Sales tax included in sales, as a negative amount. 0 when includeTax=false. Its line items in breakdown.salesTax have the opposite sign."
+          },
+          "breakdown": {
+            "$ref": "#/components/schemas/StoreProfitAndLossBreakdown"
           }
         },
         "description": "Fetch a store's profit and loss in raw json"
+      },
+      "StoreProfitAndLossLineItem": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "Marketplace event type, e.g. Commission."
+          },
+          "amount": {
+            "type": "number"
+          }
+        },
+        "required": ["type", "amount"]
+      },
+      "StoreProfitAndLossBreakdown": {
+        "type": "object",
+        "description": "Only with includeBreakdown=true. Fee-level line items for each figure.",
+        "properties": {
+          "sales": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StoreProfitAndLossLineItem"
+            }
+          },
+          "salesTax": {
+            "type": "array",
+            "description": "Sales tax line items, signed as on the dashboard: collected tax is positive, refunded tax negative. This is the opposite sign to the top-level salesTax. Empty when includeTax=false.",
+            "items": {
+              "$ref": "#/components/schemas/StoreProfitAndLossLineItem"
+            }
+          },
+          "refunds": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StoreProfitAndLossLineItem"
+            }
+          },
+          "reimbursements": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StoreProfitAndLossLineItem"
+            }
+          },
+          "promotions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StoreProfitAndLossLineItem"
+            }
+          },
+          "otherIncome": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StoreProfitAndLossLineItem"
+            }
+          },
+          "advertisingSpend": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StoreProfitAndLossLineItem"
+            }
+          },
+          "sellingFees": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StoreProfitAndLossLineItem"
+            }
+          },
+          "shippingFees": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StoreProfitAndLossLineItem"
+            }
+          },
+          "refundsAndReturnsOverheads": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StoreProfitAndLossLineItem"
+            }
+          },
+          "cogs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StoreProfitAndLossLineItem"
+            }
+          },
+          "otherExpenses": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StoreProfitAndLossLineItem"
+            }
+          }
+        }
       },
       "SalesByPeriodRequest": {
         "type": "object",
